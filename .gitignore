@@ -1,0 +1,28 @@
+yarn.lock
+node_modules
+package.json
+mutant-standard
+hello
+.eslintrc.json
+package-lock.json
+
+# stuff for a script that changes the now playing message on my website
+# decided not to ignore these in case people want to copy the
+# 'now playing' script thing idea
+# nowplaying.config
+# nowplaying.sh
+
+# literally just technical notes about measurements, colors and whatnot
+# that I made for my own reference while writing this site
+notes
+
+# config files
+swpconfig.js
+
+# random shit
+css/img/mtns-icons
+css/img/misc/orbit.svg
+css/img/misc/section-divider.svg
+css/img/icons
+css/img/handwriting
+webgl
