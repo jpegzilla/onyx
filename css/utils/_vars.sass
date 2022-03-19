@@ -1,0 +1,222 @@
+@use 'sass:color'
+
+$p-xl: 8rem
+$p-l: 4rem
+$p-m: 2rem
+$p-s: 1rem
+$halfgap: 0.5rem
+$offset: 3rem
+$offset2x: 8rem
+
+$color-transition: 0.2s
+
+$breakpoint-huge: 2000px
+$breakpoint-large: 1920px
+$breakpoint-medium: 1700px
+$breakpoint-small: 1500px
+$breakpoint-tiny: 1350px
+$breakpoint-miniscule: 961px
+$breakpoint-infinitesimal: 700px
+$breakpoint-microscopic: 400px
+
+$max-width: 2500px
+
+$resolution-default: 166dpi
+$resolution-2: 192dpi
+$resolution-3: 288dpi
+$resolution-4: 554dpi
+
+$border-radius: 20px
+
+// 色
+
+$calvin: #2c75ff
+$calvin-light: #64a7ec
+$eris-dark: #780032
+$eris: #e0005d
+$eris-light: #e25b93
+
+$black-dark: #060408
+$white-bright: #fcfdff
+
+$rainbow-grad-hor: linear-gradient(90deg, rgb(237, 172, 204) 10%, rgb(17, 249, 223) 30%, rgb(255, 241, 81) 50%, rgb(235, 155, 208) 70%, rgb(124, 210, 255) 90%)
+
+$rainbow-grad-vert: linear-gradient(0deg, rgb(237, 172, 204) 10%, rgb(17, 249, 223) 30%, rgb(255, 241, 81) 50%, rgb(235, 155, 208) 70%, rgb(124, 210, 255) 90%)
+
+$rainbow-gradient-onyx: linear-gradient(90deg, rgba(0, 216, 247, 1) 0%, rgba(252, 238, 33, 1) 50%, rgba(255, 63, 218, 1) 100%)
+
+// ボーカロイド
+
+$miku: #39c5bb
+$luka: pink
+$meiko: #d80000
+$kaito: #2209c3
+$kagamine: #d8e500
+
+// 旗
+
+$tflag-blue: #91abf7
+$tflag-pink: #f8a0cb
+$tflag-white: #edeefd
+
+$pflag-pink: #e0005d
+$pflag-yellow: #e0d100
+$pflag-blue: #007ce0
+
+// フォント
+
+// $msgothic: "ＭＳ ゴシック", "ms gothic", monospace
+// $kaisho: "kaisho", serif
+// $crimson: "crimson", serif
+// $nunito: "Nunito Sans", sans-serif
+// $kosugi: "kosugi", sans-serif
+// $prompt: "prompt", $nunito, sans-serif
+// $neutral: "neutral", $nunito, sans-serif
+
+// レイヤー
+
+$layer-underlay: 48
+$layer-sections: 49
+$layer-deco-grid: 50
+$layer-controls: 51
+$layer-header: 52
+$layer-overlay: 54
+
+// mixins
+
+=toosmalldontshow
+  @media (max-width: $breakpoint-tiny)
+    display: none
+
+=blurbg($distance: 2px, $sat: 180%)
+  backdrop-filter: blur($distance) saturate($sat)
+
+// =theme($theme: "dark")
+//   --text-highlight: #{$red-in-mid}
+//
+//   @if $theme == "light"
+//     --bg-main: #{$white-bright}
+//     --bg-main-halfop: #{color.adjust($white-bright, $alpha: -0.5)}
+//     --text-main: #{$black-blue}
+//     --hl-main: #{$red-in-mid}
+//   @else if $theme == "dark"
+//     --bg-main: #{$black-dark}
+//     --bg-main-halfop: #{color.adjust($black-dark, $alpha: -0.5)}
+//     --text-main: #{$white-bright}
+//     --hl-main: #{$red-in-mid}
+
+=flexcenter($left: false)
+  display: flex
+  align-items: center
+  justify-content: center
+
+  @if $left
+    justify-content: flex-start
+
+=no-scrollbar
+  scrollbar-width: none
+  overflow: -moz-scrollbars-none
+  overflow-y: auto
+
+  &::-webkit-scrollbar
+    display: none
+    width: 0
+
+=custom-scrollbar
+  overflow-y: auto
+
+  &::-webkit-scrollbar
+    width: 1rem
+    display: block
+    background-color: transparent
+
+  &::-webkit-scrollbar-track
+    -webkit-box-shadow: inset 0 0 10px 10px transparent
+    box-shadow: inset 0 0 10px 10px transparent
+    border: solid 5px transparent
+    width: 6px !important
+    display: block
+
+  &::-webkit-scrollbar-thumb
+    -webkit-box-shadow: inset 0 0 10px 10px $white-bright
+    box-shadow: inset 0 0 10px 10px $white-bright
+    border: solid 5px transparent
+
+  &::-webkit-scrollbar-corner, &::-webkit-resizer
+    display: none
+
+=focus($othertransitions: '')
+  &:focus
+    outline: 1px dotted $black-dark
+    transition: outline-color 0.3s, #{$othertransitions}
+    outline-offset: 0.25rem
+
+    body.dark &
+      outline: 1px dotted $white-bright
+      transition: outline-color 0.3s, #{$othertransitions}
+
+=color($color1: $black-dark, $color2: $white-bright)
+  color: $color1
+  transition: color 0.3s
+
+  body.dark &
+    color: $color2
+    transition: color 0.3s
+
+=background-color($color1: $black-dark, $color2: $white-bright)
+  background-color: $color2
+  transition: background-color 0.3s
+
+  body.dark &
+    background-color: $color1
+    transition: background-color 0.3s
+
+=both-colors($color1: $white-bright, $color2: $black-dark)
+  background-color: $color2
+  color: $color1
+  transition: background-color 0.3s, color 0.3s
+
+  body.dark &
+    color: $color2
+    background-color: $color1
+    transition: background-color 0.3s, color 0.3s
+
+=border-color($color1: $black-dark, $color2: $white-bright)
+  border: 1px solid $color1
+  transition: border-color 0.3s
+
+  body.dark &
+    border: 1px solid $color2
+    transition: border-color 0.3s
+
+=mfont
+  @media (max-width: $breakpoint-miniscule)
+    font-size: 5rem
+
+=kfocus($othertransitions: '')
+  &:focus
+    outline: 1px dotted $meiko
+
+  &:focus:not(:focus-visible)
+    outline: none
+
+  &:focus-visible
+    +focus($othertransitions)
+
+=antibullet
+  list-style-type: none
+  margin: 0
+  padding: 0
+
+=big
+  height: 100%
+  width: 100%
+
+=notforscreenreaders
+  @media speech
+    display: none
+    visibility: hidden
+
+=ffonly
+  @-moz-document url-prefix()
+    @content

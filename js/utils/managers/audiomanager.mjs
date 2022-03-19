@@ -1,21 +1,21 @@
-import { uuidv4 } from "../index.mjs";
-import { arachne } from "./../../main.mjs";
+import { uuidv4 } from '../index.mjs'
+import { arachne } from './../../main.mjs'
 
-const BASE_PATH = "./../../assets/audio/";
+const BASE_PATH = './../../assets/audio/'
 
 export default class AudioManager {
-  #ctx = new AudioContext();
+  ctx = new AudioContext()
 
   constructor(options) {
     // contains sounds loaded via the load function
-    this.sounds = {};
+    this.sounds = {}
 
     // contains the current playing sounds
-    this.sources = [];
+    this.sources = []
 
-    this.state = options.state;
+    this.state = options.state
 
-    return this;
+    return this
   }
 
   /**
@@ -29,67 +29,65 @@ export default class AudioManager {
    * @returns {undefined} void
    */
   play(name, { mute }) {
-    if (mute) return;
+    if (mute) return
     if (Object.keys(this.sounds).length === 0) {
-      arachne.warn("tried to play a sound without loading it.");
+      arachne.warn('tried to play a sound without loading it.')
     }
 
-    const id = uuidv4();
+    const id = uuidv4()
 
-    const source = this.#ctx.createBufferSource();
-    const gainNode = this.#ctx.createGain();
-    source.connect(gainNode);
-    gainNode.connect(this.#ctx.destination);
+    const source = this.ctx.createBufferSource()
+    const gainNode = this.ctx.createGain()
+    source.connect(gainNode)
+    gainNode.connect(this.ctx.destination)
 
     // add the new audio to the sources, and set it's state to running.
-    this.sources.push({ name, id, source, state: "running" });
-    source.buffer = this.sounds[name];
-    source.connect(this.#ctx.destination);
+    this.sources.push({ name, id, source, state: 'running' })
+    source.buffer = this.sounds[name]
+    source.connect(this.ctx.destination)
 
     // this is meant to prevent sounds from overlapping.
     // if there is a sound source with the same name as
     // a source that is still playing, the new sound
     // does not play.
-    if (this.sources.find((item) => item.name === name)) {
-      if (
-        this.sources.every((item) => item.name === name).state === "running"
-      ) {
-        console.log("sound rejected.", name);
-        return;
+    if (this.sources.find(item => item.name === name)) {
+      if (this.sources.every(item => item.name === name).state === 'running') {
+        console.log('sound rejected.', name)
+        return
       }
     }
 
-    gainNode.gain.setValueAtTime(1, this.#ctx.currentTime);
+    gainNode.gain.setValueAtTime(1, this.ctx.currentTime)
 
-    if (gainNode.gain.value > 0) source.start();
+    if (gainNode.gain.value > 0) source.start()
 
     // whenever a sound stops, it's state is set to stopped, and it is removed
     // from the array of sources. this is to help when detecting sounds that might
     // be inappropriately running at the same time and overlapping.
-    source.addEventListener("ended", () => {
-      this.sources = this.sources.map((i) => {
+    source.addEventListener('ended', () => {
+      this.sources = this.sources.map(i => {
         if (i.id === id) {
           return {
             ...i,
-            state: "stopped",
-          };
-        } else return i;
-      });
+            state: 'stopped',
+          }
+        } else return i
+      })
 
-      this.sources.unshift();
+      this.sources.unshift()
       // console.log("sources", this.sources);
-    });
+    })
   }
 
   // close the audio manager's audiocontext.
   close() {
-    this.#ctx.close();
+    this.ctx.close()
   }
 
   // this could be used to refresh and reload the sound in the audiomanager's cache,
   // if that were for some reason needed.
   unload() {
-    this.sources = {};
+    this.sources = {}
   }
 
   /**
@@ -105,39 +103,39 @@ export default class AudioManager {
    */
   async load(names, format) {
     const promises = names.map(
-      (name) =>
+      name =>
         new Promise((resolve, reject) => {
-          const resolvedPath = `${BASE_PATH}${name}.${format}`;
+          const resolvedPath = `${BASE_PATH}${name}.${format}`
           fetch(resolvedPath)
-            .then((res) => res.arrayBuffer())
-            .then((buf) =>
-              this.#ctx
+            .then(res => res.arrayBuffer())
+            .then(buf =>
+              this.ctx
                 .decodeAudioData(buf)
-                .then((sound) => {
-                  this.sounds[name] = sound;
-                  resolve(true);
+                .then(sound => {
+                  this.sounds[name] = sound
+                  resolve(true)
                 })
-                .catch((err) => {
-                  arachne.error(`${err} (${name})`);
-                  reject(err);
+                .catch(err => {
+                  arachne.error(`${err} (${name})`)
+                  reject(err)
                 })
             )
-            .catch((err) => {
-              arachne.error(err);
-              reject(err);
-            });
-        }),
-    );
+            .catch(err => {
+              arachne.error(err)
+              reject(err)
+            })
+        })
+    )
 
-    const allSettled = await Promise.allSettled(promises).then((values) => {
+    const allSettled = await Promise.allSettled(promises).then(values => {
       const filteredValues = values.filter(
-        ({ status }) => status !== "rejected",
-      );
+        ({ status }) => status !== 'rejected'
+      )
 
-      return filteredValues;
-    });
+      return filteredValues
+    })
 
-    if (allSettled.length === names.length) return true;
-    else return false;
+    if (allSettled.length === names.length) return true
+    else return false
   }
 }

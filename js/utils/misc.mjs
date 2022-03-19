@@ -1,7 +1,7 @@
 import arachne from './arachne.mjs'
 
 export const hotkey = (key, fn) => {
-  window.addEventListener('keydown', ({ key: eventKey, repeat }) => {
+  addEventListener('keydown', ({ key: eventKey, repeat }) => {
     if (repeat) return
     if (eventKey === key) fn()
   })
@@ -43,8 +43,9 @@ const preventDefaultForScrollKeys = e => {
 }
 
 export const disableScroll = () => {
-  if (window.addEventListener)
-    window.addEventListener('DOMMouseScroll', preventDefault, false)
+  if (addEventListener) {
+    addEventListener('DOMMouseScroll', preventDefault, false)
+  }
   document.addEventListener('wheel', preventDefault, {
     passive: false,
   })
@@ -55,8 +56,9 @@ export const disableScroll = () => {
 }
 
 export const enableScroll = () => {
-  if (window.removeEventListener)
-    window.removeEventListener('DOMMouseScroll', preventDefault, false)
+  if (removeEventListener) {
+    removeEventListener('DOMMouseScroll', preventDefault, false)
+  }
   document.removeEventListener('wheel', preventDefault, {
     passive: false,
   })
@@ -84,7 +86,7 @@ export const replaceAt = (string, index, replaceWith) =>
 
 export const uuidv4 = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-    let r = (Math.random() * 16) | 0,
+    const r = (Math.random() * 16) | 0,
       v = c === 'x' ? r : (r & 0x3) | 0x8
     return v.toString(16)
   })
@@ -104,7 +106,7 @@ export const throttle = (fn, threshold) => {
   let last, deferTimer
 
   return () => {
-    let now = +new Date()
+    const now = +new Date()
     if (last && now < last + threshold) {
       // hold on to it
       clearTimeout(deferTimer)
@@ -122,49 +124,35 @@ export const throttle = (fn, threshold) => {
 /**
  * getAverageColor - calculates the average color of the image provided.
  *
- * @param {HTMLElement} imgEl an html <img> element containing the image
+ * @param {HTMLElement} img an html <img> element containing the image
  * that you want to get the average color of.
  *
  * @returns {object} object containing r, g, and b values for the
  * calculated average color
  */
-export const getAverageColor = imgEl => {
-  let blockSize = 5, // only visit every 5 pixels
-    defaultRGB = { r: 0, g: 0, b: 0 }, // for non-supporting envs
-    canvas = document.createElement('canvas'),
-    context = canvas.getContext && canvas.getContext('2d'),
-    data,
-    width,
-    height,
-    i = -4,
-    length,
-    rgb = { r: 0, g: 0, b: 0 },
-    count = 0
+export const getAverageColor = img => {
+  const blockSize = 5
+  const canvas = document.createElement('canvas')
+  const rgb = { r: 0, g: 0, b: 0 }
+  const context = canvas.getContext('2d')
 
-  if (!context) {
-    return defaultRGB
-  }
+  canvas.width = img.naturalWidth || img.offsetWidth || img.width
+  canvas.height = img.naturalHeight || img.offsetHeight || img.height
 
-  height = canvas.height =
-    imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height
-  width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width
+  let i = -4
+  let count = 0
+  const { width, height } = canvas
 
-  context.drawImage(imgEl, 0, 0)
+  context.drawImage(img, 0, 0)
 
-  try {
-    data = context.getImageData(0, 0, width, height)
-  } catch (e) {
-    /* security error, img on diff domain */
-    return defaultRGB
-  }
-
-  length = data.data.length
+  const { data } = context.getImageData(0, 0, width, height)
+  const length = data.data.length
 
   while ((i += blockSize * 4) < length) {
     ++count
-    rgb.r += data.data[i]
-    rgb.g += data.data[i + 1]
-    rgb.b += data.data[i + 2]
+    rgb.r += data[i]
+    rgb.g += data[i + 1]
+    rgb.b += data[i + 2]
   }
 
   // ~~ used to floor values

@@ -10,6 +10,6 @@ export {
   getAverageColor,
 } from './misc.mjs'
 export { colorSchemeToUse } from './colortools.mjs'
-export { default as Minerva } from './state/state.mjs'
+export { default as Minerva } from './state/minerva.mjs'
 export { default as Arachne } from './arachne.mjs'
 export { default as html } from './html.mjs'

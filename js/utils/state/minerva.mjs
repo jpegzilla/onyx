@@ -7,7 +7,7 @@ import arachne from './../arachne.mjs'
  * Minerva - state manager!
  */
 class Minerva {
-  static #_store = window.localStorage
+  static _store = window.localStorage
 
   static defaultSettings = {
     volume: { effect: 100 },
@@ -26,6 +26,7 @@ class Minerva {
     this.temp = {}
     this.ident = ident
     this.store = this.load() || Minerva.defaultSettings
+    this.hasAllSounds = false
 
     this.save()
 
@@ -44,7 +45,7 @@ class Minerva {
       return
     }
 
-    const store = JSON.parse(Minerva.#_store.getItem(this.ident))
+    const store = JSON.parse(Minerva._store.getItem(this.ident))
 
     return store[key] || this.store[key]
   }
@@ -107,16 +108,16 @@ class Minerva {
   }
 
   save() {
-    Minerva.#_store.setItem(this.ident, JSON.stringify(this.store))
+    Minerva._store.setItem(this.ident, JSON.stringify(this.store))
   }
 
   clear() {
-    Minerva.#_store.removeItem(this.ident)
+    Minerva._store.removeItem(this.ident)
   }
 
   load() {
     try {
-      return JSON.parse(Minerva.#_store.getItem(this.ident))
+      return JSON.parse(Minerva._store.getItem(this.ident))
     } catch {
       return null
     }

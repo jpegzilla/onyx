@@ -1,0 +1,28 @@
+@use './vars' as v
+@use './../animations/bgshake' as b
+
+.filters
+  +v.flexcenter
+
+  height: 100vh
+  width: 100vw
+  position: fixed
+  z-index: 9999
+  pointer-events: none
+  user-select: none
+  top: 0
+  left: 0
+  overflow: hidden
+
+  &.noise::after
+    +b.bgshake(0.5s)
+
+    content: ''
+    background-image: url("./assets/img/textures/noise.png")
+    opacity: 0.55
+    background-repeat: repeat
+    background-size: 5rem
+    background-position: center 40%
+    height: 300vh
+    min-width: 300vw
+    display: block
