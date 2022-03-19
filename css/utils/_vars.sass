@@ -39,6 +39,8 @@ $eris-light: #e25b93
 $black-dark: #060408
 $white-bright: #fcfdff
 
+$red: $eris
+
 $rainbow-grad-hor: linear-gradient(90deg, rgb(237, 172, 204) 10%, rgb(17, 249, 223) 30%, rgb(255, 241, 81) 50%, rgb(235, 155, 208) 70%, rgb(124, 210, 255) 90%)
 
 $rainbow-grad-vert: linear-gradient(0deg, rgb(237, 172, 204) 10%, rgb(17, 249, 223) 30%, rgb(255, 241, 81) 50%, rgb(235, 155, 208) 70%, rgb(124, 210, 255) 90%)
@@ -91,19 +93,26 @@ $layer-overlay: 54
 =blurbg($distance: 2px, $sat: 180%)
   backdrop-filter: blur($distance) saturate($sat)
 
-// =theme($theme: "dark")
-//   --text-highlight: #{$red-in-mid}
-//
-//   @if $theme == "light"
-//     --bg-main: #{$white-bright}
-//     --bg-main-halfop: #{color.adjust($white-bright, $alpha: -0.5)}
-//     --text-main: #{$black-blue}
-//     --hl-main: #{$red-in-mid}
-//   @else if $theme == "dark"
-//     --bg-main: #{$black-dark}
-//     --bg-main-halfop: #{color.adjust($black-dark, $alpha: -0.5)}
-//     --text-main: #{$white-bright}
-//     --hl-main: #{$red-in-mid}
+=theme($theme: "dark")
+  @if $theme == "light"
+    --bg-color: #{$white-bright}
+    --bg-color-half: #{color.adjust($white-bright, $alpha: -0.5)}
+    --text-color: #{$black-dark}
+    --hl-color: #{$red}
+  @else if $theme == "dark"
+    --bg-color: #{$black-dark}
+    --bg-color-half: #{color.adjust($black-dark, $alpha: -0.5)}
+    --text-color: #{$white-bright}
+    --hl-color: #{$red}
+
+=fontcolor
+  color: var(--text-color)
+
+=bgcolor
+  background-color: var(--bg-color)
+
+=hlcolor
+  background-color: var(--hl-color-override, --hl-color)
 
 =flexcenter($left: false)
   display: flex

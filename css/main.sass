@@ -2,3 +2,10 @@
 
 @use 'utils/defaults'
 @use 'utils/vars' as v
+
+:root
+  &.dark
+    +v.theme("dark")
+
+  &.light
+    +v.theme("dark")
