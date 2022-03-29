@@ -1,0 +1,10 @@
+=deepspin($speed: 2s)
+  @keyframes deepspin
+    from
+      transform: rotate3d(1.25, 1, 2, 0.5turn)
+
+    to
+      transform: rotate3d(1.25, 1, 2, -0.5turn)
+
+  animation: deepspin $speed infinite linear
+  transform-style: preserve-3d
