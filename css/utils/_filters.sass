@@ -2,23 +2,23 @@
 @use './../animations/bgshake' as b
 
 .filters
-  +v.flexcenter
+  +v.center
 
   height: 100vh
-  width: 100vw
-  position: fixed
-  z-index: 9999
-  pointer-events: none
-  user-select: none
-  top: 0
   left: 0
   overflow: hidden
+  pointer-events: none
+  position: fixed
+  top: 0
+  user-select: none
+  width: 100vw
+  z-index: v.$layer-overlay
 
   &.noise::after
     +b.bgshake(0.5s)
 
     content: ''
-    background-image: url("./assets/img/textures/noise.png")
+    background-image: url("./../assets/img/textures/noise.png")
     opacity: 0.55
     background-repeat: repeat
     background-size: 5rem

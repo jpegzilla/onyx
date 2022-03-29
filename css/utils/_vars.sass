@@ -67,21 +67,18 @@ $pflag-blue: #007ce0
 
 // フォント
 
-// $msgothic: "ＭＳ ゴシック", "ms gothic", monospace
-// $kaisho: "kaisho", serif
-// $crimson: "crimson", serif
-// $nunito: "Nunito Sans", sans-serif
-// $kosugi: "kosugi", sans-serif
-// $prompt: "prompt", $nunito, sans-serif
-// $neutral: "neutral", $nunito, sans-serif
+$kurenaido: "zen kurenaido", sans-serif
+$redhat: "red hat mono", monospace
+$poppins: "poppins", sans-serif
+$montserrat: "montserrat alternates", sans-serif
 
 // レイヤー
 
 $layer-underlay: 48
 $layer-sections: 49
-$layer-deco-grid: 50
 $layer-controls: 51
 $layer-header: 52
+$layer-loading-screen: 53
 $layer-overlay: 54
 
 // mixins
@@ -99,11 +96,15 @@ $layer-overlay: 54
     --bg-color-half: #{color.adjust($white-bright, $alpha: -0.5)}
     --text-color: #{$black-dark}
     --hl-color: #{$red}
+    --fade-color: #{color.adjust($black-dark, $alpha: -0.5)}
+    --fade-bg: #{color.adjust($black-dark, $alpha: -0.95)}
   @else if $theme == "dark"
     --bg-color: #{$black-dark}
     --bg-color-half: #{color.adjust($black-dark, $alpha: -0.5)}
     --text-color: #{$white-bright}
     --hl-color: #{$red}
+    --fade-color: #{color.adjust($white-bright, $alpha: -0.5)}
+    --fade-bg: #{color.adjust($white-bright, $alpha: -0.95)}
 
 =fontcolor
   color: var(--text-color)
@@ -114,13 +115,16 @@ $layer-overlay: 54
 =hlcolor
   background-color: var(--hl-color-override, --hl-color)
 
-=flexcenter($left: false)
+=fadecolor
+  color: var(--fade-color)
+
+=fadebg
+  background-color: var(--fade-bg)
+
+=center
   display: flex
   align-items: center
   justify-content: center
-
-  @if $left
-    justify-content: flex-start
 
 =no-scrollbar
   scrollbar-width: none
@@ -218,6 +222,10 @@ $layer-overlay: 54
   padding: 0
 
 =big
+  height: 100vh
+  width: 100vw
+
+=fill
   height: 100%
   width: 100%
 
@@ -229,3 +237,18 @@ $layer-overlay: 54
 =ffonly
   @-moz-document url-prefix()
     @content
+
+=croptext($lineheight)
+  &::before
+    content: ''
+    display: block
+    height: 0
+    width: 0
+    margin-top: calc((1 - #{$lineheight}) * 0.5em)
+
+=lightmono
+  +croptext(1)
+
+  font-variation-settings: 'wght' 300
+  font-family: $redhat
+  line-height: 1
