@@ -1,1 +1,34 @@
 @use '../utils/vars' as v
+@use '../animations/crashturn' as c
+@use '../animations/fadeout' as fo
+
+#loadingscreen
+  +v.big
+
+  z-index: v.$layer-loading-screen
+  position: fixed
+
+  &.fadeout .loading-screen-container
+    +fo.fadeout(0.25s)
+
+  .loading-screen-container
+    +v.bgcolor
+    +v.big
+
+    align-items: flex-start
+    display: flex
+    justify-content: flex-end
+    padding: v.$p-l
+    will-change: opacity
+
+  .loading-screen
+    +v.center
+    +v.fill
+
+    &-logo
+      +c.crashturn(4s, 361deg)
+
+      $size: 4rem
+
+      height: $size
+      width: $size

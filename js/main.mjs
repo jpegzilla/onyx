@@ -4,17 +4,13 @@ import {
   Minerva,
   translationToUse,
 } from './utils/index.mjs'
-import { LoadingScreen } from './components/index.mjs'
+import components from './components/index.mjs'
 
 export const minerva = new Minerva('jpegzilla-onyx')
 export const arachne = Arachne
 
-const setupUserPrefs = (minerva, _arachne) => {
-  console.log(
-    { colorSchemeToUse, translationToUse },
-    minerva.get('colorScheme'),
-    minerva.get('language')
-  )
+const setupUserPrefs = minerva => {
+  console.log({ colorSchemeToUse, translationToUse })
 
   const { highlight } = minerva.get('systemColors')
 
@@ -29,8 +25,14 @@ const setupUserPrefs = (minerva, _arachne) => {
   setColorScheme(minerva.get('colorScheme'))
   setLanguage(minerva.get('language'))
 
-  minerva.on('language', setColorScheme)
-  minerva.on('colorScheme', setLanguage)
+  minerva.set('arrivals', minerva.get('arrivals') + 1)
+
+  minerva.on('language', setLanguage)
+  minerva.on('colorScheme', setColorScheme)
+
+  if (minerva.get('arrivals') > 0) {
+    minerva.set('newPlayer', false)
+  }
 
   if (!minerva.get('colorScheme')) {
     minerva.set('colorScheme', colorSchemeToUse)
@@ -43,9 +45,7 @@ const setupUserPrefs = (minerva, _arachne) => {
   document.documentElement.style.setProperty('--hl-color-override', highlight)
 }
 
-const elements = [LoadingScreen]
-
-elements.forEach(({ name, element }) => {
+components.forEach(({ name, element }) => {
   if (name && element) customElements.define(name, element)
 })
 

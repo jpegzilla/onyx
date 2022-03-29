@@ -1,0 +1,36 @@
+@use 'sass:color' as c
+@use '../utils/vars' as v
+
+#onyx-header
+  +v.fill
+
+  grid-area: header
+  padding: v.$p-m
+
+  header
+    display: flex
+    flex-direction: row
+    align-items: center
+    gap: v.$halfgap
+
+    b
+      flex-grow: 666
+
+    .header-logo
+      $size: 2.5rem
+
+      height: $size
+      width: $size
+
+    .header-wordmark
+      +v.croptext(1)
+
+      font-family: v.$montserrat
+      font-size: 1.5rem
+      line-height: 1
+
+      .fade
+        +v.fadecolor
+
+    .header-status-info
+      +v.lightmono

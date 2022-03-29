@@ -1,5 +1,5 @@
 import Component from './component.mjs'
-// import { html } from "./../utils/index.mjs";
+import { html } from './../utils/index.mjs'
 import { arachne, minerva } from './../main.mjs'
 
 const sounds = ['click_small', 'click', 'failure', 'hover', 'success']
@@ -9,7 +9,7 @@ class LoadingScreen extends Component {
     super()
 
     this.name = 'loadingscreen'
-    this.id = 'loading-screen'
+    this.id = 'loadingscreen'
   }
 
   async loadAssets() {
@@ -32,6 +32,8 @@ class LoadingScreen extends Component {
     })
 
     try {
+      // look, maybe, just maybe I'll load some other assets here.
+      // I swear it *needs* to be Promise.allSettled
       await Promise.allSettled([loadSounds])
     } catch (err) {
       arachne.error(err)
@@ -43,10 +45,27 @@ class LoadingScreen extends Component {
   }
 
   allDone() {
-    console.log('remove loading screen now!')
+    this.querySelector('.loading-screen-container').addEventListener(
+      'animationend',
+      e => {
+        if (e.target !== e.currentTarget) return
+
+        setTimeout(() => {
+          this.remove()
+        }, 500)
+      }
+    )
+
+    this.addClass('fadeout')
   }
 
   connectedCallback() {
+    this.innerHTML = html`<section class="loading-screen-container">
+      <div class="loading-screen">
+        <onyx-logo class="loading-screen-logo" />
+      </div>
+    </section>`
+
     this.loadAssets().then(val => {
       if (val) minerva.hasAllSounds = true
       else minerva.hasAllSounds = false

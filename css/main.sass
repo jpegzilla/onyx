@@ -1,11 +1,28 @@
 // compile main
 
+@use "utils/fontfaces"
 @use 'utils/defaults'
 @use 'utils/vars' as v
+@use 'utils/filters'
+
+// components
+
+@use "components/loadingscreen"
+@use "components/maincontainer"
+@use "components/header"
 
 :root
   &.dark
     +v.theme("dark")
 
   &.light
-    +v.theme("dark")
+    +v.theme("light")
+
+  +v.bgcolor
+
+body
+  +v.fontcolor
+  +v.bgcolor
+  +v.big
+
+  display: grid

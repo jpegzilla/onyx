@@ -1,6 +1,6 @@
 // ♪音楽 → LANGE FEAT. SKYE - DRIFTING AWAY : https://www.youtube.com/watch?v=ktmcNflvDwk
 
-import AudioManager from './../managers/audiomanager.mjs'
+import AudioManager from './../managers/audioManager.mjs'
 import arachne from './../arachne.mjs'
 
 /**
@@ -12,9 +12,11 @@ class Minerva {
   static defaultSettings = {
     volume: { effect: 100 },
     timeFormat: '24hr',
-    systemColors: { highlight: 'e0005d' },
+    systemColors: { highlight: '#e0005d' },
     machine: 'ONYX', // 4 character name of machine, customizable by user
     mute: false,
+    newPlayer: true,
+    arrivals: 0,
   }
 
   constructor(ident) {
@@ -74,7 +76,7 @@ class Minerva {
 
       this.save()
 
-      if (this.events[key]) this.events[key].forEach(fn => fn(val))
+      if (this.events[key]) this.events[key].forEach(fn => fn(item))
 
       return this
     } catch (err) {
