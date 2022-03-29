@@ -1,0 +1,4 @@
+kurenaido font - 大平善道 - https://zenfont.jp/
+montserrat alternates - julieta ulanovsky - https://github.com/JulietaUla/Montserrat
+poppins - ninad kale / jonny pinhorn - https://github.com/itfoundry/poppins
+space mono - colophon foundry - https://www.colophon-foundry.org/
