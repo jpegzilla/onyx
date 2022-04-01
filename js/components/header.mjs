@@ -10,6 +10,7 @@ class Header extends Component {
 
     this.name = 'onyx-header'
     this.id = 'onyx-header'
+    this.twelveHourTime = false
   }
 
   get greeting() {
@@ -29,6 +30,8 @@ class Header extends Component {
       case timesArrived > 30:
         return "it's good to see you."
     }
+
+    return 'hello!'
   }
 
   connectedCallback() {
@@ -46,9 +49,22 @@ class Header extends Component {
           <span class="greeting">${this.greeting}</span>
         </div>
       </header>
+      <b class="border-bottom"></b>
     `
 
-    handleClock(this.querySelector('.clock'))
+    this.querySelector('.clock').addEventListener('click', () => {
+      if (this.twelveHourTime) {
+        minerva.set('timeFormat', '24hr')
+        this.twelveHourTime = false
+      } else {
+        minerva.set('timeFormat', '12hr')
+        this.twelveHourTime = true
+      }
+
+      handleClock(this.querySelector('.clock'), minerva)
+    })
+
+    handleClock(this.querySelector('.clock'), minerva)
   }
 }
 

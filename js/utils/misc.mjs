@@ -162,3 +162,13 @@ export const getAverageColor = img => {
 
   return rgb
 }
+
+export const setCustomProperty = (property, value) => {
+  document.documentElement.style.setProperty(property, value)
+}
+
+export const getCustomProperty = property => {
+  return getComputedStyle(document.querySelector(':root'))
+    .getPropertyValue(property)
+    .trim()
+}

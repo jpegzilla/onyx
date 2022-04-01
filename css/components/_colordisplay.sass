@@ -1,0 +1,28 @@
+@use 'sass:color' as c
+@use '../utils/vars' as v
+
+#colordisplay
+  +v.fill
+
+  grid-area: color-display
+
+  .color-display-container
+    $lineheight: 1.2
+
+    +v.fill
+    +v.colordisplaycolor
+
+    .hex-value-background, .hex-value-foreground
+      +v.croptext($lineheight)
+
+      font-family: v.$redhat
+      line-height: $lineheight
+
+    .hex-value-foreground
+      font-size: 14rem
+      font-variation-settings: "wght" 599
+      margin-bottom: -1rem
+
+    .hex-value-background
+      font-size: 2rem
+      opacity: 0.4

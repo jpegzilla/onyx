@@ -5,13 +5,22 @@
   +v.fill
 
   grid-area: header
-  padding: v.$p-m
+  margin-bottom: v.$p-s
+
+  .border-bottom
+    +v.fadecolor
+
+    height: 1px
+    width: 100%
+    background-color: currentColor
+    display: block
 
   header
+    align-items: center
     display: flex
     flex-direction: row
-    align-items: center
     gap: v.$halfgap
+    padding-bottom: v.$p-l
 
     b
       flex-grow: 666
@@ -34,3 +43,6 @@
 
     .header-status-info
       +v.lightmono
+
+    .clock
+      cursor: pointer

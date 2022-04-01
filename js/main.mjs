@@ -3,11 +3,15 @@ import {
   colorSchemeToUse,
   Minerva,
   translationToUse,
+  setCustomProperty,
+  getCustomProperty,
 } from './utils/index.mjs'
 import components from './components/index.mjs'
 
 export const minerva = new Minerva('jpegzilla-onyx')
 export const arachne = Arachne
+
+minerva.set('loaded', false)
 
 const setupUserPrefs = minerva => {
   console.log({ colorSchemeToUse, translationToUse })
@@ -42,11 +46,24 @@ const setupUserPrefs = minerva => {
     minerva.set('language', translationToUse)
   }
 
-  document.documentElement.style.setProperty('--hl-color-override', highlight)
+  setCustomProperty('--hl-color-override', highlight)
+
+  const colors = {
+    fg: getCustomProperty('--text-color'),
+    bg: getCustomProperty('--bg-color'),
+  }
+
+  minerva.set('colors', colors)
 }
 
+const allMounted = components.map(({ name }) =>
+  customElements.whenDefined(name)
+)
 components.forEach(({ name, element }) => {
   if (name && element) customElements.define(name, element)
 })
 
-setupUserPrefs(minerva)
+Promise.all(allMounted).then(() => {
+  setupUserPrefs(minerva)
+  minerva.set('loaded', true)
+})

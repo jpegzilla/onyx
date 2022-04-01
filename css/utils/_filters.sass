@@ -3,15 +3,14 @@
 
 .filters
   +v.center
+  +v.fill
 
-  height: 100vh
   left: 0
   overflow: hidden
   pointer-events: none
   position: fixed
   top: 0
   user-select: none
-  width: 100vw
   z-index: v.$layer-overlay
 
   &.noise::after
@@ -19,7 +18,7 @@
 
     content: ''
     background-image: url("./../assets/img/textures/noise.png")
-    opacity: 0.55
+    opacity: 0.8
     background-repeat: repeat
     background-size: 5rem
     background-position: center 40%

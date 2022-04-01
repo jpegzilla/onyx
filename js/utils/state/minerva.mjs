@@ -13,6 +13,8 @@ class Minerva {
     volume: { effect: 100 },
     timeFormat: '24hr',
     systemColors: { highlight: '#e0005d' },
+    colors: {},
+    palettes: [],
     machine: 'ONYX', // 4 character name of machine, customizable by user
     mute: false,
     newPlayer: true,
@@ -27,8 +29,11 @@ class Minerva {
     this.events = {}
     this.temp = {}
     this.ident = ident
-    this.store = this.load() || Minerva.defaultSettings
+    this.store =
+      { ...Minerva.defaultSettings, ...this.load() } || Minerva.defaultSettings
     this.hasAllSounds = false
+
+    console.log(this.store)
 
     this.save()
 
@@ -59,7 +64,8 @@ class Minerva {
   }
 
   play(sound) {
-    this.store.audio &&
+    this.hasAllSounds &&
+      this.store.audio &&
       this.audioManager.play(sound, {
         mute: this.get('mute'),
       })

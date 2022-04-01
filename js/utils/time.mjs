@@ -1,7 +1,11 @@
-export const handleClock = clockElement => {
+export const handleClock = (clockElement, minerva) => {
   setInterval(() => {
-    const hour = new Date().getHours().toString()
+    let hour = new Date().getHours().toString()
     const minute = new Date().getMinutes().toString()
+
+    if (minerva.get('timeFormat') === '12hr') {
+      hour = (((parseInt(hour) + 11) % 12) + 1).toString()
+    }
 
     const timeString = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`
 
