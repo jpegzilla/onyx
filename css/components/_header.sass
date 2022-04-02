@@ -5,12 +5,14 @@
   +v.fill
 
   grid-area: header
-  margin-bottom: v.$p-s
+  margin-bottom: v.$p-l
+
+  @media (max-width: v.$breakpoint-tiny)
+    margin-bottom: v.$p-s
 
   .border-bottom
-    +v.fadecolor
-
     height: 1px
+    transform: scaleY(0.25)
     width: 100%
     background-color: currentColor
     display: block
@@ -20,7 +22,7 @@
     display: flex
     flex-direction: row
     gap: v.$halfgap
-    padding-bottom: v.$p-l
+    padding-bottom: v.$p-s
 
     b
       flex-grow: 666
@@ -40,6 +42,9 @@
 
       .fade
         +v.fadecolor
+
+        @media (max-width: v.$breakpoint-tiny)
+          display: none
 
     .header-status-info
       +v.lightmono

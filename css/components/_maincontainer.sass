@@ -15,3 +15,9 @@ main
   max-width: v.$max-width
   padding: v.$p-l
   z-index: v.$layer-sections
+
+  @media (max-width: v.$breakpoint-tiny)
+    padding: v.$p-m
+
+  @media (max-width: v.$breakpoint-miniscule)
+    padding: v.$p-s

@@ -19,10 +19,17 @@
       line-height: $lineheight
 
     .hex-value-foreground
-      font-size: 14rem
-      font-variation-settings: "wght" 599
+      font-size: 12rem
+      font-variation-settings: "wght" 600
       margin-bottom: -1rem
 
+      @media (max-width: v.$breakpoint-tiny)
+        font-variation-settings: "wght" 500
+        font-size: 8rem
+
+      @media (max-width: v.$breakpoint-miniscule)
+        font-size: 6rem
+
     .hex-value-background
-      font-size: 2rem
+      font-size: 1.5rem
       opacity: 0.4
