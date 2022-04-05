@@ -163,6 +163,13 @@ export const getAverageColor = img => {
   return rgb
 }
 
+export const getUrlParams = () => {
+  const vars = {}
+  const regex = /[?&]+([^=&]+)=([^&]*)/gi
+  window.location.href.replace(regex, (_, key, val) => (vars[key] = val))
+  return vars
+}
+
 export const setCustomProperty = (property, value) => {
   document.documentElement.style.setProperty(property, value)
 }
