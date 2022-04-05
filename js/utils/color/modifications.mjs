@@ -21,7 +21,7 @@ export const shiftHue = (rgb, deg) => {
 
 // function to change color's saturation
 export const shiftSat = (rgb, deg) => {
-  let hsl = rgbToNHSL(rgb.r, rgb.g, rgb.b)
+  const hsl = rgbToNHSL(rgb.r, rgb.g, rgb.b)
 
   if (deg > 100 || deg < -100)
     throw new RangeError(
@@ -47,7 +47,7 @@ export const changeShade = (color, amount) => {
     usePound = true
   }
 
-  let num = parseInt(color, 16)
+  const num = parseInt(color, 16)
 
   let r = (num >> 16) + amount
 

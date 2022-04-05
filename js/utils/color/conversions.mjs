@@ -1,3 +1,12 @@
+import {
+  RGB_MAX,
+  LUM_DIVISOR_H,
+  LUM_ADDEND,
+  XYZ_THRESHOLD,
+  RGB_THRESHOLD,
+  TAU,
+} from './constants.mjs'
+
 export const hexToRGBA = hex => {
   if (!hex || typeof hex != 'string' || hex.length < 3) return false
   if (hex.split('').indexOf('#') == 0) hex = hex.substring(1)
@@ -17,7 +26,7 @@ export const hexToRGBA = hex => {
       throw new Error('please enter rgb(a) values only between 0 and F.')
     }
 
-    return { r, g, b }
+    return { r, g, b, a: 1 }
   } else if (hex.length == 3) {
     hex.split('')
     hex = [hex[0], hex[0], hex[1], hex[1], hex[2], hex[2]]
@@ -137,7 +146,7 @@ export const rgbToNHSL = (r, g, b) => {
   }
 }
 
-export const rgbToHSL = (r, g, b) => {
+export const rgbaToHSLA = (r, g, b, a) => {
   const red = r / RGB_MAX
   const green = g / RGB_MAX
   const blue = b / RGB_MAX
@@ -166,7 +175,14 @@ export const rgbToHSL = (r, g, b) => {
     h: h.toFixed(2),
     s: s.toFixed(2) + '%',
     l: l.toFixed(2) + '%',
+    a,
   }
+}
+
+export const hexToHSLA = hex => {
+  const { r, g, b, a } = hexToRGBA(hex)
+
+  return rgbaToHSLA(r, g, b, a)
 }
 
 // returns h, s, and l in the set [0, 1]
@@ -209,4 +225,97 @@ export const numToHex = num => {
   return isNaN(num)
     ? '00'
     : hexDigits[(num - (num % 16)) / 16] + hexDigits[num % 16]
+}
+
+export const hexToHWB = hex => {
+  const { r, g, b, a } = hexToRGBA(hex)
+  const { h, s, l } = rgbaToHSLA(r, g, b, a)
+  const hwbH = parseInt(h)
+  const hwbW = parseInt(s)
+  const hwbV = parseInt(l)
+  const hwbB = 100 - parseInt(hwbV)
+
+  return { h: hwbH, w: `${hwbW}%`, b: `${hwbB}%`, a }
+}
+
+export const rgbToXYZ = (red, green, blue) => {
+  let r = red / RGB_MAX,
+    g = green / RGB_MAX,
+    b = blue / RGB_MAX,
+    x,
+    y,
+    z
+
+  r =
+    r > RGB_THRESHOLD
+      ? Math.pow((r + LUM_ADDEND) / 1.055, 2.4)
+      : r / LUM_DIVISOR_H
+  g =
+    g > RGB_THRESHOLD
+      ? Math.pow((g + LUM_ADDEND) / 1.055, 2.4)
+      : g / LUM_DIVISOR_H
+  b =
+    b > RGB_THRESHOLD
+      ? Math.pow((b + LUM_ADDEND) / 1.055, 2.4)
+      : b / LUM_DIVISOR_H
+
+  x = (r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047
+  y = (r * 0.2126 + g * 0.7152 + b * 0.0722) / 1.0
+  z = (r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883
+
+  x = x > XYZ_THRESHOLD ? Math.pow(x, 1 / 3) : 7.787 * x + 16 / 116
+  y = y > XYZ_THRESHOLD ? Math.pow(y, 1 / 3) : 7.787 * y + 16 / 116
+  z = z > XYZ_THRESHOLD ? Math.pow(z, 1 / 3) : 7.787 * z + 16 / 116
+
+  return { x, y, z }
+}
+
+export const rgbToLAB = (r, g, b, a, trunc = true) => {
+  const { x, y, z } = rgbToXYZ(r, g, b)
+
+  if (trunc) {
+    return {
+      l: `${(116 * y - 16).toFixed(4)}%`,
+      a: (500 * (x - y)).toFixed(4),
+      b: (200 * (y - z)).toFixed(4),
+      alpha: a,
+    }
+  }
+
+  return {
+    l: `${116 * y - 16}%`,
+    a: 500 * (x - y),
+    b: 200 * (y - z),
+    alpha: a,
+  }
+}
+
+export const hexToLAB = hex => {
+  const { r, g, b, a } = hexToRGBA(hex)
+
+  return rgbToLAB(r, g, b, a)
+}
+
+export const hexToXYZ = hex => {
+  const { r, g, b } = hexToRGBA(hex)
+  const { x, y, z } = rgbToXYZ(r, g, b)
+
+  return {
+    x: x.toFixed(2),
+    y: y.toFixed(2),
+    z: z.toFixed(2),
+  }
+}
+
+export const labToLCH = (l, a, b, alpha) => ({
+  l,
+  c: Math.hypot(a, b),
+  h: (Math.atan2(b, a) * 360) / TAU,
+  a: alpha,
+})
+
+export const hexToLCH = hex => {
+  const { l, a, b, a: alpha } = hexToLAB(hex)
+
+  return labToLCH(l, a, b, alpha)
 }
