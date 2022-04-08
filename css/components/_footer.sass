@@ -1,0 +1,66 @@
+@use 'sass:color' as c
+@use '../utils/vars' as v
+
+#onyx-footer
+  +v.fill
+  +v.lightmono
+
+  grid-area: footer
+
+  .border-top
+    height: 1px
+    transform: scaleY(0.25)
+    width: 100%
+    background-color: currentColor
+    display: block
+
+  footer
+    align-items: center
+    display: flex
+    flex-direction: row
+    gap: v.$halfgap
+    padding-top: v.$p-s
+
+    @media (max-width: v.$breakpoint-miniscule)
+      display: grid
+
+    b
+      flex-grow: 666
+
+    .footer-attribution
+      +v.croptext(1.2)
+
+      font-size: 0.8rem
+      line-height: 1.1rem
+
+      a
+        color: currentColor
+
+    button,
+    .workspace-attr
+      +v.destroy
+      +v.inversefontcolor
+      +v.fadebg
+      +v.croptext(1.2)
+
+      cursor: pointer
+      font-size: 0.8rem
+      font-variation-settings: "wght" 450
+      line-height: 1.1rem
+      padding: 0.15rem 0.25rem
+      border-radius: v.$border-radius
+      text-align: center
+      max-height: max-content
+
+    .workspace-info
+      display: grid
+      grid-template-columns: 1fr 1fr
+      gap: v.$halfgap
+
+      @media (max-width: v.$breakpoint-miniscule)
+        flex-direction: column
+
+    .workspace-name,
+    .workspace-type
+      +v.hlbg
+      +v.fontcolor

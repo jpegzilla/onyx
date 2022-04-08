@@ -3,21 +3,16 @@
 $grid-area-1: "header header header"
 $grid-area-2: "color-display data previews"
 $grid-area-3: "controls controls 3d-preview"
+$grid-area-4: "footer footer footer"
 
 main
   +v.big
 
   display: grid
   gap: v.$p-s
-  grid-template-areas: $grid-area-1 $grid-area-2 $grid-area-3
-  grid-template-rows: auto 2fr 1fr
+  grid-template-areas: $grid-area-1 $grid-area-2 $grid-area-3 $grid-area-4
+  grid-template-rows: auto 2fr 1fr auto
   grid-template-columns: 3fr 1fr 1fr
   max-width: v.$max-width
-  padding: v.$p-l
+  padding: v.$p-m v.$p-l v.$p-s v.$p-l
   z-index: v.$layer-sections
-
-  @media (max-width: v.$breakpoint-tiny)
-    padding: v.$p-m
-
-  @media (max-width: v.$breakpoint-miniscule)
-    padding: v.$p-s
