@@ -93,18 +93,22 @@ $layer-overlay: 54
 =theme($theme: "dark")
   @if $theme == "light"
     --bg-color: #{$white-bright}
+    --inverse-bg-color: #{$black-dark}
     --bg-color-half: #{color.adjust($white-bright, $alpha: -0.5)}
     --text-color: #{$black-dark}
+    --inverse-color: #{$white-bright}
     --hl-color: #{$red}
     --fade-color: #{color.adjust($black-dark, $alpha: -0.5)}
     --fade-bg: #{color.adjust($black-dark, $alpha: -0.95)}
   @else if $theme == "dark"
     --bg-color: #{$black-dark}
+    --inverse-bg-color: #{$white-bright}
     --bg-color-half: #{color.adjust($black-dark, $alpha: -0.5)}
     --text-color: #{$white-bright}
+    --inverse-color: #{$black-dark}
     --hl-color: #{$red}
     --fade-color: #{color.adjust($white-bright, $alpha: -0.5)}
-    --fade-bg: #{color.adjust($white-bright, $alpha: -0.95)}
+    --fade-bg: #{color.adjust($white-bright, $alpha: -0.2)}
 
 =fontcolor
   color: var(--text-color)
@@ -129,6 +133,12 @@ $layer-overlay: 54
 
 =colordisplaycolor
   color: var(--color-display-color)
+
+=inversebg
+  background-color: var(--inverse-bg-color)
+
+=inversefontcolor
+  background-color: var(--inverse-color)
 
 =center
   display: flex
@@ -248,12 +258,17 @@ $layer-overlay: 54
     @content
 
 =croptext($lineheight)
-  &::before
+  &::before, &::after
     content: ''
     display: block
     height: 0
     width: 0
+
+  &::before
     margin-top: calc((1 - #{$lineheight}) * 0.5em)
+
+  &::after
+    margin-bottom: calc((1 - #{$lineheight}) * 0.5em)
 
 =lightmono
   +croptext(1)
@@ -261,3 +276,11 @@ $layer-overlay: 54
   font-variation-settings: 'wght' 300
   font-family: $redhat
   line-height: 1
+
+=destroy
+  font-size: 100%
+  font-family: inherit
+  border: 0
+  padding: 0
+  margin: 0
+  background: none
