@@ -15,10 +15,11 @@ class Minerva {
     systemColors: { highlight: '#e0005d' },
     colors: {},
     palettes: [],
-    machine: 'ONYX', // 4 character name of machine, customizable by user
+    machine: 'onyx', // 4 character name of workspace, customizable by user
     mute: false,
     newPlayer: true,
     arrivals: 0,
+    processType: 'standard',
   }
 
   constructor(ident) {
@@ -40,6 +41,22 @@ class Minerva {
     this.audioManager = new AudioManager({
       state: this,
     })
+  }
+
+  get workspaceName() {
+    return this.get('machine')
+  }
+
+  set workspaceName(name) {
+    this.set('machine', name.toLowerCase())
+  }
+
+  get workspaceType() {
+    return this.get('processType')
+  }
+
+  set workspaceType(name) {
+    this.set('processType', name.toLowerCase())
   }
 
   get audio() {
@@ -95,6 +112,12 @@ class Minerva {
 
   place(key, item) {
     this.temp[key] = item
+
+    console.log(this)
+  }
+
+  pick(key) {
+    return this.temp[key]
   }
 
   on(ev, fn) {
