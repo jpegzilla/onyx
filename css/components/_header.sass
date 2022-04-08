@@ -5,10 +5,7 @@
   +v.fill
 
   grid-area: header
-  margin-bottom: v.$p-l
-
-  @media (max-width: v.$breakpoint-tiny)
-    margin-bottom: v.$p-s
+  margin-bottom: v.$p-m
 
   .border-bottom
     height: 1px
@@ -51,3 +48,7 @@
 
     .clock
       cursor: pointer
+
+      @media (max-width: v.$breakpoint-tiny)
+        .time-division
+          display: none

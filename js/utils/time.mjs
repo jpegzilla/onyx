@@ -1,3 +1,5 @@
+import { html } from './../utils/index.mjs'
+
 export const handleClock = (clockElement, minerva) => {
   setInterval(() => {
     let hour = new Date().getHours().toString()
@@ -68,6 +70,7 @@ export const handleClock = (clockElement, minerva) => {
         break
     }
 
-    clockElement.innerHTML = `${day}. ${timeString} &mdash; ${timeDivision}`
+    clockElement.innerHTML = html`${day}. ${timeString} &mdash;
+      <span class="time-division">${timeDivision}</span>`
   }, 500)
 }

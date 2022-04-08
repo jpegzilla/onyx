@@ -45,7 +45,10 @@ class Header extends Component {
         </div>
         <b></b>
         <div class="header-status-info">
-          <span class="clock">00:00:00 &mdash; dead of night.</span>
+          <span class="clock"
+            >00:00:00 &mdash;
+            <span class="time-division">dead of night.</span></span
+          >
           <span class="greeting">${this.greeting}</span>
         </div>
       </header>
