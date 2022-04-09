@@ -46,6 +46,15 @@ class Footer extends Component {
             >jpegzilla</a
           >
         </div>
+        |
+        <div class="footer-attribution">
+          <a
+            href="https://github.com/jpegzilla/onyx"
+            target="_blank"
+            rel="noreferrer noopener"
+            >source code</a
+          >
+        </div>
       </footer>
     `
   }
