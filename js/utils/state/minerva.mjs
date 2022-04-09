@@ -112,8 +112,6 @@ class Minerva {
 
   place(key, item) {
     this.temp[key] = item
-
-    console.log(this)
   }
 
   pick(key) {
