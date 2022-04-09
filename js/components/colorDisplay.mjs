@@ -16,19 +16,20 @@ class ColorDisplay extends Component {
   }
 
   updateColors(fg, bg) {
-    this.querySelector('.hex-value-foreground').textContent = fg
-    this.querySelector('.hex-value-background span').textContent = bg
+    this.querySelector('.foreground-color-value').textContent = fg
+    this.querySelector('.background-color-value').textContent = bg
 
     this.getConversions(fg)
   }
 
   getConversions(hexColor) {
     this.conversionWorker.addEventListener('message', ({ data }) => {
-      const conversions = ['rgba', 'hsla', 'hwb', 'lab', 'lch', 'xyz']
-
-      conversions.forEach(format => {
-        this.querySelector(`.conversion-${format}`).textContent = data[format]
-      })
+      minerva.place('colorConversions', data)
+      // const conversions = ['rgba', 'hsla', 'hwb', 'lab', 'lch', 'xyz']
+      //
+      // conversions.forEach(format => {
+      //   this.querySelector(`.conversion-${format}`).textContent = data[format]
+      // })
     })
 
     this.conversionWorker.postMessage(hexColor)
@@ -39,8 +40,16 @@ class ColorDisplay extends Component {
 
     this.innerHTML = html`
       <section class="color-display-container">
-        <div class="hex-value-foreground">#000000</div>
-        <div class="hex-value-background">background: <span>#000000</span></div>
+        <div class="hex-value-foreground">
+          <div class="foreground-color-name">foreground</div>
+          <div class="foreground-color-value">#000000</div>
+        </div>
+
+        <div class="hex-value-background">
+          <div class="background-color-name">background</div>
+          <div class="background-color-value">#000000</div>
+        </div>
+
         <div class="color-display-conversions">
           <div class="conversion-rgba"></div>
           <div class="conversion-hsla"></div>
@@ -49,12 +58,8 @@ class ColorDisplay extends Component {
           <div class="conversion-lch"></div>
           <div class="conversion-xyz"></div>
         </div>
-        <input type="range" />
       </section>
     `
-
-    this.updateColors()
-    this.getConversions(minerva.get('colors').fg)
 
     minerva.on('colors', ({ fg, bg }) => {
       this.updateColors(fg, bg)
