@@ -12,7 +12,7 @@ class LoadingScreen extends Component {
   constructor() {
     super()
 
-    this.id = this.name
+    this.id = LoadingScreen.name
   }
 
   async loadAssets() {

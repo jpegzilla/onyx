@@ -7,7 +7,7 @@ class Controls extends Component {
   constructor() {
     super()
 
-    this.id = this.name
+    this.id = Controls.name
   }
 
   connectedCallback() {

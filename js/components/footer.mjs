@@ -9,7 +9,7 @@ class Footer extends Component {
   constructor() {
     super()
 
-    this.id = this.name
+    this.id = Footer.name
   }
 
   connectedCallback() {

@@ -10,7 +10,7 @@ class Header extends Component {
   constructor() {
     super()
 
-    this.id = this.name
+    this.id = Header.name
     this.twelveHourTime = false
   }
 

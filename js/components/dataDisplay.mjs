@@ -7,7 +7,7 @@ class DataDisplay extends Component {
   constructor() {
     super()
 
-    this.id = this.name
+    this.id = DataDisplay.name
   }
 
   connectedCallback() {

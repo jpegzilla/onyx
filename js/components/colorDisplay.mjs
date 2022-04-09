@@ -10,7 +10,7 @@ class ColorDisplay extends Component {
   constructor() {
     super()
 
-    this.id = this.name
+    this.id = ColorDisplay.name
     this.colors = minerva.get('colors')
     this.activeColor = 'fg'
 
