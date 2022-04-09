@@ -34,8 +34,6 @@ class Minerva {
       { ...Minerva.defaultSettings, ...this.load() } || Minerva.defaultSettings
     this.hasAllSounds = false
 
-    console.log(this.store)
-
     this.save()
 
     this.audioManager = new AudioManager({

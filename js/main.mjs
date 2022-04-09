@@ -15,8 +15,6 @@ export const arachne = Arachne
 minerva.set('loaded', false)
 
 const setupUserPrefs = minerva => {
-  console.log({ colorSchemeToUse, translationToUse })
-
   const { highlight } = minerva.get('systemColors')
 
   const setColorScheme = colorScheme => {
@@ -61,6 +59,14 @@ const allMounted = components.map(({ name }) =>
   customElements.whenDefined(name)
 )
 components.forEach(({ name, element }) => {
+  if (customElements.get(name)) {
+    arachne.warn(
+      'received a custom element that has already been defined. check component exports!'
+    )
+
+    return
+  }
+
   if (name && element) customElements.define(name, element)
 })
 
