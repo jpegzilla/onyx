@@ -5,10 +5,12 @@ import { minerva } from './../main.mjs'
 const conversionWorker = './js/workers/colorConversion.worker.mjs'
 
 class ColorDisplay extends Component {
+  static name = 'onyx-color-display'
+
   constructor() {
     super()
 
-    this.id = 'colordisplay'
+    this.id = this.name
     this.colors = minerva.get('colors')
     this.activeColor = 'fg'
 
@@ -67,4 +69,4 @@ class ColorDisplay extends Component {
   }
 }
 
-export default { name: 'onyx-color-display', element: ColorDisplay }
+export default { name: ColorDisplay.name, element: ColorDisplay }

@@ -5,11 +5,12 @@ import { html, handleClock } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
 
 class Header extends Component {
+  static name = 'onyx-header'
+
   constructor() {
     super()
 
-    this.name = 'onyx-header'
-    this.id = 'onyx-header'
+    this.id = this.name
     this.twelveHourTime = false
   }
 

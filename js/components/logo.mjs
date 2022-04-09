@@ -2,10 +2,10 @@ import Component from './component.mjs'
 import { html } from './../utils/index.mjs'
 
 class Logo extends Component {
+  static name = 'onyx-logo'
+
   constructor() {
     super()
-
-    this.name = 'onyx-logo'
   }
 
   connectedCallback() {
@@ -33,4 +33,4 @@ class Logo extends Component {
   }
 }
 
-export default { name: 'onyx-logo', element: Logo }
+export default { name: Logo.name, element: Logo }

@@ -2,10 +2,10 @@ import Component from './component.mjs'
 import { html } from './../utils/index.mjs'
 
 class Box extends Component {
+  static name = 'box'
+
   constructor() {
     super()
-
-    this.name = 'box'
   }
 
   connectedCallback() {
@@ -13,4 +13,4 @@ class Box extends Component {
   }
 }
 
-export default { name: 'box-component', element: Box }
+export default { name: Box.name, element: Box }

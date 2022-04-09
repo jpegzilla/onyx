@@ -2,10 +2,12 @@ import Component from './component.mjs'
 import { html } from './../utils/index.mjs'
 
 class DataDisplay extends Component {
+  static name = 'onyx-data-display'
+
   constructor() {
     super()
 
-    this.id = 'datadisplay'
+    this.id = this.name
   }
 
   connectedCallback() {
@@ -13,4 +15,4 @@ class DataDisplay extends Component {
   }
 }
 
-export default { name: 'onyx-data-display', element: DataDisplay }
+export default { name: DataDisplay.name, element: DataDisplay }

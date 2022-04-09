@@ -7,11 +7,12 @@ import { arachne, minerva } from './../main.mjs'
 const sounds = ['click_small', 'click', 'failure', 'hover', 'success']
 
 class LoadingScreen extends Component {
+  static name = 'onyx-loading-screen'
+
   constructor() {
     super()
 
-    this.name = 'loadingscreen'
-    this.id = 'loadingscreen'
+    this.id = this.name
   }
 
   async loadAssets() {
@@ -94,4 +95,4 @@ class LoadingScreen extends Component {
   }
 }
 
-export default { name: 'loading-screen', element: LoadingScreen }
+export default { name: LoadingScreen.name, element: LoadingScreen }

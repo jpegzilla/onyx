@@ -4,11 +4,12 @@ import { minerva } from './../main.mjs'
 import { footerCopy } from './../data/copy.mjs'
 
 class Footer extends Component {
+  static name = 'onyx-footer'
+
   constructor() {
     super()
 
-    this.name = 'onyx-footer'
-    this.id = 'onyx-footer'
+    this.id = this.name
   }
 
   connectedCallback() {
@@ -60,4 +61,4 @@ class Footer extends Component {
   }
 }
 
-export default { name: 'onyx-footer', element: Footer }
+export default { name: Footer.name, element: Footer }
