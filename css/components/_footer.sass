@@ -34,11 +34,13 @@
       line-height: 1.1rem
 
       a
+        +v.kfocus
+
         color: currentColor
 
-    button,
-    .workspace-attr
+    button
       +v.destroy
+      +v.kfocus
       +v.inversefontcolor
       +v.fadebg
       +v.croptext(1.2)
