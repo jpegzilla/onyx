@@ -1,5 +1,10 @@
 import arachne from './arachne.mjs'
 
+/**
+ * adds a "hotkey" listener to the window.
+ * @param  {string}   key  the key to bind
+ * @param  {Function} fn   a function run when hitting the hotkey
+ */
 export const hotkey = (key, fn) => {
   addEventListener('keydown', ({ key: eventKey, repeat }) => {
     if (repeat) return
@@ -12,12 +17,24 @@ export const keycodes = {
   enter: 'Enter',
 }
 
+/**
+ * add multiple event listeners to an element
+ * @param {HTMLElement}   element  the element to add the listeners to
+ * @param {Array<string>} events   an array of event types
+ * @param {Function}      fn       callback to execute for each event
+ */
 export const addMultiListener = (element, events, fn) => {
   events.forEach(ev => {
     element.addEventListener(ev, fn)
   })
 }
 
+/**
+ * interleaves two arrays.
+ * @param  {Array} a1  the first array
+ * @param  {Array} a2  the second array
+ * @return {Array}     an interleaved array
+ */
 export const interleave = (a1, a2) => {
   return a1.map((val, idx) => [val, a2[idx]])
 }
@@ -29,12 +46,20 @@ const keys = {
   40: 1,
 }
 
+/**
+ * prevents the default action for an event
+ * @param  {Event} e  the event to be prevented
+ */
 const preventDefault = e => {
   e = e || window.event
   if (e.preventDefault) e.preventDefault()
   e.returnValue = false
 }
 
+/**
+ * prevents the default action for a key event
+ * @param  {KeyboardEvent} e  the event to be prevented
+ */
 const preventDefaultForScrollKeys = e => {
   if (keys[e.keyCode]) {
     preventDefault(e)
@@ -42,6 +67,9 @@ const preventDefaultForScrollKeys = e => {
   }
 }
 
+/**
+ * prevents all scrolling on the page
+ */
 export const disableScroll = () => {
   if (addEventListener) {
     addEventListener('DOMMouseScroll', preventDefault, false)
@@ -55,6 +83,9 @@ export const disableScroll = () => {
   document.onkeydown = preventDefaultForScrollKeys
 }
 
+/**
+ * enables all scrolling on the page
+ */
 export const enableScroll = () => {
   if (removeEventListener) {
     removeEventListener('DOMMouseScroll', preventDefault, false)
@@ -68,6 +99,12 @@ export const enableScroll = () => {
   document.onkeydown = null
 }
 
+/**
+ * gets a random integer between two given numbers
+ * @param  {Number} min  minimum bound for number generation
+ * @param  {Number} max  maximum bound for number generation
+ * @return {Number}      a random number between max and min
+ */
 export const getRandomInt = (min, max) => {
   if (isNaN(min) || isNaN(max)) {
     arachne.error('getRandomInt must be called with two numbers.')
@@ -79,11 +116,10 @@ export const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min // the maximum is exclusive and the minimum is inclusive
 }
 
-export const replaceAt = (string, index, replaceWith) =>
-  string.substr(0, index) +
-  replaceWith +
-  this.substr(index + replaceWith.length)
-
+/**
+ * generates a valid uuidv4
+ * @return {string} a uuidv4
+ */
 export const uuidv4 = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
     const r = (Math.random() * 16) | 0,
@@ -163,6 +199,10 @@ export const getAverageColor = img => {
   return rgb
 }
 
+/**
+ * gets url parameters from current url.
+ * @return {object} a set of key-value pairs of url params.
+ */
 export const getUrlParams = () => {
   const vars = {}
   const regex = /[?&]+([^=&]+)=([^&]*)/gi
@@ -170,10 +210,20 @@ export const getUrlParams = () => {
   return vars
 }
 
+/**
+ * sets a custom property on the root element
+ * @param {string} property  property to set
+ * @param {string} value     value to assign to the property
+ */
 export const setCustomProperty = (property, value) => {
   document.documentElement.style.setProperty(property, value)
 }
 
+/**
+ * gets a custom property from the root element
+ * @param  {string} property  property to retrieve
+ * @return {string} the value of the requested property
+ */
 export const getCustomProperty = property => {
   return getComputedStyle(document.querySelector(':root'))
     .getPropertyValue(property)

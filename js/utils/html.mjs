@@ -1,3 +1,10 @@
+/**
+ * returns a tagged template. I use this because it allows
+ * my ide to format a template string similarly to regular html
+ * @param  {object} literals  object containing template literals
+ * @param  {Array} vars       variables passed in the template
+ * @return {string}           constructed string
+ */
 export default (literals, ...vars) => {
   let raw = literals.raw,
     result = '',

@@ -1,3 +1,4 @@
+// ♪音楽 → MOJO-P - PINK MOON : https://www.youtube.com/watch?v=kMcTFR2hUGc
 import {
   Arachne,
   colorSchemeToUse,

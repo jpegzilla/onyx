@@ -1,3 +1,4 @@
+// ♪音楽 → DJ WINK - OVER ME : https://www.youtube.com/watch?v=xS_LwqviqIg
 export { supportedLangs, translationToUse, getLang } from './langTools.mjs'
 export {
   disableScroll,
