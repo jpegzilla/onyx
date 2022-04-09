@@ -4,6 +4,8 @@
 #colordisplay
   +v.fill
 
+  $fadeamount: 0.4
+
   grid-area: color-display
 
   .color-display-container
@@ -12,26 +14,54 @@
     +v.fill
     +v.colordisplaycolor
 
-    .hex-value-background, .hex-value-foreground
+    .hex-value-foreground + .hex-value-background
+      margin-top: v.$p-m
+
+      @media (max-width: v.$breakpoint-tiny)
+        margin-top: v.$p-s
+
+    .hex-value-background,
+    .hex-value-foreground
+      font-family: v.$redhat
+
+    .foreground-color-name,
+    .background-color-name
+      +v.fontcolor
+
+      font-size: 1.5rem
+      opacity: $fadeamount
+      margin-bottom: v.$halfgap
+
+    .foreground-color-value,
+    .background-color-value
+      max-width: max-content
+      overflow: hidden
+      text-transform: uppercase
+
+    .foreground-color-value
       +v.croptext($lineheight)
 
-      font-family: v.$redhat
-      line-height: $lineheight
-
-    .hex-value-foreground
       font-size: 12rem
+      line-height: 12.2rem
       font-variation-settings: "wght" 600
-      margin-bottom: -1rem
 
       @media (max-width: v.$breakpoint-tiny)
         font-variation-settings: "wght" 500
         font-size: 8rem
+        font-size: 8.2rem
 
       @media (max-width: v.$breakpoint-miniscule)
         font-size: 6rem
+        line-height: 6.2rem
 
-    .hex-value-background
+    .background-color-value
+      +v.croptext($lineheight)
       +v.fontcolor
 
-      font-size: 1.5rem
-      opacity: 0.4
+      font-size: 4rem
+      line-height: 4.2rem
+      opacity: $fadeamount
+      font-variation-settings: "wght" 475
+
+  .color-display-conversions
+    display: none
