@@ -10,8 +10,6 @@ import {
 self.onmessage = message => {
   const { data: color } = message
 
-  console.log(color)
-
   if (color) {
     const rgba = `rgba(${hexToRGBA(color).r}, ${hexToRGBA(color).g}, ${
       hexToRGBA(color).b
@@ -21,15 +19,15 @@ self.onmessage = message => {
       hexToHSLA(color).l
     }, ${hexToHSLA(color).a})`
 
-    const hwb = `hwb(${hexToHWB(color).h} ${hexToHWB(color).w}  ${
+    const hwb = `hwb(${hexToHWB(color).h} ${hexToHWB(color).w} ${
       hexToHWB(color).b
     } / ${hexToHWB(color).a})`
 
-    const lab = `lab(${hexToLAB(color).l} ${hexToLAB(color).a}  ${
+    const lab = `lab(${hexToLAB(color).l} ${hexToLAB(color).a} ${
       hexToLAB(color).b
     } / ${hexToLAB(color).alpha})`
 
-    const lch = `lch(${hexToLCH(color).l} ${hexToLCH(color).c}  ${
+    const lch = `lch(${hexToLCH(color).l} ${hexToLCH(color).c} ${
       hexToLCH(color).h
     } / ${hexToLCH(color).a})`
 
