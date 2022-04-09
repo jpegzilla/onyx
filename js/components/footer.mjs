@@ -1,17 +1,7 @@
 import Component from './component.mjs'
 import { html } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
-
-const copy = {
-  export:
-    'exports all your palettes, and settings as a .json file for you to download.',
-  import:
-    'allows you to upload a json file containing palettes and settings you (or someone else) previously exported',
-  save: 'allows you to locally save all current palettes and settings to your color workspace library.',
-  switch: 'allows you to switch between your saved color workspaces.',
-  workspace: 'the name of the current color workspace.',
-  workspaceType: 'the type of the current color workspace.',
-}
+import { footerCopy } from './../data/copy.mjs'
 
 class Footer extends Component {
   constructor() {
@@ -28,24 +18,24 @@ class Footer extends Component {
       <b class="border-top"></b>
       <footer>
         <div class="workspace-info">
-          <div
+          <button
             class="workspace-name workspace-attr"
-            aria-description="${copy.workspace}"
+            aria-description="${footerCopy.workspace}"
           >
             workspace: ${minerva.workspaceName}
-          </div>
-          <div
+          </button>
+          <button
             class="workspace-type workspace-attr"
-            aria-description="${copy.workspaceType}"
+            aria-description="${footerCopy.workspaceType}"
           >
             type: ${minerva.workspaceType}
-          </div>
+          </button>
         </div>
 
-        <button aria-description="${copy.export}">export</button>
-        <button aria-description="${copy.import}">import</button>
-        <button aria-description="${copy.save}">save</button>
-        <button aria-description="${copy.switch}">switch</button>
+        <button aria-description="${footerCopy.export}">export</button>
+        <button aria-description="${footerCopy.import}">import</button>
+        <button aria-description="${footerCopy.save}">save</button>
+        <button aria-description="${footerCopy.switch}">switch</button>
         <b></b>
         <div class="footer-attribution">
           made by
