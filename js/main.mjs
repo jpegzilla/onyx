@@ -6,11 +6,13 @@ import {
   translationToUse,
   setCustomProperty,
   getCustomProperty,
+  Mnemosyne,
 } from './utils/index.mjs'
 import components from './components/index.mjs'
 
 export const minerva = new Minerva('jpegzilla-onyx')
 export const arachne = Arachne
+export const mnemosyne = new Mnemosyne('jpegzilla-onyx')
 
 minerva.set('loaded', false)
 
