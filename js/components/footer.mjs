@@ -18,25 +18,19 @@ class Footer extends Component {
     this.innerHTML = html`
       <b class="border-top"></b>
       <footer>
-        <div class="workspace-info">
-          <button
-            class="workspace-name workspace-attr"
-            aria-description="${footerCopy.workspace}"
-          >
-            workspace: ${minerva.workspaceName}
-          </button>
-          <button
-            class="workspace-type workspace-attr"
-            aria-description="${footerCopy.workspaceType}"
-          >
-            type: ${minerva.workspaceType}
-          </button>
-        </div>
+        <div class="footer-controls">
+          <div class="options-selector">
+            <span class="fade">data</span>
+            <button title="${footerCopy.export}">export</button>
+            <button title="${footerCopy.import}">import</button>
+          </div>
 
-        <button aria-description="${footerCopy.export}">export</button>
-        <button aria-description="${footerCopy.import}">import</button>
-        <button aria-description="${footerCopy.save}">save</button>
-        <button aria-description="${footerCopy.switch}">switch</button>
+          <div class="options-selector">
+            <span class="fade">workspace</span>
+            <button title="${footerCopy.save}">save</button>
+            <button title="${footerCopy.switch}">switch</button>
+          </div>
+        </div>
         <b></b>
         <div class="footer-attribution">
           made by
@@ -46,9 +40,7 @@ class Footer extends Component {
             rel="noreferrer noopener"
             >jpegzilla</a
           >
-        </div>
-        |
-        <div class="footer-attribution">
+          <span>&middot;</span>
           <a
             href="https://github.com/jpegzilla/onyx"
             target="_blank"

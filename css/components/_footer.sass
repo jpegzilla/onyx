@@ -26,6 +26,10 @@
 
     b
       flex-grow: 666
+      display: inline-block
+
+      @media (max-width: v.$breakpoint-miniscule)
+        display: none
 
     .footer-attribution
       +v.croptext(1.2)
@@ -38,31 +42,42 @@
 
         color: currentColor
 
-    button
-      +v.destroy
-      +v.kfocus
-      +v.inversefontcolor
-      +v.fadebg
-      +v.croptext(1.2)
-
-      cursor: pointer
-      font-size: 0.8rem
-      font-variation-settings: "wght" 450
-      line-height: 1.1rem
-      padding: 0.15rem 0.25rem
-      border-radius: v.$border-radius
-      text-align: center
-      max-height: max-content
-
-    .workspace-info
+    .footer-controls
       display: grid
-      grid-template-columns: 1fr 1fr
       gap: v.$halfgap
+      grid-template-columns: repeat(2, max-content)
+
+      .options-selector
+        +v.colordisplaycolor
+
+        display: flex
+        max-height: max-content
+        max-width: max-content
+        gap: v.$halfgap
+
+        button
+          +v.destroy
+          +v.kfocus
+
+          cursor: pointer
+          color: currentColor
+
+          &:hover
+            text-decoration: underline
+
+        button, span
+          +v.croptext(1.2)
+          +v.lightmono
+
+          display: block
+          font-size: 0.8rem
+          line-height: 1.1rem
+          text-transform: uppercase
+
+          &.fade
+            opacity: 0.6
+            user-select: none
 
       @media (max-width: v.$breakpoint-miniscule)
-        flex-direction: column
-
-    .workspace-name,
-    .workspace-type
-      +v.hlbg
-      +v.fontcolor
+        grid-template-columns: 1fr
+        grid-template-rows: 1fr 1fr
