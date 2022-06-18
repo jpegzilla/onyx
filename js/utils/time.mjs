@@ -16,9 +16,9 @@ export const handleClock = (clockElement, minerva) => {
     const isMorning = hours >= 8 && hours < 12
     const isNoon = hours === 12
     const isAfterNoon = hours > 12 && hours < 16
-    const isLateAfterNoon = hours >= 16 && hours < 17
-    const isEarlyEvening = hours >= 17 && hours < 18
-    const isEvening = hours >= 18 && hours < 20
+    const isLateAfterNoon = hours >= 16 && hours < 18
+    const isEarlyEvening = hours >= 18 && hours < 19
+    const isEvening = hours >= 19 && hours < 20
     const isNight = hours >= 20 && hours < 23
     const isMidNight = hours === 0
     const isVeryLate = hours > 0 && hours < 5
