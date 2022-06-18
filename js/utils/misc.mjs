@@ -131,8 +131,8 @@ export const uuidv4 = () => {
 /**
  * throttle - fires a callback *only* every x seconds
  *
- * @param {function} callback the callback to trigger
- * @param {number}   delay    how often the callback should be able to fire
+ * @param {function} fn         the callback to trigger
+ * @param {number}   threshold  how often the callback should be able to fire
  *
  * @returns {function} function that fires the callback
  */
