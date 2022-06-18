@@ -46,12 +46,15 @@ class Header extends Component {
         </div>
         <b></b>
         <div class="header-status-info">
-          <span class="clock"
-            >00:00:00 &mdash;
+          <span
+            class="clock"
+            title="click to switch between 12 and 24 hour time."
+            >xxx. 00:00 &mdash;
             <span class="time-division">dead of night.</span></span
           >
           <span class="greeting">${this.greeting}</span>
         </div>
+        <b class="chronocolorimeter"></b>
       </header>
       <b class="border-bottom"></b>
     `
