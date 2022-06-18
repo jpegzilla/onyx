@@ -4,64 +4,74 @@
 #onyx-color-display
   +v.fill
 
-  $fadeamount: 0.4
+  $fadeamount: 0.6
 
   grid-area: color-display
 
   .color-display-container
-    $lineheight: 1.2
-
-    +v.fill
     +v.colordisplaycolor
 
-    .hex-value-foreground + .hex-value-background
-      margin-top: v.$p-m
+    display: flex
+    gap: v.$p-m
 
-      @media (max-width: v.$breakpoint-tiny)
-        margin-top: v.$p-s
+    .color-display-selector
 
-    .hex-value-background,
-    .hex-value-foreground
-      font-family: v.$redhat
+      align-items: flex-start
+      display: flex
+      flex-direction: column
+      gap: v.$quartergap
+      padding-top: 1px
 
-    .foreground-color-name,
-    .background-color-name
-      +v.fontcolor
+      &-description
+        +v.croptext(1.32)
 
-      font-size: 1.5rem
-      opacity: $fadeamount
-      margin-bottom: v.$halfgap
+        font-size: 1rem
+        line-height: 1.2rem
+        opacity: 0.5
+        padding-bottom: v.$small-space
+        user-select: none
 
-    .foreground-color-value,
-    .background-color-value
-      max-width: max-content
+      button
+        +v.destroy
+
+        cursor: pointer
+        width: 100%
+        text-align: left
+
+      button, div
+        +v.colordisplaycolor
+
+        max-height: max-content
+        overflow: hidden
+
+        span
+          +v.lightmono
+          +v.croptext(1.3)
+
+          display: block
+          font-size: 1rem
+          line-height: 1.2rem
+          padding-bottom: v.$small-space
+          padding-right: v.$halfgap
+
+    .color-display-readout
+      max-height: max-content
+      padding-bottom: v.$small-space
       overflow: hidden
       text-transform: uppercase
 
-    .foreground-color-value
-      +v.croptext($lineheight)
+      span
+        +v.croptext(1.3)
 
-      font-size: 12rem
-      line-height: 12.2rem
-      font-variation-settings: "wght" 600
+        font-family: v.$redhat
+        font-variation-settings: 'wght' 300
+        font-size: 10rem
+        line-height: 10.2rem
 
-      @media (max-width: v.$breakpoint-tiny)
-        font-variation-settings: "wght" 500
-        font-size: 8rem
-        font-size: 8.2rem
+        @media (max-width: v.$breakpoint-tiny)
+          font-size: 8rem
+          line-height: 8.2rem
 
-      @media (max-width: v.$breakpoint-miniscule)
-        font-size: 6rem
-        line-height: 6.2rem
-
-    .background-color-value
-      +v.croptext($lineheight)
-      +v.fontcolor
-
-      font-size: 4rem
-      line-height: 4.2rem
-      opacity: $fadeamount
-      font-variation-settings: "wght" 475
-
-  .color-display-conversions
-    display: none
+        @media (max-width: v.$breakpoint-miniscule)
+          font-size: 6rem
+          line-height: 6.2rem
