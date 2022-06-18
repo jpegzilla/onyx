@@ -5,8 +5,12 @@ $p-l: 3rem
 $p-m: 2rem
 $p-s: 1rem
 $halfgap: 0.5rem
+$quartergap: 0.25rem
+$gridgap: $p-s
 $offset: 3rem
 $offset2x: 8rem
+$button-padding: 0.15rem 0.25rem
+$button-padding-big: 0.35rem 0.5rem
 
 $color-transition: 0.2s
 
@@ -27,6 +31,7 @@ $resolution-3: 288dpi
 $resolution-4: 554dpi
 
 $border-radius: 4px
+$small-space: 4px
 
 // 色
 
@@ -71,6 +76,8 @@ $kurenaido: "zen kurenaido", sans-serif
 $redhat: "red hat mono", monospace
 $poppins: "poppins", sans-serif
 $montserrat: "montserrat alternates", sans-serif
+$montserratnormal: "montserrat", sans-serif
+$ibmplex: "ibm plex", monospace
 
 // レイヤー
 
@@ -272,11 +279,8 @@ $layer-overlay: 54
     margin-bottom: calc((1 - #{$lineheight}) * 0.5em)
 
 =lightmono
-  +croptext(1)
-
   font-variation-settings: 'wght' 300
   font-family: $redhat
-  line-height: 1
 
 =destroy
   font-size: 100%
