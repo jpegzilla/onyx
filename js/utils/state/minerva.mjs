@@ -136,6 +136,8 @@ class Minerva {
   }
 
   place(key, item) {
+    if (this.events[key]) this.events[key].forEach(fn => fn(item))
+
     this.temp[key] = item
   }
 
