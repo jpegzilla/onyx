@@ -1,3 +1,7 @@
+/**
+ * base class for custom elements
+ * @extends HTMLElement
+ */
 class Component extends HTMLElement {
   addClass(className) {
     this.classList.add(className)
