@@ -1,4 +1,16 @@
+resources
+
 kurenaido font - 大平善道 - https://zenfont.jp/
+
 montserrat alternates - julieta ulanovsky - https://github.com/JulietaUla/Montserrat
+
 poppins - ninad kale / jonny pinhorn - https://github.com/itfoundry/poppins
+
 space mono - colophon foundry - https://www.colophon-foundry.org/
+
+ral and hks color lists - james pederson - https://github.com/jpederson/colornerd/tree/gh-pages/csv
+
+inspiration
+
+colorable - jxnblk - https://colorable.jxnblk.com/
+colori - remiscan - https://remiscan.fr/colori/
