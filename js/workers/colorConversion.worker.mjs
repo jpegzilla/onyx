@@ -36,12 +36,12 @@ self.onmessage = message => {
     })`
 
     self.postMessage({
-      rgba,
-      hsla,
-      hwb,
-      lab,
-      lch,
-      xyz,
+      rgba, // correct
+      hsla, // correct
+      hwb, // correct
+      lab, // CIE-L*ab - correct
+      lch, // CIE-L*CH°- correct
+      xyz, // correct
     })
   }
 }
