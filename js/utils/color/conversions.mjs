@@ -2,10 +2,10 @@ import {
   RGB_MAX,
   LUM_DIVISOR_H,
   LUM_ADDEND,
-  XYZ_THRESHOLD,
   RGB_THRESHOLD,
   PI,
   CIE_1931_XYZ_REFERENCE,
+  CIE_1964_XYZ_REFERENCE,
 } from './constants.mjs'
 
 export const hexToRGBA = hex => {
@@ -254,12 +254,12 @@ export const rgbToXYZ = (red, green, blue) => {
   let g = green / 255
   let b = blue / 255
 
-  if (r > 0.04045) r = ((r + 0.055) / 1.055) ** 2.4
-  else r = r / 12.92
-  if (g > 0.04045) g = ((g + 0.055) / 1.055) ** 2.4
-  else g = g / 12.92
-  if (b > 0.04045) b = ((b + 0.055) / 1.055) ** 2.4
-  else b = b / 12.92
+  if (r > RGB_THRESHOLD) r = ((r + LUM_ADDEND) / 1.055) ** 2.4
+  else r = r / LUM_DIVISOR_H
+  if (g > RGB_THRESHOLD) g = ((g + LUM_ADDEND) / 1.055) ** 2.4
+  else g = g / LUM_DIVISOR_H
+  if (b > RGB_THRESHOLD) b = ((b + LUM_ADDEND) / 1.055) ** 2.4
+  else b = b / LUM_DIVISOR_H
 
   r = r * 100
   g = g * 100
@@ -272,12 +272,18 @@ export const rgbToXYZ = (red, green, blue) => {
   return { x, y, z }
 }
 
-export const rgbToLAB = (red, green, blue, alpha, type = 'D65') => {
+export const rgbToLAB = (red, green, blue, alpha, type, cieRef) => {
   const { x, y, z } = rgbToXYZ(red, green, blue)
 
   let standardX = x / CIE_1931_XYZ_REFERENCE[type][0]
   let standardY = y / CIE_1931_XYZ_REFERENCE[type][1]
   let standardZ = z / CIE_1931_XYZ_REFERENCE[type][2]
+
+  if (cieRef === '1964') {
+    standardX = x / CIE_1931_XYZ_REFERENCE[type][0]
+    standardY = y / CIE_1931_XYZ_REFERENCE[type][1]
+    standardZ = z / CIE_1931_XYZ_REFERENCE[type][2]
+  }
 
   if (standardX > 0.008856) standardX = standardX ** (1 / 3)
   else standardX = 7.787 * standardX + 16 / 116
@@ -293,10 +299,10 @@ export const rgbToLAB = (red, green, blue, alpha, type = 'D65') => {
   return { l: l.toFixed(3), a: a.toFixed(3), b: b.toFixed(3), alpha }
 }
 
-export const hexToLAB = hex => {
+export const hexToLAB = (hex, type = 'D65', cieRef = '1931') => {
   const { r, g, b, a } = hexToRGBA(hex)
 
-  return rgbToLAB(r, g, b, a)
+  return rgbToLAB(r, g, b, a, type, cieRef)
 }
 
 export const hexToXYZ = hex => {

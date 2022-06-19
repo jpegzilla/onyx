@@ -11,36 +11,39 @@ self.onmessage = message => {
   const { data: color } = message
 
   if (color) {
-    const rgba = `rgba(${hexToRGBA(color).r}, ${hexToRGBA(color).g}, ${
-      hexToRGBA(color).b
-    }, ${hexToRGBA(color).a})`
+    const { r: rgbaR, g: rgbaG, b: rgbaB, a: rgbaA } = hexToRGBA(color)
+    const { h: hslaH, s: hslaS, l: hslaL, a: hslaA } = hexToHSLA(color)
+    const { h: hwbH, w: hwbW, b: hwbB, a: hwbA } = hexToHWB(color)
+    const {
+      l: d65L,
+      a: d65A,
+      b: d65B,
+      alpha: d65Alpha,
+    } = hexToLAB(color, 'D65')
+    const {
+      l: d50L,
+      a: d50A,
+      b: d50B,
+      alpha: d50Alpha,
+    } = hexToLAB(color, 'D50')
+    const { l: lchL, c: lchC, h: lchH, a: lchA } = hexToLCH(color)
+    const { x, y, z } = hexToXYZ(color)
 
-    const hsla = `hsla(${hexToHSLA(color).h}, ${hexToHSLA(color).s}, ${
-      hexToHSLA(color).l
-    }, ${hexToHSLA(color).a})`
-
-    const hwb = `hwb(${hexToHWB(color).h} ${hexToHWB(color).w} ${
-      hexToHWB(color).b
-    } / ${hexToHWB(color).a})`
-
-    const lab = `lab(${hexToLAB(color).l} ${hexToLAB(color).a} ${
-      hexToLAB(color).b
-    } / ${hexToLAB(color).alpha})`
-
-    const lch = `lch(${hexToLCH(color).l} ${hexToLCH(color).c} ${
-      hexToLCH(color).h
-    } / ${hexToLCH(color).a})`
-
-    const xyz = `xyz(${hexToXYZ(color).x}, ${hexToXYZ(color).y}, ${
-      hexToXYZ(color).z
-    })`
+    const rgba = `rgba(${rgbaR}, ${rgbaG}, ${rgbaB}, ${rgbaA})`
+    const hsla = `hsla(${hslaH}, ${hslaS}, ${hslaL}, ${hslaA})`
+    const hwb = `hwb(${hwbH} ${hwbW} ${hwbB} / ${hwbA})`
+    const labD65 = `lab(${d65L} ${d65A} ${d65B} / ${d65Alpha})`
+    const labD50 = `lab(${d50L} ${d50A} ${d50B} / ${d50Alpha})`
+    const lch = `lch(${lchL} ${lchC} ${lchH} / ${lchA})`
+    const xyz = `xyz(${x}, ${y}, ${z})`
 
     self.postMessage({
       rgba, // correct
       hsla, // correct
       hwb, // correct
-      lab, // CIE-L*ab - correct
-      lch, // CIE-L*CH°- correct
+      ['CIELAB D50/10° (1931)']: labD50, // CIE-L*ab - correct
+      ['CIELAB D65/10° (1931)']: labD65, // CIE-L*ab - correct
+      ['CIELCh D65/10° (1931)']: lch, // CIE-L*CH°- correct
       xyz, // correct
     })
   }
