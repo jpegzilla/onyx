@@ -4,7 +4,8 @@ import {
   hks,
   ral,
   pantone,
-  behr
+  behr,
+  traditionalJapanese,
 } from './../data/palettes/index.mjs'
 import { TAU } from './../utils/color/constants.mjs'
 import { hexToHSV } from './../utils/color/conversions.mjs'
@@ -15,7 +16,8 @@ const LIBS = {
   hks,
   ral,
   ptn: pantone,
-  bhr: behr
+  bhr: behr,
+  tjp: traditionalJapanese,
 }
 
 const findClosestColor = ({ color, library }) => {
@@ -75,6 +77,10 @@ self.onmessage = message => {
       color: hexToHSV(hexColor),
       library: LIBS.bhr,
     })
+    const closestTraditionalJapaneseColor = findClosestColor({
+      color: hexToHSV(hexColor),
+      library: LIBS.tjp,
+    })
 
     self.postMessage({
       css: closestCSSColor,
@@ -82,7 +88,8 @@ self.onmessage = message => {
       hks: closestHksColor,
       ral: closestRalColor,
       pantone: closestPantoneColor,
-      behr: closestBehrColor
+      behr: closestBehrColor,
+      traditionalJapanese: closestTraditionalJapaneseColor,
     })
   }
 }
