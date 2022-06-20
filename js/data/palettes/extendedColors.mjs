@@ -240,10 +240,6 @@ export default [
     hex: '#e8f5f2',
   },
   {
-    name: 'aquamarine',
-    hex: '#7fffd4',
-  },
-  {
     name: 'aquamarine blue',
     hex: '#71d9e2',
   },
@@ -370,10 +366,6 @@ export default [
   {
     name: 'aztec gold',
     hex: '#c39953',
-  },
-  {
-    name: 'azure',
-    hex: '#007fff',
   },
   {
     name: 'azure mist',
@@ -504,10 +496,6 @@ export default [
     hex: '#fef2c7',
   },
   {
-    name: 'beige',
-    hex: '#D0B084',
-  },
-  {
     name: 'belgion',
     hex: '#add8ff',
   },
@@ -568,10 +556,6 @@ export default [
     hex: '#c1b7a4',
   },
   {
-    name: 'bisque',
-    hex: '#ffe4c4',
-  },
-  {
     name: 'bistre',
     hex: '#3d2b1f',
   },
@@ -594,10 +578,6 @@ export default [
   {
     name: 'bizarre',
     hex: '#eededa',
-  },
-  {
-    name: 'black',
-    hex: '#000000',
   },
   {
     name: 'black bean',
@@ -698,10 +678,6 @@ export default [
   {
     name: 'blossom',
     hex: '#dcb4bc',
-  },
-  {
-    name: 'blue',
-    hex: '#0000ff',
   },
   {
     name: 'blue bayoux',
@@ -1012,10 +988,6 @@ export default [
     hex: '#ffec13',
   },
   {
-    name: 'brown',
-    hex: '#964b00',
-  },
-  {
     name: 'brown bramble',
     hex: '#592804',
   },
@@ -1094,10 +1066,6 @@ export default [
   {
     name: 'burgundy',
     hex: '#800020',
-  },
-  {
-    name: 'burlywood',
-    hex: '#deb887',
   },
   {
     name: 'burnham',
@@ -1580,10 +1548,6 @@ export default [
     hex: '#e68fac',
   },
   {
-    name: 'chartreuse',
-    hex: '#dfff00',
-  },
-  {
     name: 'chateau green',
     hex: '#40a860',
   },
@@ -1678,10 +1642,6 @@ export default [
   {
     name: 'chlorophyll green',
     hex: '#4aff00',
-  },
-  {
-    name: 'chocolate',
-    hex: '#7b3f00',
   },
   {
     name: 'christalle',
@@ -1932,10 +1892,6 @@ export default [
     hex: '#ff3800',
   },
   {
-    name: 'coral',
-    hex: '#ff7f50',
-  },
-  {
     name: 'coral red',
     hex: '#A63D2F',
   },
@@ -1982,10 +1938,6 @@ export default [
   {
     name: 'cornflower lilac',
     hex: '#ffb0ac',
-  },
-  {
-    name: 'cornsilk',
-    hex: '#fff8dc',
   },
   {
     name: 'corvette',
@@ -2084,10 +2036,6 @@ export default [
     hex: '#737829',
   },
   {
-    name: 'crimson',
-    hex: '#dc143c',
-  },
-  {
     name: 'crimson glory',
     hex: '#be0032',
   },
@@ -2138,10 +2086,6 @@ export default [
   {
     name: 'cutty sark',
     hex: '#507672',
-  },
-  {
-    name: 'cyan',
-    hex: '#00ffff',
   },
   {
     name: 'cyan azure',
@@ -3120,10 +3064,6 @@ export default [
     hex: '#ce2029',
   },
   {
-    name: 'firebrick',
-    hex: '#b22222',
-  },
-  {
     name: 'firefly',
     hex: '#0e2a30',
   },
@@ -3312,10 +3252,6 @@ export default [
     hex: '#4f9d5d',
   },
   {
-    name: 'fuchsia',
-    hex: '#ff00ff',
-  },
-  {
     name: 'fuchsia blue',
     hex: '#7a58c1',
   },
@@ -3370,10 +3306,6 @@ export default [
   {
     name: 'gable green',
     hex: '#163531',
-  },
-  {
-    name: 'gainsboro',
-    hex: '#dcdcdc',
   },
   {
     name: 'gallery',
@@ -3540,10 +3472,6 @@ export default [
     hex: '#E49E00',
   },
   {
-    name: 'goldenrod',
-    hex: '#daa520',
-  },
-  {
     name: 'gondola',
     hex: '#261414',
   },
@@ -3612,10 +3540,6 @@ export default [
     hex: '#4a444b',
   },
   {
-    name: 'gray',
-    hex: '#808080',
-  },
-  {
     name: 'gray asparagus',
     hex: '#465945',
   },
@@ -3638,10 +3562,6 @@ export default [
   {
     name: 'gray suit',
     hex: '#c1becd',
-  },
-  {
-    name: 'green',
-    hex: '#00ff00',
   },
   {
     name: 'green blue',
@@ -3944,10 +3864,6 @@ export default [
     hex: '#4f1c70',
   },
   {
-    name: 'honeydew',
-    hex: '#f0fff0',
-  },
-  {
     name: 'honeysuckle',
     hex: '#edfc84',
   },
@@ -4064,10 +3980,6 @@ export default [
     hex: '#e3a857',
   },
   {
-    name: 'indigo',
-    hex: '#4b0082',
-  },
-  {
     name: 'indigo dye',
     hex: '#091f92',
   },
@@ -4122,10 +4034,6 @@ export default [
   {
     name: 'island spice',
     hex: '#fffcee',
-  },
-  {
-    name: 'ivory',
-    hex: '#DDC49A',
   },
   {
     name: 'jacaranda',
@@ -4320,10 +4228,6 @@ export default [
     hex: '#bfc921',
   },
   {
-    name: 'khaki',
-    hex: '#c3b091',
-  },
-  {
     name: 'kidnapper',
     hex: '#e1ead4',
   },
@@ -4414,10 +4318,6 @@ export default [
   {
     name: 'lava',
     hex: '#cf1020',
-  },
-  {
-    name: 'lavender',
-    hex: '#b57edc',
   },
   {
     name: 'lavender blush',
@@ -4668,10 +4568,6 @@ export default [
     hex: '#76bd17',
   },
   {
-    name: 'lime',
-    hex: '#bfff00',
-  },
-  {
     name: 'lime green',
     hex: '#32cd32',
   },
@@ -4698,10 +4594,6 @@ export default [
   {
     name: 'lincoln green',
     hex: '#195905',
-  },
-  {
-    name: 'linen',
-    hex: '#faf0e6',
   },
   {
     name: 'link water',
@@ -4832,10 +4724,6 @@ export default [
     hex: '#3f3002',
   },
   {
-    name: 'magenta',
-    hex: '#ca1f7b',
-  },
-  {
     name: 'magenta haze',
     hex: '#9f4576',
   },
@@ -4954,10 +4842,6 @@ export default [
   {
     name: 'mariner',
     hex: '#286acd',
-  },
-  {
-    name: 'maroon',
-    hex: '#800000',
   },
   {
     name: 'maroon oak',
@@ -5288,10 +5172,6 @@ export default [
     hex: '#6e1d14',
   },
   {
-    name: 'moccasin',
-    hex: '#ffe4b5',
-  },
-  {
     name: 'mocha',
     hex: '#782d19',
   },
@@ -5504,10 +5384,6 @@ export default [
     hex: '#ffdead',
   },
   {
-    name: 'navy',
-    hex: '#000080',
-  },
-  {
     name: 'nebula',
     hex: '#cbdbd6',
   },
@@ -5692,10 +5568,6 @@ export default [
     hex: '#848482',
   },
   {
-    name: 'olive',
-    hex: '#808000',
-  },
-  {
     name: 'olive drab',
     hex: '#3A3327',
   },
@@ -5748,10 +5620,6 @@ export default [
     hex: '#377475',
   },
   {
-    name: 'orange',
-    hex: '#ff7f00',
-  },
-  {
     name: 'orange peel',
     hex: '#ff9f00',
   },
@@ -5774,10 +5642,6 @@ export default [
   {
     name: 'orange yellow',
     hex: '#f8d568',
-  },
-  {
-    name: 'orchid',
-    hex: '#da70d6',
   },
   {
     name: 'orchid pink',
@@ -6276,10 +6140,6 @@ export default [
     hex: '#ec5800',
   },
   {
-    name: 'peru',
-    hex: '#cd853f',
-  },
-  {
     name: 'peru tan',
     hex: '#7f3a02',
   },
@@ -6372,10 +6232,6 @@ export default [
     hex: '#171f04',
   },
   {
-    name: 'pink',
-    hex: '#ffc0cb',
-  },
-  {
     name: 'pink flamingo',
     hex: '#fc74fd',
   },
@@ -6458,10 +6314,6 @@ export default [
   {
     name: 'platinum',
     hex: '#e5e4e2',
-  },
-  {
-    name: 'plum',
-    hex: '#8e4585',
   },
   {
     name: 'plump purple',
@@ -6622,10 +6474,6 @@ export default [
   {
     name: 'punga',
     hex: '#4d3d14',
-  },
-  {
-    name: 'purple',
-    hex: '#800080',
   },
   {
     name: 'purple heart',
@@ -6794,10 +6642,6 @@ export default [
   {
     name: 'rebel',
     hex: '#3c1206',
-  },
-  {
-    name: 'red',
-    hex: '#ff0000',
   },
   {
     name: 'red beech',
@@ -7256,10 +7100,6 @@ export default [
     hex: '#097f4b',
   },
   {
-    name: 'salmon',
-    hex: '#fa8072',
-  },
-  {
     name: 'salmon pink',
     hex: '#CF6955',
   },
@@ -7476,10 +7316,6 @@ export default [
     hex: '#731e8f',
   },
   {
-    name: 'seashell',
-    hex: '#fff5ee',
-  },
-  {
     name: 'seaweed',
     hex: '#1b2f11',
   },
@@ -7608,16 +7444,8 @@ export default [
     hex: '#f3e7bb',
   },
   {
-    name: 'sienna',
-    hex: '#882d17',
-  },
-  {
     name: 'silk',
     hex: '#bdb1a8',
-  },
-  {
-    name: 'silver',
-    hex: '#c0c0c0',
   },
   {
     name: 'silver chalice',
@@ -7730,10 +7558,6 @@ export default [
   {
     name: 'smoky topaz',
     hex: '#933d41',
-  },
-  {
-    name: 'snow',
-    hex: '#fffafa',
   },
   {
     name: 'snow drift',
@@ -8180,10 +8004,6 @@ export default [
     hex: '#341515',
   },
   {
-    name: 'tan',
-    hex: '#d2b48c',
-  },
-  {
     name: 'tan hide',
     hex: '#fa9d5a',
   },
@@ -8272,10 +8092,6 @@ export default [
     hex: '#b19461',
   },
   {
-    name: 'teal',
-    hex: '#008080',
-  },
-  {
     name: 'teal blue',
     hex: '#367588',
   },
@@ -8322,10 +8138,6 @@ export default [
   {
     name: 'thatch green',
     hex: '#403d19',
-  },
-  {
-    name: 'thistle',
-    hex: '#d8bfd8',
   },
   {
     name: 'thistle green',
@@ -8410,10 +8222,6 @@ export default [
   {
     name: 'tom thumb',
     hex: '#3f583b',
-  },
-  {
-    name: 'tomato',
-    hex: '#ff6347',
   },
   {
     name: 'tonys pink',
@@ -8550,10 +8358,6 @@ export default [
   {
     name: 'turmeric',
     hex: '#cabb48',
-  },
-  {
-    name: 'turquoise',
-    hex: '#40e0d0',
   },
   {
     name: 'turquoise blue',
@@ -8816,10 +8620,6 @@ export default [
     hex: '#290c5e',
   },
   {
-    name: 'violet',
-    hex: '#7f00ff',
-  },
-  {
     name: 'violet blue',
     hex: '#314F6F',
   },
@@ -9048,10 +8848,6 @@ export default [
     hex: '#f19bab',
   },
   {
-    name: 'wheat',
-    hex: '#f5deb3',
-  },
-  {
     name: 'wheatfield',
     hex: '#f3edcf',
   },
@@ -9062,10 +8858,6 @@ export default [
   {
     name: 'whisper',
     hex: '#f7f5fa',
-  },
-  {
-    name: 'white',
-    hex: '#ffffff',
   },
   {
     name: 'white ice',
@@ -9226,10 +9018,6 @@ export default [
   {
     name: 'yankees blue',
     hex: '#1c2841',
-  },
-  {
-    name: 'yellow',
-    hex: '#ffff00',
   },
   {
     name: 'yellow green',
