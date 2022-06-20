@@ -31,8 +31,7 @@ export const calculateLuminance = (r, g, b) => {
  * determines the contrast ratio between two colors
  * @param  {string} foreground a hex color.
  * @param  {string} background a hex color.
- * @return {object}            an object containing information
- *                             about the contrast between colors.
+ * @return {object} an object containing information about the contrast between colors.
  */
 export const getContrastRatio = (foreground, background) => {
   const foregroundRGB = hexToRGBA(foreground)
@@ -99,6 +98,5 @@ export const isElementBackgroundBright = element => {
     parseInt(background.g) * BRIGHTNESS.G +
     parseInt(background.b) * BRIGHTNESS.B
 
-  if (brightness > 125) return true
-  if (brightness < 125) return false
+  return brightness >= 125
 }
