@@ -53,32 +53,34 @@ self.onmessage = message => {
   const { data: hexColor } = message
 
   if (hexColor) {
+    const hsvColor = hexToHSV(hexColor)
+
     const closestCSSColor = findClosestColor({
-      color: hexToHSV(hexColor),
+      color: hsvColor,
       library: LIBS.css,
     })
     const closestExtColor = findClosestColor({
-      color: hexToHSV(hexColor),
+      color: hsvColor,
       library: LIBS.ext,
     })
     const closestHksColor = findClosestColor({
-      color: hexToHSV(hexColor),
+      color: hsvColor,
       library: LIBS.hks,
     })
     const closestRalColor = findClosestColor({
-      color: hexToHSV(hexColor),
+      color: hsvColor,
       library: LIBS.ral,
     })
     const closestPantoneColor = findClosestColor({
-      color: hexToHSV(hexColor),
+      color: hsvColor,
       library: LIBS.ptn,
     })
     const closestBehrColor = findClosestColor({
-      color: hexToHSV(hexColor),
+      color: hsvColor,
       library: LIBS.bhr,
     })
     const closestTraditionalJapaneseColor = findClosestColor({
-      color: hexToHSV(hexColor),
+      color: hsvColor,
       library: LIBS.tjp,
     })
 
