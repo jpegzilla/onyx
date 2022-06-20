@@ -3,6 +3,7 @@ import { html } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
 
 const conversionWorker = './js/workers/colorConversion.worker.mjs'
+const closestColorWorker = './js/workers/closestColorFromPalette.worker.mjs'
 
 class ColorDisplay extends Component {
   static name = 'onyx-color-display'
@@ -13,6 +14,7 @@ class ColorDisplay extends Component {
     this.id = ColorDisplay.name
     this.activeColor = minerva.get('activeColor') || 'bg'
     this.conversionWorker = new Worker(conversionWorker, { type: 'module' })
+    this.closestColorWorker = new Worker(closestColorWorker, { type: 'module' })
   }
 
   updateReadout({ fg, bg }) {
@@ -36,20 +38,35 @@ class ColorDisplay extends Component {
   updateColors({ fg, bg }) {
     this.updateReadout({ fg, bg })
 
-    // this.getConversions(fg)
+    this.getConversions(bg)
   }
 
   getConversions(hexColor) {
     this.conversionWorker.addEventListener('message', ({ data }) => {
       minerva.place('colorConversions', data)
-      // const conversions = ['rgba', 'hsla', 'hwb', 'lab', 'lch', 'xyz']
-      //
-      // conversions.forEach(format => {
-      //   this.querySelector(`.conversion-${format}`).textContent = data[format]
-      // })
+
+      // console.log('color data from conversion', data)
+      const conversions = Object.entries(data)
+
+      conversions.forEach(([format, value]) => {
+        const conversionElement = document.createElement('div')
+        conversionElement.innerHTML = html`
+          <span>${format}:</span>
+          <span>${value}</span>
+        `
+
+        this.querySelector('.color-formats-extended').appendChild(
+          conversionElement
+        )
+      })
+    })
+
+    this.closestColorWorker.addEventListener('message', ({ data }) => {
+      console.log(data)
     })
 
     this.conversionWorker.postMessage(hexColor)
+    this.closestColorWorker.postMessage('c70b5d')
   }
 
   connectedCallback() {
@@ -58,7 +75,7 @@ class ColorDisplay extends Component {
         <div class="color-display-readout"><span>#000000</span></div>
         <div class="color-display-selector">
           <div class="color-display-selector-description">
-            <span>current color readout:</span>
+            <span>select color readout</span>
           </div>
 
           <button class="display-background-color" data-color="bg">
@@ -69,6 +86,10 @@ class ColorDisplay extends Component {
             <span>${this.activeColor === 'fg' ? '> ' : ''}text</span>
           </button>
         </div>
+      </section>
+      <section class="color-formats-container">
+        <div class="color-formats-header">extended formats</div>
+        <div class="color-formats-extended"></div>
       </section>
     `
 

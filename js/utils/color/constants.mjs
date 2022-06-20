@@ -27,6 +27,7 @@ export const EPSILON = 216 / 24389
 export const KAPPA = 24389 / 27
 export const TAU = 2 * Math.PI
 export const PI = Math.PI
+export const ANGLE_MAX = 360
 
 // standard white points
 // https://www.w3.org/TR/css-color-4/#:~:text=//%20standard%20white%20points%2C%20defined%20by%204%2Dfigure%20CIE%20x%2Cy%20chromaticities

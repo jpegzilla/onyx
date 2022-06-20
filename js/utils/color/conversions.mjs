@@ -334,3 +334,39 @@ export const hexToLCH = hex => {
 
   return labToLCH(l, a, b, alpha)
 }
+
+export const hexToHSV = hex => {
+  const { r, g, b } = hexToRGBA(hex)
+
+  let red = r / 255
+  let green = g / 255
+  let blue = b / 255
+
+  const minRGBValue = Math.min(red, green, blue)
+  const maxRGBValue = Math.max(red, green, blue)
+  const deltaRGB = maxRGBValue - minRGBValue
+
+  const v = maxRGBValue
+  let h, s
+
+  if (deltaRGB === 0) {
+    // gray
+    h = 0
+    s = 0
+  } else {
+    s = deltaRGB / maxRGBValue
+
+    const deltaR = ((maxRGBValue - red) / 6 + deltaRGB / 2) / deltaRGB
+    const deltaG = ((maxRGBValue - green) / 6 + deltaRGB / 2) / deltaRGB
+    const deltaB = ((maxRGBValue - blue) / 6 + deltaRGB / 2) / deltaRGB
+
+    if (red === maxRGBValue) h = deltaB - deltaG
+    else if (green === maxRGBValue) h = 1 / 3 + deltaR - deltaB
+    else if (blue === maxRGBValue) h = 2 / 3 + deltaG - deltaR
+
+    if (h < 0) h += 1
+    if (h > 1) h -= 1
+  }
+
+  return { h, s, v }
+}
