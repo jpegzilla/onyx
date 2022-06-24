@@ -1,3 +1,7 @@
+/**
+ * some ral color names and hex codes
+ * @type {Array<{ name: string, code: string, hex: string }>}
+ */
 export default [
   {
     name: 'green beige',

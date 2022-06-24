@@ -1,4 +1,8 @@
 // https://en.wikipedia.org/wiki/Traditional_colors_of_Japan
+/**
+ * traditional colos of japan - color names and hex codes
+ * @type {Array<{ name: string, hex: string, english: string, rgb: string, romanized: string }>}
+ */
 export default [
   {
     name: '一斤染',

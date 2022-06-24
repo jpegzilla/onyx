@@ -1,3 +1,7 @@
+/**
+ * some hks color names and hex codes
+ * @type {Array<{ name: string, code: string, hex: string }>}
+ */
 export default [
   {
     name: 'hks 1 e',

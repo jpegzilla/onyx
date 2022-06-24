@@ -1,3 +1,7 @@
+/**
+ * extended color names and hex codes
+ * @type {Array<{ name: string, hex: string }>}
+ */
 export default [
   {
     name: 'abbey',
