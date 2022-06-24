@@ -5604,8 +5604,12 @@ export default [
     hex: '#2f270e',
   },
   {
-    name: 'onyx',
+    name: 'onyx grey',
     hex: '#353839',
+  },
+  {
+    name: 'onyx',
+    hex: '#060408',
   },
   {
     name: 'opal',
