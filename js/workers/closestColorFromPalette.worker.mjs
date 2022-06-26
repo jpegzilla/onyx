@@ -20,6 +20,15 @@ const LIBS = {
   tjp: traditionalJapanese,
 }
 
+/**
+ * given an hsl color in {h, s, v} format and an array of objects
+ * containing several colors in hex format, finds the closest
+ * match for the hsl color in the array.
+ * @arg {Object} args - findClosestColor parameter
+ * @arg {Object} args.color - color in hsv format
+ * @arg {Array} args.library - list of colors to search
+ * @return {Object} closest match to given color from library
+ */
 const findClosestColor = ({ color, library }) => {
   const { sin, cos, pow } = Math
 
