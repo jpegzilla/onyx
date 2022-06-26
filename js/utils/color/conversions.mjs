@@ -347,7 +347,8 @@ export const hexToHSV = hex => {
   const deltaRGB = maxRGBValue - minRGBValue
 
   const v = maxRGBValue
-  let h, s
+  let h = 0,
+    s = 0
 
   if (deltaRGB === 0) {
     // gray
