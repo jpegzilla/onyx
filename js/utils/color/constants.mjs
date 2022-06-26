@@ -30,8 +30,9 @@ export const PI = Math.PI
 export const ANGLE_MAX = 360
 
 // standard white points
-// https://www.w3.org/TR/css-color-4/#:~:text=//%20standard%20white%20points%2C%20defined%20by%204%2Dfigure%20CIE%20x%2Cy%20chromaticities
+
 // reference values of a perfect reflecting diffuser (cie 1931)
+// https://www.w3.org/TR/css-color-4/#:~:text=//%20standard%20white%20points%2C%20defined%20by%204%2Dfigure%20CIE%20x%2Cy%20chromaticities
 export const CIE_1931_XYZ_REFERENCE = {
   D50: [96.422, 100, 82.521],
   D55: [95.682, 100, 92.149],
