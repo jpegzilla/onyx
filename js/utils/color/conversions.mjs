@@ -371,3 +371,14 @@ export const hexToHSV = hex => {
 
   return { h, s, v }
 }
+
+export const hexToNRGBA = hex => {
+  const { r, g, b, a } = hexToRGBA(hex)
+
+  return {
+    nR: (r / 255).toFixed(3),
+    nG: (g / 255).toFixed(3),
+    nB: (b / 255).toFixed(3),
+    nA: (a / 255).toFixed(3),
+  }
+}

@@ -5,6 +5,7 @@ import {
   hexToLAB,
   hexToXYZ,
   hexToLCH,
+  hexToNRGBA,
 } from './../utils/color/conversions.mjs'
 
 self.onmessage = message => {
@@ -28,6 +29,7 @@ self.onmessage = message => {
     } = hexToLAB(color, 'D50')
     const { l: lchL, c: lchC, h: lchH, a: lchA } = hexToLCH(color)
     const { x, y, z } = hexToXYZ(color)
+    const { nR, nG, nB, nA } = hexToNRGBA(color)
 
     const rgba = `rgba(${rgbaR}, ${rgbaG}, ${rgbaB}, ${rgbaA})`
     const hsla = `hsla(${hslaH}, ${hslaS}, ${hslaL}, ${hslaA})`
@@ -36,6 +38,7 @@ self.onmessage = message => {
     const labD50 = `lab(${d50L} ${d50A} ${d50B} / ${d50Alpha})`
     const lch = `lch(${lchL} ${lchC} ${lchH} / ${lchA})`
     const xyz = `xyz(${x}, ${y}, ${z})`
+    const nrgba = `[${nR}, ${nG}, ${nB}, ${nA}]`
 
     self.postMessage({
       rgba, // correct
@@ -45,6 +48,7 @@ self.onmessage = message => {
       ['CIELAB D65/10° (1931)']: labD65, // CIE-L*ab - correct
       ['CIELCh D65/10° (1931)']: lch, // CIE-L*CH°- correct
       xyz, // correct
+      ['normalized rgba']: nrgba, // normalized rgba (0 - 1)
     })
   }
 }
