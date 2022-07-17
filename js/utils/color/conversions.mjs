@@ -382,3 +382,11 @@ export const hexToNRGBA = hex => {
     nA: a.toFixed(3),
   }
 }
+
+export const rgbaToHex = rgba => {
+  const { r, g, b } = rgba
+
+  return `${(r | (1 << 8)).toString(16).slice(1)}${(g | (1 << 8))
+    .toString(16)
+    .slice(1)}${(b | (1 << 8)).toString(16).slice(1)}`
+}
