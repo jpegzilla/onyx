@@ -379,6 +379,6 @@ export const hexToNRGBA = hex => {
     nR: (r / 255).toFixed(3),
     nG: (g / 255).toFixed(3),
     nB: (b / 255).toFixed(3),
-    nA: (a / 255).toFixed(3),
+    nA: a.toFixed(3),
   }
 }
