@@ -5,7 +5,6 @@ import {
   RGB_THRESHOLD,
   PI,
   CIE_1931_XYZ_REFERENCE,
-  CIE_1964_XYZ_REFERENCE,
 } from './constants.mjs'
 
 export const hexToRGBA = hex => {
@@ -83,6 +82,13 @@ export const hexToRGBA = hex => {
   }
 }
 
+/**
+ * converts normalized [0 - 1] hsl to rgb
+ * @param  {number} h hue
+ * @param  {number} s saturation
+ * @param  {number} l lightness
+ * @return {object}   rgb color
+ */
 export const hslToRGB = (h, s, l) => {
   let r, g, b
 
@@ -125,7 +131,7 @@ export const rgbToNHSL = (r, g, b) => {
   let sat = 0
   let hue = 0
   if (max != min) {
-    if (lum < 0.5) s = (max - min) / (max + min)
+    if (lum < 0.5) sat = (max - min) / (max + min)
     else sat = (max - min) / (2 - max - min)
 
     if (red == max) hue = (green - blue) / (max - min)
