@@ -12,6 +12,7 @@ export const LUM_G_ADDEND = 0.0722
 // rgb
 
 export const RGB_MAX = 255
+export const HEX_WHITE = 16777215
 
 // brightness
 
