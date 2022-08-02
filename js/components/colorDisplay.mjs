@@ -4,7 +4,13 @@ import { minerva } from './../main.mjs'
 
 const conversionWorker = './js/workers/colorConversion.worker.mjs'
 const closestColorWorker = './js/workers/closestColorFromPalette.worker.mjs'
+const harmonyWorker = './js/workers/colorHarmonies.worker.mjs'
 
+/**
+ * area in which information about the currently selected color is
+ * displayed.
+ * @extends Component
+ */
 class ColorDisplay extends Component {
   static name = 'onyx-color-display'
 
@@ -15,8 +21,43 @@ class ColorDisplay extends Component {
     this.activeColor = minerva.get('activeColor') || 'bg'
     this.conversionWorker = new Worker(conversionWorker, { type: 'module' })
     this.closestColorWorker = new Worker(closestColorWorker, { type: 'module' })
+    this.harmonyWorker = new Worker(harmonyWorker, { type: 'module' })
+
+    this.conversionWorker.addEventListener('message', ({ data }) => {
+      minerva.place('colorConversions', data)
+
+      const conversions = Object.entries(data)
+      let conversionsHTML = ``
+
+      conversions.forEach(([format, value]) => {
+        conversionsHTML += html`
+          <div>
+            <span class="color-conversion-format">${format}:</span>
+            <span class="color-conversion-unit">${value}</span>
+          </div>
+        `
+      })
+
+      console.log('conversions to other formats', data)
+
+      this.querySelector('.color-formats-extended').innerHTML = conversionsHTML
+    })
+
+    this.closestColorWorker.addEventListener('message', ({ data }) => {
+      console.log('closest colors in other palettes', data)
+    })
+
+    this.harmonyWorker.addEventListener('message', ({ data }) => {
+      console.log('color harmonies', data)
+    })
   }
 
+  /**
+   * updates the color readout in the onyx interface.
+   * @arg {Object} args - updateReadout parameters
+   * @arg {String} args.fg - foreground color
+   * @arg {String} args.bg - background color
+   */
   updateReadout({ fg, bg }) {
     console.log(fg, bg)
     const readout = this.querySelector('.color-display-readout span')
@@ -35,38 +76,28 @@ class ColorDisplay extends Component {
     }
   }
 
+  getConversions(hexColor) {
+    this.conversionWorker.postMessage(hexColor)
+    this.closestColorWorker.postMessage(hexColor)
+    this.harmonyWorker.postMessage(hexColor)
+  }
+
+  /**
+   * updates colors on the display - changes the readout and gets the closest color match along with conversions to the other color formats.
+   * @arg {Object} args - updateColors parameters
+   * @arg {String} args.fg - foreground color
+   * @arg {String} args.bg - background color
+   */
   updateColors({ fg, bg }) {
     this.updateReadout({ fg, bg })
 
-    this.getConversions(bg)
-  }
-
-  getConversions(hexColor) {
-    this.conversionWorker.addEventListener('message', ({ data }) => {
-      minerva.place('colorConversions', data)
-
-      // console.log('color data from conversion', data)
-      const conversions = Object.entries(data)
-
-      conversions.forEach(([format, value]) => {
-        const conversionElement = document.createElement('div')
-        conversionElement.innerHTML = html`
-          <span>${format}:</span>
-          <span>${value}</span>
-        `
-
-        this.querySelector('.color-formats-extended').appendChild(
-          conversionElement
-        )
-      })
-    })
-
-    this.closestColorWorker.addEventListener('message', ({ data }) => {
-      console.log(data)
-    })
-
-    this.conversionWorker.postMessage(hexColor)
-    this.closestColorWorker.postMessage('c70b5d')
+    switch (this.activeColor) {
+      case 'fg':
+        this.getConversions(fg)
+        break
+      case 'bg':
+        this.getConversions(bg)
+    }
   }
 
   connectedCallback() {
@@ -88,7 +119,6 @@ class ColorDisplay extends Component {
         </div>
       </section>
       <section class="color-formats-container">
-        <div class="color-formats-header">extended formats</div>
         <div class="color-formats-extended"></div>
       </section>
     `
@@ -129,7 +159,7 @@ class ColorDisplay extends Component {
 
     minerva.on('activeColor', color => {
       this.activeColor = color
-      this.updateReadout({
+      this.updateColors({
         fg: minerva.get('colors').fg,
         bg: minerva.get('colors').bg,
       })

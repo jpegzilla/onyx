@@ -1,29 +1,29 @@
-import { rgbToNHSL, hslToRGB } from './conversions.mjs'
+import { rgbaToHSLA, hslToRGB } from './conversions.mjs'
 
-// function to change color's hue
 export const shiftHue = (rgb, deg) => {
-  const hsl = rgbToNHSL(rgb.r, rgb.g, rgb.b)
+  const { r, g, b, a } = rgb
+  const { h, s, l } = rgbaToHSLA(r, g, b)
 
   if (deg > 100 || deg < 0)
     throw new RangeError(
       'amount of hue shifting in shiftHue must be within the range [0, 100].'
     )
 
-  hsl.h += deg
-  if (hsl.h < 0) hsl.h += 360
-  if (hsl.h > 360) hsl.h -= 360
-  hsl.h /= 360
-  hsl.s /= 100
-  hsl.l /= 100
+  let hue = h + deg
+  const saturation = parseInt(s) / 100
+  const lightness = parseInt(l) / 100
+  if (hue < 0) hue += 360
+  if (hue > 360) hue -= 360
+  hue /= 360
 
-  return hslToRGB(hsl.h, hsl.s, hsl.l)
+  return hslToRGB(hue, saturation, lightness)
 }
 
 // function to change color's saturation
 export const shiftSat = (rgb, deg) => {
-  const hsl = rgbToNHSL(rgb.r, rgb.g, rgb.b)
+  const hsl = rgbaToHSLA(rgb.r, rgb.g, rgb.b)
 
-  if (deg > 100 || deg < -100)
+  if (Math.abs(deg) > 100)
     throw new RangeError(
       'amount of hue shifting in shiftHue must be within the range [-100, 100].'
     )

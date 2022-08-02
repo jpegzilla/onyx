@@ -47,6 +47,8 @@ class Footer extends Component {
             rel="noreferrer noopener"
             >source code</a
           >
+          <span>&middot;</span>
+          <b></b>
         </div>
       </footer>
     `
