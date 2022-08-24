@@ -12,8 +12,14 @@ class Footer extends Component {
     this.id = Footer.name
   }
 
+  setStatus(status) {
+    this.querySelector('.status-indicator')
+  }
+
   connectedCallback() {
     minerva.workspaceName = 'onyx'
+
+    const currentStatus = 'idle'
 
     this.innerHTML = html`
       <b class="border-top"></b>
@@ -32,14 +38,21 @@ class Footer extends Component {
           </div>
         </div>
         <b></b>
+        <div class="status-indicator">
+          <span class="status-indicator-label">status</span>
+          <span class="status-indicator-message">${currentStatus}</span>
+        </div>
+        <b></b>
         <div class="footer-attribution">
-          made by
-          <a
-            href="https://jpegzilla.com"
-            target="_blank"
-            rel="noreferrer noopener"
-            >jpegzilla</a
-          >
+          <span>
+            made by
+            <a
+              href="https://jpegzilla.com"
+              target="_blank"
+              rel="noreferrer noopener"
+              >jpegzilla</a
+            >
+          </span>
           <span>&middot;</span>
           <a
             href="https://github.com/jpegzilla/onyx"
@@ -47,8 +60,6 @@ class Footer extends Component {
             rel="noreferrer noopener"
             >source code</a
           >
-          <span>&middot;</span>
-          <b></b>
         </div>
       </footer>
     `

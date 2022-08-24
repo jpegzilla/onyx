@@ -31,16 +31,26 @@
       @media (max-width: v.$breakpoint-miniscule)
         display: none
 
-    .footer-attribution
+    .status-indicator
       +v.croptext(1.2)
 
       font-size: 0.8rem
       line-height: 1.1rem
 
-      b
-        height: v.$halfgap
-        width: v.$halfgap
-        border-radius: 50%
+      &-label
+        opacity: 0.6
+        user-select: none
+
+      &-message
+        user-select: none
+
+    .footer-attribution
+      +v.center
+      +v.croptext(1.2)
+
+      font-size: 0.8rem
+      gap: v.$quartergap
+      line-height: 1.1rem
 
       a
         +v.kfocus
