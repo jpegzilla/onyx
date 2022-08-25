@@ -8,7 +8,7 @@ import {
   hexToNRGBA,
 } from './../utils/color/conversions.mjs'
 
-self.onmessage = message => {
+export default message => {
   const { data: color } = message
 
   if (color) {
@@ -40,15 +40,15 @@ self.onmessage = message => {
     const xyz = `xyz(${x}, ${y}, ${z})`
     const nrgba = `[${nR}, ${nG}, ${nB}, ${nA}]`
 
-    self.postMessage({
+    return {
       rgba, // correct
       hsla, // correct
       hwb, // correct
-      xyz, // correct
-      ['normalized rgba']: nrgba, // normalized rgba (0 - 1)
       ['CIELAB D50/10° (1931)']: labD50, // CIE-L*ab - correct
       ['CIELAB D65/10° (1931)']: labD65, // CIE-L*ab - correct
       ['CIELCh D65/10° (1931)']: lch, // CIE-L*CH°- correct
-    })
+      xyz, // correct
+      ['normalized rgba']: nrgba, // normalized rgba (0 - 1)
+    }
   }
 }

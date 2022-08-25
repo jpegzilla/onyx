@@ -229,3 +229,15 @@ export const getCustomProperty = property => {
     .getPropertyValue(property)
     .trim()
 }
+
+export const supportsImportInWorkers = minerva => {
+  return new Promise(resolve => {
+    const dummyWorker = new Worker('./js/workers/dummy.worker.mjs')
+
+    dummyWorker.addEventListener('message', ({ data }) => {
+      if (data === 'error')
+        resolve(minerva.set('supportsImportInWorkers', false))
+      else resolve(minerva.set('supportsImportInWorkers', true))
+    })
+  })
+}

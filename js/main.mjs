@@ -7,6 +7,7 @@ import {
   setCustomProperty,
   getCustomProperty,
   Mnemosyne,
+  supportsImportInWorkers,
 } from './utils/index.mjs'
 import components from './components/index.mjs'
 
@@ -57,9 +58,9 @@ const setupUserPrefs = minerva => {
   minerva.set('colors', colors)
 }
 
-const allMounted = components.map(({ name }) =>
-  customElements.whenDefined(name)
-)
+const allMounted = components
+  .map(({ name }) => customElements.whenDefined(name))
+  .concat(supportsImportInWorkers(minerva))
 components.forEach(({ name, element }) => {
   if (customElements.get(name)) {
     arachne.warn(

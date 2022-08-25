@@ -1,6 +1,9 @@
 import Component from './component.mjs'
 import { html } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
+import closestColorNonWorker from './../workers/closestColorFromPalette.nonWorker.mjs'
+import conversionNonWorker from './../workers/colorConversion.nonWorker.mjs'
+import harmonyNonWorker from './../workers/colorHarmonies.nonWorker.mjs'
 
 const conversionWorker = './js/workers/colorConversion.worker.mjs'
 const closestColorWorker = './js/workers/closestColorFromPalette.worker.mjs'
@@ -19,37 +22,36 @@ class ColorDisplay extends Component {
 
     this.id = ColorDisplay.name
     this.activeColor = minerva.get('activeColor') || 'bg'
-    this.conversionWorker = new Worker(conversionWorker, { type: 'module' })
-    this.closestColorWorker = new Worker(closestColorWorker, { type: 'module' })
-    this.harmonyWorker = new Worker(harmonyWorker, { type: 'module' })
 
-    this.conversionWorker.addEventListener('message', ({ data }) => {
-      minerva.place('colorConversions', data)
+    this.shouldUseWorkers = minerva.get('supportsImportInWorkers')
+  }
 
-      const conversions = Object.entries(data)
-      let conversionsHTML = ``
+  handleClosestColorData({ data }) {
+    console.log('closest colors in other palettes', data)
+  }
 
-      conversions.forEach(([format, value]) => {
-        conversionsHTML += html`
-          <div>
-            <span class="color-conversion-format">${format}:</span>
-            <span class="color-conversion-unit">${value}</span>
-          </div>
-        `
-      })
+  handleHarmonyData({ data }) {
+    console.log('color harmonies', data)
+  }
 
-      console.log('conversions to other formats', data)
+  handleConversionData({ data }) {
+    minerva.place('colorConversions', data)
 
-      this.querySelector('.color-formats-extended').innerHTML = conversionsHTML
+    const conversions = Object.entries(data)
+    let conversionsHTML = ``
+
+    conversions.forEach(([format, value]) => {
+      conversionsHTML += html`
+        <div class="color-conversion-format-container">
+          <span class="color-conversion-format">${format}</span>
+          <span class="color-conversion-unit">${value}</span>
+        </div>
+      `
     })
 
-    this.closestColorWorker.addEventListener('message', ({ data }) => {
-      console.log('closest colors in other palettes', data)
-    })
+    console.log('conversions to other formats', data)
 
-    this.harmonyWorker.addEventListener('message', ({ data }) => {
-      console.log('color harmonies', data)
-    })
+    this.querySelector('.color-formats-extended').innerHTML = conversionsHTML
   }
 
   /**
@@ -77,9 +79,20 @@ class ColorDisplay extends Component {
   }
 
   getConversions(hexColor) {
-    this.conversionWorker.postMessage(hexColor)
-    this.closestColorWorker.postMessage(hexColor)
-    this.harmonyWorker.postMessage(hexColor)
+    if (this.shouldUseWorkers) {
+      this.conversionWorker.postMessage(hexColor)
+      this.closestColorWorker.postMessage(hexColor)
+      this.harmonyWorker.postMessage(hexColor)
+    } else {
+      const conversionData = conversionNonWorker({ data: hexColor })
+      this.handleConversionData({ data: conversionData })
+
+      const closestColorData = closestColorNonWorker({ data: hexColor })
+      this.handleClosestColorData({ data: closestColorData })
+
+      const harmonyData = harmonyNonWorker({ data: hexColor })
+      this.handleHarmonyData({ data: harmonyData })
+    }
   }
 
   /**
@@ -97,6 +110,26 @@ class ColorDisplay extends Component {
         break
       case 'bg':
         this.getConversions(bg)
+    }
+  }
+
+  setupWorkers() {
+    if (this.shouldUseWorkers) {
+      this.conversionWorker = new Worker(conversionWorker, { type: 'module' })
+      this.closestColorWorker = new Worker(closestColorWorker, {
+        type: 'module',
+      })
+      this.harmonyWorker = new Worker(harmonyWorker, { type: 'module' })
+
+      this.conversionWorker.addEventListener('message', ({ data }) =>
+        this.handleConversionData({ data })
+      )
+      this.closestColorWorker.addEventListener('message', ({ data }) =>
+        this.handleClosestColorData({ data })
+      )
+      this.harmonyWorker.addEventListener('message', ({ data }) =>
+        this.handleHarmonyData({ data })
+      )
     }
   }
 
@@ -168,6 +201,8 @@ class ColorDisplay extends Component {
     minerva.on('colors', ({ fg, bg }) => {
       this.updateColors({ fg, bg })
     })
+
+    this.setupWorkers()
   }
 }
 
