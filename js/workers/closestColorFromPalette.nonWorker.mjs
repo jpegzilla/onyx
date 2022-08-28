@@ -6,6 +6,7 @@ import {
   pantone,
   behr,
   traditionalJapanese,
+  crayola,
 } from './../data/palettes/index.mjs'
 import { TAU } from './../utils/color/constants.mjs'
 import { hexToHSV } from './../utils/color/conversions.mjs'
@@ -18,6 +19,7 @@ const LIBS = {
   ptn: pantone,
   bhr: behr,
   tjp: traditionalJapanese,
+  crl: crayola,
 }
 
 /**
@@ -92,15 +94,20 @@ export default message => {
       color: hsvColor,
       library: LIBS.tjp,
     })
+    const closestCrayolaColor = findClosestColor({
+      color: hsvColor,
+      library: LIBS.crl,
+    })
 
     return {
       css: closestCSSColor,
-      ext: closestExtColor,
+      ['bonus']: closestExtColor,
       hks: closestHksColor,
       ral: closestRalColor,
       pantone: closestPantoneColor,
       behr: closestBehrColor,
-      traditionalJapanese: closestTraditionalJapaneseColor,
+      ['伝統色']: closestDentouShoku,
+      crayola: closestCrayolaColor,
     }
   }
 }
