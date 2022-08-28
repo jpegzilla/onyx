@@ -76,7 +76,28 @@
           font-size: 6rem
           line-height: 6.2rem
 
-  .color-formats-container
+  .color-info-container
     +v.lightmono
 
     margin-top: v.$p-m
+
+    .color-info-container-header
+      margin-bottom: v.$p-m
+      font-size: 1.25rem
+      text-transform: uppercase
+      opacity: 0.6
+
+    .color-info-container-list
+      display: grid
+      grid-row-gap: v.$halfgap
+      grid-auto-flow: column dense
+      grid-template-rows: repeat(4, 1fr)
+
+      .color-info-format-container
+        max-width: max-content
+
+      .color-info-format
+        +v.fadebg
+
+        border-radius: v.$border-radius
+        padding: v.$button-padding

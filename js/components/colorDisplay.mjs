@@ -28,6 +28,28 @@ class ColorDisplay extends Component {
 
   handleClosestColorData({ data }) {
     console.log('closest colors in other palettes', data)
+
+    minerva.place('otherColorPalettes', data)
+
+    const conversions = Object.entries(data)
+    let conversionsHTML = ``
+
+    conversions.forEach(([format, { name, code, hex }]) => {
+      conversionsHTML += html`
+        <div class="color-info-format-container">
+          <span class="color-info-format">${format} analogue</span>
+          <span class="color-info-unit"
+            >${name}${code ? ' [' + code + '] ' : ''} (${hex})</span
+          >
+        </div>
+      `
+    })
+
+    console.log('conversions to other formats', data)
+
+    this.querySelector(
+      '.color-info-container.palettes .color-info-container-list'
+    ).innerHTML = conversionsHTML
   }
 
   handleHarmonyData({ data }) {
@@ -42,16 +64,18 @@ class ColorDisplay extends Component {
 
     conversions.forEach(([format, value]) => {
       conversionsHTML += html`
-        <div class="color-conversion-format-container">
-          <span class="color-conversion-format">${format}</span>
-          <span class="color-conversion-unit">${value}</span>
+        <div class="color-info-format-container">
+          <span class="color-info-format">${format}</span>
+          <span class="color-info-unit">${value}</span>
         </div>
       `
     })
 
     console.log('conversions to other formats', data)
 
-    this.querySelector('.color-formats-extended').innerHTML = conversionsHTML
+    this.querySelector(
+      '.color-info-container.conversions .color-info-container-list'
+    ).innerHTML = conversionsHTML
   }
 
   /**
@@ -135,25 +159,32 @@ class ColorDisplay extends Component {
 
   connectedCallback() {
     this.innerHTML = html`
-      <section class="color-display-container">
-        <div class="color-display-readout"><span>#000000</span></div>
-        <div class="color-display-selector">
-          <div class="color-display-selector-description">
-            <span>select color readout</span>
+      <div>
+        <section class="color-display-container">
+          <div class="color-display-readout"><span>#000000</span></div>
+          <div class="color-display-selector">
+            <div class="color-display-selector-description">
+              <span>select color readout</span>
+            </div>
+
+            <button class="display-background-color" data-color="bg">
+              <span>${this.activeColor === 'bg' ? '> ' : ''}background</span>
+            </button>
+
+            <button class="display-text-color" data-color="fg">
+              <span>${this.activeColor === 'fg' ? '> ' : ''}text</span>
+            </button>
           </div>
+        </section>
 
-          <button class="display-background-color" data-color="bg">
-            <span>${this.activeColor === 'bg' ? '> ' : ''}background</span>
-          </button>
+        <section class="color-info-container conversions">
+          <div class="color-info-container-list"></div>
+        </section>
 
-          <button class="display-text-color" data-color="fg">
-            <span>${this.activeColor === 'fg' ? '> ' : ''}text</span>
-          </button>
-        </div>
-      </section>
-      <section class="color-formats-container">
-        <div class="color-formats-extended"></div>
-      </section>
+        <section class="color-info-container palettes">
+          <div class="color-info-container-list"></div>
+        </section>
+      </div>
     `
 
     const displayBackgroundColor = this.querySelector(
