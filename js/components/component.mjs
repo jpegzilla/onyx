@@ -15,6 +15,14 @@ class Component extends HTMLElement {
     this.classList.toggle(className)
   }
 
+  qs(query) {
+    return this.querySelector(query)
+  }
+
+  qsa(query) {
+    return this.querySelectorAll(query)
+  }
+
   setId(id) {
     this.id = id
   }

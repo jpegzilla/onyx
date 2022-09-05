@@ -47,7 +47,7 @@ class ColorDisplay extends Component {
 
     console.log('conversions to other formats', data)
 
-    this.querySelector(
+    this.qs(
       '.color-info-container.palettes .color-info-container-list'
     ).innerHTML = conversionsHTML
   }
@@ -73,7 +73,7 @@ class ColorDisplay extends Component {
 
     console.log('conversions to other formats', data)
 
-    this.querySelector(
+    this.qs(
       '.color-info-container.conversions .color-info-container-list'
     ).innerHTML = conversionsHTML
   }
@@ -86,7 +86,7 @@ class ColorDisplay extends Component {
    */
   updateReadout({ fg, bg }) {
     console.log(fg, bg)
-    const readout = this.querySelector('.color-display-readout span')
+    const readout = this.qs('.color-display-readout span')
 
     if (this.activeColor === 'bg') {
       readout.textContent = bg
@@ -187,10 +187,8 @@ class ColorDisplay extends Component {
       </div>
     `
 
-    const displayBackgroundColor = this.querySelector(
-      '.display-background-color'
-    )
-    const displayTextColor = this.querySelector('.display-text-color')
+    const displayBackgroundColor = this.qs('.display-background-color')
+    const displayTextColor = this.qs('.display-text-color')
 
     const buttons = [displayBackgroundColor, displayTextColor]
 
