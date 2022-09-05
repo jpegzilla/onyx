@@ -31,14 +31,14 @@ self.onmessage = message => {
     const { x, y, z } = hexToXYZ(color)
     const { nR, nG, nB, nA } = hexToNRGBA(color)
 
-    const rgba = `rgba(${rgbaR}, ${rgbaG}, ${rgbaB}, ${rgbaA})`
-    const hsla = `hsla(${hslaH}, ${hslaS}, ${hslaL}, ${hslaA})`
-    const hwb = `hwb(${hwbH} ${hwbW} ${hwbB} / ${hwbA})`
-    const labD65 = `lab(${d65L} ${d65A} ${d65B} / ${d65Alpha})`
-    const labD50 = `lab(${d50L} ${d50A} ${d50B} / ${d50Alpha})`
-    const lch = `lch(${lchL} ${lchC} ${lchH} / ${lchA})`
-    const xyz = `xyz(${x}, ${y}, ${z})`
-    const nrgba = `[${nR}, ${nG}, ${nB}, ${nA}]`
+    const rgba = `${rgbaR}, ${rgbaG}, ${rgbaB}, ${rgbaA}`
+    const hsla = `${hslaH}, ${hslaS}, ${hslaL}, ${hslaA}`
+    const hwb = `${hwbH} ${hwbW} ${hwbB} / ${hwbA}`
+    const labD65 = `${d65L} ${d65A} ${d65B} / ${d65Alpha}`
+    const labD50 = `${d50L} ${d50A} ${d50B} / ${d50Alpha}`
+    const lch = `${lchL} ${lchC} ${lchH} / ${lchA}`
+    const xyz = `${x}, ${y}, ${z}`
+    const nrgba = `${nR}, ${nG}, ${nB}, ${nA}`
 
     self.postMessage({
       rgba, // correct
@@ -48,7 +48,7 @@ self.onmessage = message => {
       ['CIELAB D50']: labD50, // CIE-L*ab D50/10 - correct
       ['CIELAB D65']: labD65, // CIE-L*ab D65/10- correct
       ['CIELCh D65']: lch, // CIE-L*CH° D65/10- correct
-      ['normalized rgba']: nrgba, // normalized rgba (0 - 1)
+      ['norm. rgba']: nrgba, // normalized rgba (0 - 1)
     })
   }
 }
