@@ -101,13 +101,13 @@ self.onmessage = message => {
 
     self.postMessage({
       css: closestCSSColor,
-      ['bonus']: closestExtColor,
       hks: closestHksColor,
       ral: closestRalColor,
       pantone: closestPantoneColor,
       behr: closestBehrColor,
       ['伝統色']: closestDentouShoku,
       crayola: closestCrayolaColor,
+      ['bonus']: closestExtColor,
     })
   }
 }

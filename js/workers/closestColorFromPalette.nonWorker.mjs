@@ -101,13 +101,13 @@ export default message => {
 
     return {
       css: closestCSSColor,
-      ['bonus']: closestExtColor,
       hks: closestHksColor,
       ral: closestRalColor,
       pantone: closestPantoneColor,
       behr: closestBehrColor,
-      ['伝統色']: closestDentouShoku,
+      ['伝統色']: closestTraditionalJapaneseColor,
       crayola: closestCrayolaColor,
+      ['bonus']: closestExtColor,
     }
   }
 }
