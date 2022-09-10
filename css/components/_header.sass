@@ -3,6 +3,7 @@
 
 #onyx-header
   +v.fill
+  +v.colordisplaycolor
 
   grid-area: header
   margin-bottom: v.$p-s // controversial - should this be smaller?
@@ -15,6 +16,7 @@
     display: block
 
   header
+    +v.colordisplaycolor
 
     align-items: center
     display: flex
@@ -26,6 +28,8 @@
       flex-grow: 666
 
     .header-logo
+      +v.colordisplaycolor
+
       $size: 2.25rem
 
       height: $size
@@ -34,6 +38,7 @@
       margin-bottom: -#{v.$halfgap}
 
     .header-wordmark
+      +v.colordisplaycolor
       +v.croptext(1)
 
       font-family: v.$montserrat
@@ -41,7 +46,9 @@
       line-height: 1
 
       .fade
-        +v.fadecolor
+        +v.colordisplaycolor
+
+        opacity: 0.4
 
         @media (max-width: v.$breakpoint-tiny)
           display: none
