@@ -105,9 +105,9 @@ self.onmessage = message => {
       ral: closestRalColor,
       pantone: closestPantoneColor,
       behr: closestBehrColor,
-      ['伝統色']: closestDentouShoku,
+      ['trad. jp']: closestDentouShoku,
       crayola: closestCrayolaColor,
-      ['bonus']: closestExtColor,
+      bonus: closestExtColor,
     })
   }
 }

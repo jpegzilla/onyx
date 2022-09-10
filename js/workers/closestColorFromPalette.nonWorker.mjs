@@ -105,9 +105,9 @@ export default message => {
       ral: closestRalColor,
       pantone: closestPantoneColor,
       behr: closestBehrColor,
-      ['伝統色']: closestTraditionalJapaneseColor,
+      ['trad. jp']: closestTraditionalJapaneseColor,
       crayola: closestCrayolaColor,
-      ['bonus']: closestExtColor,
+      bonus: closestExtColor,
     }
   }
 }
