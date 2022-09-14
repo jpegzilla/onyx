@@ -1,1 +1,8 @@
-{}
+{
+  "short_name": "onyx",
+  "name": "onyx chromatics research system",
+  "description": "onyx is a color tool made for software designers and developers, specifically people who make games and things on the web.",
+  "start_url": "/",
+  "display": "standalone",
+  "scope": "/"
+}
