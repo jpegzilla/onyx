@@ -1,8 +1,15 @@
 @use '../utils/vars' as v
 
 #onyx-logo
-  +v.fontcolor
+  +v.colordisplaycolor
 
   min-height: 20px
   height: 100%
   aspect-ratio: 1 / 1
+  transition: transform 2000000s cubic-bezier(.59,-0.37,.34,1)
+
+  &:hover
+    transition: transform 2000000s linear
+    transform: rotate(360000000deg)
+    // 360 degrees per 2 seconds
+    // 360000000 degrees per 2000000 seconds
