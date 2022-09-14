@@ -10,6 +10,8 @@ space mono - colophon foundry - https://www.colophon-foundry.org/
 
 ral and hks color lists - james pederson - https://github.com/jpederson/colornerd/tree/gh-pages/csv
 
+color names list (various sources) - https://en.wikipedia.org/wiki/List_of_colors_(compact), https://en.wikipedia.org/wiki/List_of_colors_by_shade
+
 inspiration
 
 colorable - jxnblk - https://colorable.jxnblk.com/
