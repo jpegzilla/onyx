@@ -50,7 +50,7 @@ const setupUserPrefs = minerva => {
 
   setCustomProperty('--hl-color-override', highlight)
 
-  const colors = {
+  const colors = minerva.get('colors') ?? {
     fg: getCustomProperty('--text-color'),
     bg: getCustomProperty('--bg-color'),
   }
