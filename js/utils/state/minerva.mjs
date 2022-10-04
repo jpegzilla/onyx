@@ -31,23 +31,23 @@ class Minerva {
    * @property {string} activeColor current color being displayed
    */
   static defaultSettings = {
-    volume: { effect: 100 },
-    timeFormat: '24hr',
-    systemColors: { highlight: '#e0005d' },
-    colors: {},
-    palettes: [],
     [MACHINE]: 'onyx',
     [MUTE]: false,
-    newPlayer: true,
-    arrivals: 0,
     [PROCESS_TYPE]: 'standard',
-    historySize: 100,
     activeColor: 'bg',
+    arrivals: 0,
+    colors: {},
+    historySize: 100,
+    newPlayer: true,
+    palettes: [],
+    systemColors: { highlight: '#e0005d' },
+    timeFormat: '24hr',
+    volume: { effect: 100 },
   }
 
   /**
    * instantiates a minerva object
-   * @param {string} ident  unique identifier for minerva
+   * @param {string} ident unique identifier for minerva
    */
   constructor(ident) {
     if (ident.replace(/\s/gi, '').trim() != ident) {
