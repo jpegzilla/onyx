@@ -15,7 +15,6 @@
     gap: v.$p-m
 
     .color-display-selector
-
       align-items: flex-start
       display: flex
       flex-direction: column
@@ -65,8 +64,8 @@
 
         font-family: v.$redhat
         font-variation-settings: 'wght' 300
-        font-size: 10rem
-        line-height: 10.2rem
+        font-size: 12rem
+        line-height: 12.2rem
 
         @media (max-width: v.$breakpoint-tiny)
           font-size: 8rem
@@ -78,26 +77,41 @@
 
   .color-info-container
     +v.lightmono
+    +v.colordisplaycolor
 
-    margin-top: v.$p-m
+    margin-top: v.$p-l
 
     .color-info-container-header
-      margin-bottom: v.$p-m
-      font-size: 1.25rem
-      text-transform: uppercase
-      opacity: 0.6
+      +v.croptext(1.2)
+
+      margin-bottom: v.$threequartergap
+      font-size: 1rem
+      line-height: 1.2rem
+      display: none
+
+      span
+        opacity: 0.6
+
+      .border-bottom
+        margin-top: v.$halfgap
+        height: 1px
+        transform: scaleY(0.25)
+        width: 100%
+        background-color: currentColor
+        display: none
+        display: block
 
     .color-info-container-list
       display: grid
       grid-row-gap: v.$halfgap
-      grid-auto-flow: column dense
-      grid-template-rows: repeat(4, 1fr)
+      grid-column-gap: v.$p-s
+      grid-auto-flow: column
+      grid-template-rows: repeat(4, max-content)
+      grid-template-columns: repeat(2, 42ch)
 
       .color-info-format-container
         max-width: max-content
 
       .color-info-format
-        +v.fadebg
-
-        border-radius: v.$border-radius
-        padding: v.$button-padding
+        white-space: pre
+        opacity: 0.6

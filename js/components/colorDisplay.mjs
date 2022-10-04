@@ -1,5 +1,5 @@
 import Component from './component.mjs'
-import { html } from './../utils/index.mjs'
+import { html, objectComparison } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
 import closestColorNonWorker from './../workers/closestColorFromPalette.nonWorker.mjs'
 import conversionNonWorker from './../workers/colorConversion.nonWorker.mjs'
@@ -8,6 +8,13 @@ import harmonyNonWorker from './../workers/colorHarmonies.nonWorker.mjs'
 const conversionWorker = './js/workers/colorConversion.worker.mjs'
 const closestColorWorker = './js/workers/closestColorFromPalette.worker.mjs'
 const harmonyWorker = './js/workers/colorHarmonies.worker.mjs'
+
+const HARMONIES = 'colorHarmonies'
+const CONVERSIONS = 'colorConversions'
+const OTHER_PALETTES = 'otherColorPalettes'
+const ACTIVE_COLOR = 'activeColor'
+const BACKGROUND = 'bg'
+const FOREGROUND = 'fg'
 
 /**
  * area in which information about the currently selected color is
@@ -21,43 +28,53 @@ class ColorDisplay extends Component {
     super()
 
     this.id = ColorDisplay.name
-    this.activeColor = minerva.get('activeColor') || 'bg'
+    this.activeColor = minerva.get(ACTIVE_COLOR) || BACKGROUND
 
     this.shouldUseWorkers = minerva.get('supportsImportInWorkers')
   }
 
+  isOldData(data, key) {
+    return minerva.pick(key) && objectComparison(data, minerva.pick(key))
+  }
+
   handleClosestColorData({ data }) {
-    console.log('closest colors in other palettes', data)
+    if (this.isOldData(data, OTHER_PALETTES)) return
 
-    minerva.place('otherColorPalettes', data)
+    // console.log('closest colors in other palettes', data)
 
-    const conversions = Object.entries(data)
-    let conversionsHTML = ``
+    minerva.place(OTHER_PALETTES, data)
 
-    conversions.forEach(([format, { name, code, hex }]) => {
-      conversionsHTML += html`
+    const otherPalettes = Object.entries(data)
+    let otherPalettesHTML = ``
+
+    otherPalettes.forEach(([format, { name, code, hex }]) => {
+      otherPalettesHTML += html`
         <div class="color-info-format-container">
-          <span class="color-info-format">${format} analogue</span>
+          <span class="color-info-format">${format.padEnd(10)}</span>
           <span class="color-info-unit"
-            >${name}${code ? ' [' + code + '] ' : ''} (${hex})</span
+            >${name}${code ? ' [' + code + '] ' : ''}</span
           >
         </div>
       `
     })
 
-    console.log('conversions to other formats', data)
+    // console.log('analogues in other palettes', data)
 
     this.qs(
       '.color-info-container.palettes .color-info-container-list'
-    ).innerHTML = conversionsHTML
+    ).innerHTML = otherPalettesHTML
   }
 
   handleHarmonyData({ data }) {
-    console.log('color harmonies', data)
+    if (this.isOldData(data, HARMONIES)) return
+
+    // console.log('color harmonies', data)
   }
 
   handleConversionData({ data }) {
-    minerva.place('colorConversions', data)
+    if (this.isOldData(data, CONVERSIONS)) return
+
+    minerva.place(CONVERSIONS, data)
 
     const conversions = Object.entries(data)
     let conversionsHTML = ``
@@ -65,13 +82,13 @@ class ColorDisplay extends Component {
     conversions.forEach(([format, value]) => {
       conversionsHTML += html`
         <div class="color-info-format-container">
-          <span class="color-info-format">${format}</span>
+          <span class="color-info-format">${format.padEnd(10)}</span>
           <span class="color-info-unit">${value}</span>
         </div>
       `
     })
 
-    console.log('conversions to other formats', data)
+    // console.log('conversions to other formats', data)
 
     this.qs(
       '.color-info-container.conversions .color-info-container-list'
@@ -85,14 +102,13 @@ class ColorDisplay extends Component {
    * @arg {String} args.bg - background color
    */
   updateReadout({ fg, bg }) {
-    console.log(fg, bg)
     const readout = this.qs('.color-display-readout span')
 
-    if (this.activeColor === 'bg') {
+    if (this.activeColor === BACKGROUND) {
       readout.textContent = bg
     }
 
-    if (this.activeColor === 'fg') {
+    if (this.activeColor === FOREGROUND) {
       readout.textContent = fg
     }
 
@@ -129,10 +145,10 @@ class ColorDisplay extends Component {
     this.updateReadout({ fg, bg })
 
     switch (this.activeColor) {
-      case 'fg':
+      case FOREGROUND:
         this.getConversions(fg)
         break
-      case 'bg':
+      case BACKGROUND:
         this.getConversions(bg)
     }
   }
@@ -168,20 +184,30 @@ class ColorDisplay extends Component {
             </div>
 
             <button class="display-background-color" data-color="bg">
-              <span>${this.activeColor === 'bg' ? '> ' : ''}background</span>
+              <span
+                >${this.activeColor === BACKGROUND ? '> ' : ''}background</span
+              >
             </button>
 
             <button class="display-text-color" data-color="fg">
-              <span>${this.activeColor === 'fg' ? '> ' : ''}text</span>
+              <span>${this.activeColor === FOREGROUND ? '> ' : ''}text</span>
             </button>
           </div>
         </section>
 
         <section class="color-info-container conversions">
+          <div class="color-info-container-header">
+            <span>conversions to other formats</span>
+            <b class="border-bottom"></b>
+          </div>
           <div class="color-info-container-list"></div>
         </section>
 
         <section class="color-info-container palettes">
+          <div class="color-info-container-header">
+            <span>close analogues from external color systems</span>
+            <b class="border-bottom"></b>
+          </div>
           <div class="color-info-container-list"></div>
         </section>
       </div>
@@ -215,11 +241,11 @@ class ColorDisplay extends Component {
               .trim()
           })
 
-        minerva.set('activeColor', activeColor)
+        minerva.set(ACTIVE_COLOR, activeColor)
       })
     })
 
-    minerva.on('activeColor', color => {
+    minerva.on(ACTIVE_COLOR, color => {
       this.activeColor = color
       this.updateColors({
         fg: minerva.get('colors').fg,
