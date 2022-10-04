@@ -241,3 +241,7 @@ export const supportsImportInWorkers = minerva => {
     })
   })
 }
+
+export const objectComparison = (objectA, objectB) => {
+  return JSON.stringify(objectA) === JSON.stringify(objectB)
+}
