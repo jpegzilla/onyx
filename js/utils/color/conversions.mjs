@@ -400,7 +400,7 @@ export const hslToHex = ({ h, s, l }) => {
     s: +s.replaceAll(/[^0-9\.]/gi, '') / 100,
     l: +l.replaceAll(/[^0-9\.]/gi, '') / 100,
   }
-  console.log(dhsl)
+
   const rgb = hslToRGB(...Object.values(dhsl))
 
   return `#${rgbaToHex(rgb)}`
