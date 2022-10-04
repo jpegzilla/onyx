@@ -180,8 +180,8 @@ export const rgbaToHSLA = (r, g, b, a) => {
 
   return {
     h,
-    s: s.toFixed(3) + '%',
-    l: l.toFixed(3) + '%',
+    s: s.toFixed(2) + '%',
+    l: l.toFixed(2) + '%',
     a,
   }
 }
@@ -249,8 +249,8 @@ export const hexToHWB = hex => {
 
   return {
     h: +h,
-    w: white.toFixed(3),
-    b: black.toFixed(3),
+    w: white.toFixed(2),
+    b: black.toFixed(2),
     a,
   }
 }
@@ -302,7 +302,7 @@ export const rgbToLAB = (red, green, blue, alpha, type, cieRef) => {
   const a = 500 * (standardX - standardY)
   const b = 200 * (standardY - standardZ)
 
-  return { l: l.toFixed(3), a: a.toFixed(3), b: b.toFixed(3), alpha }
+  return { l: l.toFixed(2), a: a.toFixed(2), b: b.toFixed(2), alpha }
 }
 
 export const hexToLAB = (hex, type = 'D65', cieRef = '1931') => {
@@ -316,9 +316,9 @@ export const hexToXYZ = hex => {
   const { x, y, z } = rgbToXYZ(r, g, b)
 
   return {
-    x: x.toFixed(3),
-    y: y.toFixed(3),
-    z: z.toFixed(3),
+    x: x.toFixed(2),
+    y: y.toFixed(2),
+    z: z.toFixed(2),
   }
 }
 
@@ -328,9 +328,9 @@ export const labToLCH = (l, a, b, alpha) => {
   else h = 360 - (Math.abs(h) / PI) * 180
 
   return {
-    l: parseInt(l).toFixed(3),
-    c: Math.hypot(a, b).toFixed(3),
-    h: h.toFixed(3),
+    l: parseInt(l).toFixed(2),
+    c: Math.hypot(a, b).toFixed(2),
+    h: h.toFixed(2),
     a: alpha,
   }
 }
@@ -382,10 +382,10 @@ export const hexToNRGBA = hex => {
   const { r, g, b, a } = hexToRGBA(hex)
 
   return {
-    nR: (r / 255).toFixed(3),
-    nG: (g / 255).toFixed(3),
-    nB: (b / 255).toFixed(3),
-    nA: a.toFixed(3),
+    nR: (r / 255).toFixed(2),
+    nG: (g / 255).toFixed(2),
+    nB: (b / 255).toFixed(2),
+    nA: a.toFixed(2),
   }
 }
 
