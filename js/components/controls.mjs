@@ -5,12 +5,7 @@ import {
   throttle,
   setCustomProperty,
 } from './../utils/index.mjs'
-import {
-  hexToHSLA,
-  hslToRGB,
-  rgbaToHex,
-  hexToRGBA,
-} from './../utils/color/conversions.mjs'
+import { hslToRGB, hslToHex } from './../utils/color/conversions.mjs'
 import { minerva } from './../main.mjs'
 
 const MODE_RGB = 'rgb'
@@ -75,12 +70,12 @@ class Controls extends Component {
         fg,
       },
       [MODE_HSL]: {
-        bg: hexToHSLA(bg),
-        fg: hexToHSLA(fg),
+        bg,
+        fg,
       },
       [MODE_RGB]: {
-        bg: hexToRGBA(bg),
-        fg: hexToRGBA(fg),
+        bg: hslToRGB(bg),
+        fg: hslToRGB(fg),
       },
     }
   }
@@ -132,8 +127,14 @@ class Controls extends Component {
   }
 
   connectedCallback() {
-    setCustomProperty('--color-display-color', minerva.get('colors').fg)
-    setCustomProperty('--color-display-background', minerva.get('colors').bg)
+    setCustomProperty(
+      '--color-display-color',
+      hslToHex(minerva.get('colors').fg)
+    )
+    setCustomProperty(
+      '--color-display-background',
+      hslToHex(minerva.get('colors').bg)
+    )
 
     console.log(this.getColors())
     console.log(minerva)

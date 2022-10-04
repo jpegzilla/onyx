@@ -1,6 +1,7 @@
 import Component from './component.mjs'
 import { html, objectComparison } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
+import { hslToHex } from './../utils/color/conversions.mjs'
 import closestColorNonWorker from './../workers/closestColorFromPalette.nonWorker.mjs'
 import conversionNonWorker from './../workers/colorConversion.nonWorker.mjs'
 import harmonyNonWorker from './../workers/colorHarmonies.nonWorker.mjs'
@@ -248,13 +249,13 @@ class ColorDisplay extends Component {
     minerva.on(ACTIVE_COLOR, color => {
       this.activeColor = color
       this.updateColors({
-        fg: minerva.get('colors').fg,
-        bg: minerva.get('colors').bg,
+        fg: hslToHex(minerva.get('colors').fg),
+        bg: hslToHex(minerva.get('colors').bg),
       })
     })
 
     minerva.on('colors', ({ fg, bg }) => {
-      this.updateColors({ fg, bg })
+      this.updateColors({ fg: hslToHex(fg), bg: hslToHex(bg) })
     })
 
     this.setupWorkers()

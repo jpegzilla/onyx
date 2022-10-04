@@ -9,6 +9,7 @@ import {
   Mnemosyne,
   supportsImportInWorkers,
 } from './utils/index.mjs'
+import { hexToHSLA } from './utils/color/conversions.mjs'
 import components from './components/index.mjs'
 
 export const minerva = new Minerva('jpegzilla-onyx')
@@ -50,10 +51,14 @@ const setupUserPrefs = minerva => {
 
   setCustomProperty('--hl-color-override', highlight)
 
-  const colors = minerva.get('colors') ?? {
-    fg: getCustomProperty('--text-color'),
-    bg: getCustomProperty('--bg-color'),
-  }
+  const hasStoredColors = minerva.get('colors') && 'fg' in minerva.get('colors')
+
+  const colors = hasStoredColors
+    ? minerva.get('colors')
+    : {
+        fg: hexToHSLA(getCustomProperty('--text-color')),
+        bg: hexToHSLA(getCustomProperty('--bg-color')),
+      }
 
   minerva.set('colors', colors)
 }

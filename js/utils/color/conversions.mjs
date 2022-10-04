@@ -203,7 +203,7 @@ export const rgbToDHSL = (r, g, b) => {
   let hue, sat
   const lum = (max + min) / 2
 
-  if (max == min) h = s = 0
+  if (max == min) hue = sat = 0
   else {
     const delta = max - min
 
@@ -239,11 +239,8 @@ export const hexToHWB = hex => {
   const { s, l } = rgbToDHSL(r, g, b)
   const { h } = rgbaToHSLA(r, g, b, a)
 
-  let delta
+  const delta = 2 - (2 * l) / value
   const value = l + s * Math.min(l, 1 - l)
-  if (value === 0) _s = 0
-  else delta = 2 - (2 * l) / value
-
   const white = (1 - delta) * value * 100
   const black = (1 - value) * 100
 
@@ -395,4 +392,16 @@ export const rgbaToHex = rgba => {
   return `${(r | (1 << 8)).toString(16).slice(1)}${(g | (1 << 8))
     .toString(16)
     .slice(1)}${(b | (1 << 8)).toString(16).slice(1)}`
+}
+
+export const hslToHex = ({ h, s, l }) => {
+  const dhsl = {
+    h: h / 360,
+    s: +s.replaceAll(/[^0-9\.]/gi, '') / 100,
+    l: +l.replaceAll(/[^0-9\.]/gi, '') / 100,
+  }
+  console.log(dhsl)
+  const rgb = hslToRGB(...Object.values(dhsl))
+
+  return `#${rgbaToHex(rgb)}`
 }
