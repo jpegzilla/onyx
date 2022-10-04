@@ -108,6 +108,7 @@ $layer-overlay: 54
     --hl-color: #{$red}
     --fade-color: #{color.adjust($black-dark, $alpha: -0.5)}
     --fade-bg: #{color.adjust($white-bright, $alpha: -0.95)}
+    --more-bg: #{color.adjust($white-bright, $alpha: -0.85)}
   @else if $theme == "dark"
     --bg-color: #{$black-dark}
     --inverse-bg-color: #{$white-bright}
@@ -117,6 +118,7 @@ $layer-overlay: 54
     --hl-color: #{$red}
     --fade-color: #{color.adjust($white-bright, $alpha: -0.5)}
     --fade-bg: #{color.adjust($black-dark, $alpha: -0.65)}
+    --more-bg: #{color.adjust($black-dark, $alpha: -0.45)}
 
 =fontcolor
   color: var(--text-color)
@@ -138,6 +140,9 @@ $layer-overlay: 54
 
 =halfbg
   background-color: var(--bg-color-half)
+
+=morebg
+  background-color: var(--more-bg)
 
 =colordisplaybg
   background-color: var(--color-display-background)
@@ -190,11 +195,11 @@ $layer-overlay: 54
 
 =focus($othertransitions: '')
   &:focus
-    outline: 2px dotted var(--text-color)
+    outline: 1px solid currentColor
     outline-offset: 0.15rem
 
     body.dark &
-      outline: 2px dotted var(--text-color)
+      outline: 1px solid currentColor
 
 =color($color1: $black-dark, $color2: $white-bright)
   color: $color1
@@ -236,7 +241,7 @@ $layer-overlay: 54
 
 =kfocus($othertransitions: '')
   &:focus
-    outline: 1px dotted $meiko
+    outline: 2px dotted currentColor
 
   &:focus:not(:focus-visible)
     outline: none
