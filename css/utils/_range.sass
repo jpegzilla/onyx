@@ -1,0 +1,96 @@
+@use './vars' as v
+
+=thumbcolor
+  +v.colordisplaycolor
+
+  background-color: currentColor
+
+input[type=range]
+  $size1x1: 1rem
+  $trackheight: 0.45rem
+  $thumboffset: -#{v.$halfgap - ($trackheight / 2)}
+  $trackradius: v.$border-radius
+  $thumbradius: 50%
+
+  @debug $thumboffset
+
+  margin: 0
+  background-color: transparent
+  -webkit-appearance: none
+  display: inline
+
+  &::-webkit-slider-runnable-track
+    +v.fadebg
+
+    border: 0
+    width: 100%
+    height: $trackheight
+    cursor: pointer
+    border-radius: $trackradius
+
+  &::-webkit-slider-thumb
+    +thumbcolor
+
+    margin-top: $thumboffset
+    width: $size1x1
+    height: $size1x1
+    border-radius: $thumbradius
+    cursor: pointer
+    -webkit-appearance: none
+
+
+  &:focus::-webkit-slider-runnable-track
+    +v.morebg
+
+  &::-moz-range-track
+    +v.fadebg
+
+    width: 100%
+    height: $trackheight
+    cursor: pointer
+    border-radius: $trackradius
+
+  &::-moz-range-thumb
+    +thumbcolor
+
+    width: $size1x1
+    height: $size1x1
+    border-radius: $thumbradius
+    cursor: pointer
+    margin-top: $thumboffset
+
+  &::-ms-track
+    background-color: transparent
+    border-color: transparent
+    color: transparent
+    width: 100%
+    height: $trackheight
+    cursor: pointer
+    border-radius: $trackradius
+
+  &::-ms-fill-lower
+    background: #000000
+    border: 0
+
+  &::-ms-fill-upper
+    +v.fadebg
+
+    border: 0
+
+  &::-ms-thumb
+    +thumbcolor
+
+    width: $size1x1
+    height: $size1x1
+    border-radius: 50px
+    cursor: pointer
+    margin-top: $thumboffset
+
+    /*Needed to keep the Edge thumb centred
+
+  &:focus
+    &::-ms-fill-lower
+      +v.fadebg
+
+    &::-ms-fill-upper
+      background: #2b2b2b
