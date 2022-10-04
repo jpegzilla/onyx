@@ -12,6 +12,7 @@ export {
   setCustomProperty,
   getCustomProperty,
   supportsImportInWorkers,
+  objectComparison,
 } from './misc.mjs'
 export { handleClock } from './time.mjs'
 export { colorSchemeToUse } from './color/index.mjs'
