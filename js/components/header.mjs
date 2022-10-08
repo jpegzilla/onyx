@@ -21,10 +21,10 @@ class Header extends Component {
       case timesArrived <= 1:
         return 'welcome to onyx.'
 
-      case timesArrived > 1:
+      case timesArrived.between(1, 10):
         return 'welcome back.'
 
-      case timesArrived > 10:
+      case timesArrived.between(10, 30):
         return "it's good to see you."
 
       // TODO: write more flavor text for this
