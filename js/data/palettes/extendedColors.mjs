@@ -9783,4 +9783,8 @@ export default [
     name: 'pearl dark grey',
     hex: '#797B7A',
   },
+  {
+    name: 'natalya blue',
+    hex: '#2c75ff',
+  },
 ]
