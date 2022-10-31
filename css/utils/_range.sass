@@ -1,4 +1,5 @@
 @use './vars' as v
+@use 'sass:math'
 
 =thumbcolor
   +v.colordisplaycolor
@@ -8,11 +9,9 @@
 input[type=range]
   $size1x1: 1rem
   $trackheight: 0.45rem
-  $thumboffset: -#{v.$halfgap - ($trackheight / 2)}
+  $thumboffset: -#{v.$halfgap - math.div($trackheight, 2)}
   $trackradius: v.$border-radius
   $thumbradius: 50%
-
-  @debug $thumboffset
 
   margin: 0
   background-color: transparent
