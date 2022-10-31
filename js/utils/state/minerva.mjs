@@ -36,7 +36,20 @@ class Minerva {
     [PROCESS_TYPE]: 'standard',
     activeColor: 'bg',
     arrivals: 0,
-    colors: {},
+    colors: {
+      fg: {
+        h: 220,
+        s: 100,
+        l: 99.41,
+        a: 1,
+      },
+      bg: {
+        h: 270,
+        s: 33.33,
+        l: 2.35,
+        a: 1,
+      },
+    },
     historySize: 100,
     newPlayer: true,
     palettes: [],

@@ -157,6 +157,14 @@ export const throttle = (fn, threshold) => {
   }
 }
 
+export const debounce = (func, timeout = 250) => {
+  let timer
+  return () => {
+    clearTimeout(timer)
+    timer = setTimeout(() => func(), timeout)
+  }
+}
+
 /**
  * getAverageColor - calculates the average color of the image provided.
  *

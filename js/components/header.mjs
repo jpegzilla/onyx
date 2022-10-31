@@ -1,7 +1,7 @@
 // ♪音楽 → GRAPHIQSGROOVE - DEEPSKYBLUE : https://www.youtube.com/watch?v=rcVFtuxx-YA
 
 import Component from './component.mjs'
-import { html, handleClock } from './../utils/index.mjs'
+import { html, handleClock, handleGreeting } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
 
 class Header extends Component {
@@ -14,27 +14,6 @@ class Header extends Component {
     this.twelveHourTime = false
   }
 
-  get greeting() {
-    const timesArrived = minerva.get('arrivals')
-
-    switch (true) {
-      case timesArrived <= 1:
-        return 'welcome to onyx.'
-
-      case timesArrived.between(1, 10):
-        return 'welcome back.'
-
-      case timesArrived.between(10, 30):
-        return "it's good to see you."
-
-      // TODO: write more flavor text for this
-      case timesArrived > 30:
-        return "it's good to see you."
-    }
-
-    return 'hello!'
-  }
-
   connectedCallback() {
     this.innerHTML = html`
       <header>
@@ -45,6 +24,8 @@ class Header extends Component {
           onyx <span class="fade">chromatics research system</span>
         </div>
         <b></b>
+        <div class="easteregg"></div>
+        <b></b>
         <div class="header-status-info">
           <span
             class="clock"
@@ -52,7 +33,7 @@ class Header extends Component {
             >xxx. 00:00 &mdash;
             <span class="time-division">dead of night.</span></span
           >
-          <span class="greeting">${this.greeting}</span>
+          <span class="greeting"></span>
         </div>
         <b class="chronocolorimeter"></b>
       </header>
@@ -68,10 +49,15 @@ class Header extends Component {
         this.twelveHourTime = true
       }
 
-      handleClock(this.querySelector('.clock'), minerva)
+      handleClock(this.qs('.clock'), minerva)
     })
 
-    handleClock(this.querySelector('.clock'), minerva)
+    handleClock(this.qs('.clock'), minerva)
+    handleGreeting(this.qs('.greeting'), minerva)
+
+    minerva.on('headerEasterEgg', egg => {
+      this.qs('.easteregg').textContent = egg
+    })
   }
 }
 

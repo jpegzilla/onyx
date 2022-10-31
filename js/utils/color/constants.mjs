@@ -54,3 +54,9 @@ export const CIE_1964_XYZ_REFERENCE = {
 
 export const RGB_THRESHOLD = 0.04045
 export const XYZ_THRESHOLD = 0.08
+
+// modes
+
+export const MODE_HEX = 'hex'
+export const MODE_RGB = 'rgb'
+export const MODE_HSL = 'hsl'

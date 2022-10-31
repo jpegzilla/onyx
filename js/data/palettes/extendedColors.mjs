@@ -816,10 +816,6 @@ export default [
     hex: '#e3dac9',
   },
   {
-    name: 'booger buster',
-    hex: '#dde26a',
-  },
-  {
     name: 'bordeaux',
     hex: '#5c0120',
   },

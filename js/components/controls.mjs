@@ -1,16 +1,15 @@
 import Component from './component.mjs'
+import { html, LimitedList, debounce } from './../utils/index.mjs'
 import {
-  html,
-  LimitedList,
-  throttle,
-  setCustomProperty,
-} from './../utils/index.mjs'
-import { hslToRGB, hslToHex } from './../utils/color/conversions.mjs'
+  hslaToRGB,
+  hslToHex,
+  MODE_HEX,
+  MODE_HSL,
+  MODE_RGB,
+} from './../utils/color/index.mjs'
 import { minerva } from './../main.mjs'
 
-const MODE_RGB = 'rgb'
 const RGB_SETTINGS = {
-  name: MODE_RGB,
   names: ['red', 'green', 'blue'],
   ranges: [
     [0, 255],
@@ -19,9 +18,7 @@ const RGB_SETTINGS = {
   ],
 }
 
-const MODE_HSL = 'hsl'
 const HSL_SETTINGS = {
-  name: MODE_HSL,
   names: ['hue', 'saturation', 'lightness'],
   ranges: [
     [0, 360],
@@ -37,76 +34,81 @@ class Controls extends Component {
     super()
 
     this.id = Controls.name
-    this.history = new LimitedList(minerva.get('historySize'))
+    this.history = new LimitedList({ limit: minerva.get('historySize') })
     this.colors = minerva.get('colors')
     this.activeColor = 'fg'
     this.settings = {
       [MODE_RGB]: RGB_SETTINGS,
       [MODE_HSL]: HSL_SETTINGS,
+      [MODE_HEX]: RGB_SETTINGS,
     }
-    this.controlMode = this.settings[MODE_HSL]
-    this.mode = MODE_HSL
+    this.colorMode = this.settings[MODE_HSL]
+    this.mode = minerva.get('colorMode') || MODE_HSL
+
+    if (!minerva.get('colorMode')) minerva.set('colorMode', this.mode)
   }
 
   setControlMode(mode) {
-    this.controlMode = this.settings[mode]
+    this.colorMode = this.settings[mode]
     this.mode = mode
+    minerva.set('colorMode', mode)
   }
 
-  updateHistory() {
-    const update = throttle(() => {
-      // this.history.add()
-    }, 200)
-
-    update()
+  updateHistory(colors) {
+    this.history.add(colors)
   }
 
-  getColors() {
+  getColors(mode) {
     const { bg, fg } = minerva.get('colors')
 
-    return {
-      hex: {
-        bg,
-        fg,
-      },
-      [MODE_HSL]: {
-        bg,
-        fg,
-      },
-      [MODE_RGB]: {
-        bg: hslToRGB(bg),
-        fg: hslToRGB(fg),
-      },
+    switch (mode) {
+      case MODE_HSL:
+        return {
+          bg,
+          fg,
+        }
+      case MODE_RGB:
+        return {
+          bg: hslaToRGB(...Object.values(bg)),
+          fg: hslaToRGB(...Object.values(fg)),
+        }
+      case MODE_HEX:
+        return {
+          bg: hslToHex(bg),
+          fg: hslToHex(fg),
+        }
     }
   }
 
-  setForeground() {}
+  setColorForLayer(layer, hsl) {
+    minerva.set('colors', {
+      bg: layer === 'bg' ? hsl : minerva.get('colors').bg,
+      fg: layer === 'fg' ? hsl : minerva.get('colors').fg,
+    })
 
-  setBackground() {}
+    this.qs(`.${layer}-color-hex`).textContent = hslToHex(hsl)
+  }
 
-  getColorAndValue(layer, index) {
-    const controlName = this.controlMode.names[index]
-
-    const colorValue = Object.values(this.getColors()[this.mode][layer])[
-      index
-    ].toString()
-
+  getColorAndValue(index, colorValue) {
+    const controlName = this.colorMode.names[index]
     return `${controlName} ${colorValue}`
   }
 
   // use layer param to decide wether to give this html
   // to the foreground or background sliders
+  //
+  // this also needs be run when switching modes
   renderSliders(layer) {
-    if ([MODE_HSL, MODE_RGB].includes(this.mode)) {
+    if ([MODE_HSL, MODE_RGB, MODE_HEX].includes(this.mode)) {
       return this.settings[this.mode].ranges
         .map((range, idx) => {
           const colorValueNumber = Object.values(
-            this.getColors()[this.mode][layer]
+            this.getColors(this.mode)[layer]
           )
             [idx].toString()
             .replaceAll(/[^0-9\.]/gi, '')
 
-          const colorAndValue = this.getColorAndValue(layer, idx)
+          const colorAndValue = this.getColorAndValue(idx, colorValueNumber)
 
           return html`
             <div class="slider-container">
@@ -116,7 +118,7 @@ class Controls extends Component {
                 type="range"
                 min="${range[0]}"
                 max="${range[1]}"
-                step="0.01"
+                step="0.1"
                 value="${colorValueNumber}"
               />
             </div>
@@ -127,27 +129,16 @@ class Controls extends Component {
   }
 
   connectedCallback() {
-    setCustomProperty(
-      '--color-display-color',
-      hslToHex(minerva.get('colors').fg)
-    )
-    setCustomProperty(
-      '--color-display-background',
-      hslToHex(minerva.get('colors').bg)
-    )
-
-    console.log(this.getColors())
-    console.log(minerva)
-
     this.innerHTML = html`<section>
       <div class="controls-container">
         <div class="controls-container-buttons">
-          <div>COCK</div>
+          <!-- <div>CONTROLS</div> -->
         </div>
         <div class="controls-container-sliders">
           <div class="controls-left">
             <div class="controls-header">
               <button class="lock-colors-bg">🔒</button> background color
+              <span class="bg-color-hex">#000000</span>
             </div>
             <div class="controls-sliders background">
               ${this.renderSliders('bg')}
@@ -157,6 +148,7 @@ class Controls extends Component {
           <div class="controls-right">
             <div class="controls-header">
               <button class="lock-colors-fg">🔒</button> text color
+              <span class="fg-color-hex">#000000</span>
             </div>
             <div class="controls-sliders foreground">
               ${this.renderSliders('fg')}
@@ -166,23 +158,39 @@ class Controls extends Component {
       </div>
     </section>`
 
-    this.backgroundColorInputs = this.querySelectorAll(
-      '.background .color-control'
-    )
-    this.foregroundColorInputs = this.querySelectorAll(
-      '.foreground .color-control'
+    this.backgroundColorInputs = this.qsa('.background .color-control')
+    this.foregroundColorInputs = this.qsa('.foreground .color-control')
+
+    const { fg, bg } = this.getColors(this.mode)
+    this.qs('.fg-color-hex').textContent = hslToHex(fg)
+    this.qs('.bg-color-hex').textContent = hslToHex(bg)
+    const handleHistoryUpdate = debounce(
+      () => this.updateHistory({ fg, bg }),
+      200
     )
 
+    const colorInputHandler = (e, layer, index) => {
+      const newColor = Object.fromEntries(
+        Object.entries(this.getColors(this.mode)[layer]).map(
+          ([key, value], idx) =>
+            idx === index ? [key, +e.target.value] : [key, value]
+        )
+      )
+
+      this.qs(`.color-value-${layer}-${index}`).textContent =
+        this.getColorAndValue(index, +e.target.value)
+
+      this.setColorForLayer(layer, newColor)
+
+      handleHistoryUpdate()
+    }
+
     this.backgroundColorInputs.forEach((input, index) => {
-      input.addEventListener('input', e => {
-        console.log('background input', index, e.target.value)
-      })
+      input.addEventListener('input', e => colorInputHandler(e, 'bg', index))
     })
 
     this.foregroundColorInputs.forEach((input, index) => {
-      input.addEventListener('input', e => {
-        console.log('foreground input', index, e.target.value)
-      })
+      input.addEventListener('input', e => colorInputHandler(e, 'fg', index))
     })
   }
 }

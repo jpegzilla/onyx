@@ -1,4 +1,4 @@
-import { rgbaToHSLA, hslToRGB } from './conversions.mjs'
+import { rgbaToHSLA, hslaToRGB } from './conversions.mjs'
 
 export const shiftHue = (rgb, deg) => {
   const { r, g, b, a } = rgb
@@ -16,7 +16,7 @@ export const shiftHue = (rgb, deg) => {
   if (hue > 360) hue -= 360
   hue /= 360
 
-  return hslToRGB(hue, saturation, lightness)
+  return hslaToRGB(hue, saturation, lightness)
 }
 
 // function to change color's saturation
@@ -35,7 +35,7 @@ export const shiftSat = (rgb, deg) => {
   hsl.s /= 100
   hsl.l /= 100
 
-  return hslToRGB(hsl.h, hsl.s, hsl.l)
+  return hslaToRGB(hsl.h, hsl.s, hsl.l)
 }
 
 // change hex color shade by amount

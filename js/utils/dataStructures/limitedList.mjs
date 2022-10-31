@@ -7,7 +7,7 @@ class LimitedList {
    * creates a new limited list.
    * @param {number} limit  the maximum amount of items to hold
    */
-  constructor(limit) {
+  constructor({ limit }) {
     this.limit = limit
 
     this.items = []

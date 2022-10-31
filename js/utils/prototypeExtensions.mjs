@@ -14,3 +14,33 @@ Number.prototype.between = function (min, max, inclusive = false) {
 
   return inclusive ? this >= min && this <= max : this > min && this < max
 }
+
+Object.defineProperty(Object.prototype, 'values', {
+  get: function () {
+    return Object.values(this)
+  },
+})
+
+Object.defineProperty(Object.prototype, 'keys', {
+  get: function () {
+    return Object.keys(this)
+  },
+})
+
+Object.defineProperty(Object.prototype, 'entries', {
+  get: function () {
+    return Object.entries(this)
+  },
+})
+
+/**
+ * Number.sum
+ * adds all the numbers in an array together, returning the sum
+ * @return {number} sum of all numbers in the array
+ */
+Array.prototype.sum = function () {
+  if (this.some(n => isNaN(n)))
+    throw TypeError('all array indices must be numbers.')
+
+  return this.reduce((a, b) => a + b)
+}

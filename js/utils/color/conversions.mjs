@@ -87,9 +87,10 @@ export const hexToRGBA = hex => {
  * @param  {number} h hue
  * @param  {number} s saturation
  * @param  {number} l lightness
+ * @param  {number} a alpha
  * @return {object}   rgb color
  */
-export const hslToRGB = (h, s, l) => {
+export const hslaToRGB = (h, s, l, a) => {
   let r, g, b
 
   if (s == 0) r = g = b = l
@@ -115,6 +116,7 @@ export const hslToRGB = (h, s, l) => {
     r: Math.round(r * 255),
     g: Math.round(g * 255),
     b: Math.round(b * 255),
+    a,
   }
 }
 
@@ -180,8 +182,8 @@ export const rgbaToHSLA = (r, g, b, a) => {
 
   return {
     h,
-    s: s.toFixed(2) + '%',
-    l: l.toFixed(2) + '%',
+    s: +s.toFixed(2),
+    l: +l.toFixed(2),
     a,
   }
 }
@@ -252,6 +254,26 @@ export const hexToHWB = hex => {
   }
 }
 
+export const hslaToHWB = hsl => {
+  const { h: nh, s: ns, l: nl, a: na } = hsl
+  const { r, g, b, a } = hslaToRGB(nh / 360, ns / 100, nl / 100, na)
+
+  const { s, l } = rgbToDHSL(r, g, b)
+  const { h } = rgbaToHSLA(r, g, b, a)
+
+  const value = l + s * Math.min(l, 1 - l)
+  const delta = 2 - (2 * l) / value
+  const white = (1 - delta) * value * 100
+  const black = (1 - value) * 100
+
+  return {
+    h: +h,
+    w: white.toFixed(2),
+    b: black.toFixed(2),
+    a,
+  }
+}
+
 export const rgbToXYZ = (red, green, blue) => {
   let r = red / 255
   let g = green / 255
@@ -302,6 +324,25 @@ export const rgbToLAB = (red, green, blue, alpha, type, cieRef) => {
   return { l: l.toFixed(2), a: a.toFixed(2), b: b.toFixed(2), alpha }
 }
 
+export const hslaToLAB = (hsla, type = 'D65', cieRef = '1931') => {
+  const { h, s, l, a } = hsla
+  const { r, g, b } = hslaToRGB(h / 360, s / 100, l / 100, a)
+
+  return rgbToLAB(r, g, b, a, type, cieRef)
+}
+
+export const hslaToXYZ = hsla => {
+  const { h, s, l, a } = hsla
+  const { r, g, b } = hslaToRGB(h / 360, s / 100, l / 100, a)
+  const { x, y, z } = rgbToXYZ(r, g, b)
+
+  return {
+    x: x.toFixed(2),
+    y: y.toFixed(2),
+    z: z.toFixed(2),
+  }
+}
+
 export const hexToLAB = (hex, type = 'D65', cieRef = '1931') => {
   const { r, g, b, a } = hexToRGBA(hex)
 
@@ -330,6 +371,12 @@ export const labToLCH = (l, a, b, alpha) => {
     h: h.toFixed(2),
     a: alpha,
   }
+}
+
+export const hslaToLCH = hsla => {
+  const { l, a, b, alpha } = hslaToLAB(hsla)
+
+  return labToLCH(l, a, b, alpha)
 }
 
 export const hexToLCH = hex => {
@@ -375,8 +422,44 @@ export const hexToHSV = hex => {
   return { h, s, v }
 }
 
+export const hslToHSV = ({ h, s, l }) => {
+  const ds = s / 100
+  const dl = l / 100
+
+  const val = dl + ds * Math.min(dl, 1 - dl)
+  const sat = val === 0 ? 0 : 2 * (1 - dl / val)
+
+  return {
+    h,
+    s: sat,
+    v: val,
+  }
+}
+
 export const hexToNRGBA = hex => {
   const { r, g, b, a } = hexToRGBA(hex)
+
+  return {
+    nR: (r / 255).toFixed(2),
+    nG: (g / 255).toFixed(2),
+    nB: (b / 255).toFixed(2),
+    nA: a.toFixed(2),
+  }
+}
+
+export const hslaToNRGBA = hsla => {
+  const { h, s, l, a } = hsla
+  const {
+    h: dh,
+    s: ds,
+    l: dl,
+  } = {
+    h: h / 360,
+    s: s / 100,
+    l: l / 100,
+  }
+
+  const { r, g, b } = hslaToRGB(dh, ds, dl)
 
   return {
     nR: (r / 255).toFixed(2),
@@ -397,11 +480,13 @@ export const rgbaToHex = rgba => {
 export const hslToHex = ({ h, s, l }) => {
   const dhsl = {
     h: h / 360,
-    s: +s.replaceAll(/[^0-9\.]/gi, '') / 100,
-    l: +l.replaceAll(/[^0-9\.]/gi, '') / 100,
+    s: s / 100,
+    l: l / 100,
   }
 
-  const rgb = hslToRGB(...Object.values(dhsl))
+  const rgb = hslaToRGB(...Object.values(dhsl))
 
   return `#${rgbaToHex(rgb)}`
 }
+
+export const stringifyHSL = ({ h, s, l }) => `hsl(${h}, ${s}%, ${l}%)`

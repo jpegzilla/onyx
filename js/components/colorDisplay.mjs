@@ -1,10 +1,17 @@
 import Component from './component.mjs'
-import { html, objectComparison } from './../utils/index.mjs'
+import { html, objectComparison, setCustomProperty } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
-import { hslToHex } from './../utils/color/conversions.mjs'
+import {
+  hslToHex,
+  stringifyHSL,
+  MODE_HEX,
+  MODE_HSL,
+  MODE_RGB,
+} from './../utils/color/index.mjs'
 import closestColorNonWorker from './../workers/closestColorFromPalette.nonWorker.mjs'
 import conversionNonWorker from './../workers/colorConversion.nonWorker.mjs'
 import harmonyNonWorker from './../workers/colorHarmonies.nonWorker.mjs'
+import { checkForEgg } from './../utils/managers/easterEggManager.mjs'
 
 const conversionWorker = './js/workers/colorConversion.worker.mjs'
 const closestColorWorker = './js/workers/closestColorFromPalette.worker.mjs'
@@ -103,14 +110,16 @@ class ColorDisplay extends Component {
    * @arg {String} args.bg - background color
    */
   updateReadout({ fg, bg }) {
-    const readout = this.qs('.color-display-readout span')
+    const readout = this.qs(
+      '.color-display-readout .color-display-hex-code span'
+    )
 
     if (this.activeColor === BACKGROUND) {
-      readout.textContent = bg
+      readout.textContent = bg.replace('#', '')
     }
 
     if (this.activeColor === FOREGROUND) {
-      readout.textContent = fg
+      readout.textContent = fg.replace('#', '')
     }
 
     this.colors = {
@@ -119,19 +128,23 @@ class ColorDisplay extends Component {
     }
   }
 
-  getConversions(hexColor) {
+  getConversions(color, format, hexColor) {
+    const conversionMessage = { color, format }
+
     if (this.shouldUseWorkers) {
-      this.conversionWorker.postMessage(hexColor)
-      this.closestColorWorker.postMessage(hexColor)
-      this.harmonyWorker.postMessage(hexColor)
+      this.conversionWorker.postMessage(conversionMessage)
+      this.closestColorWorker.postMessage({ color: hexColor })
+      this.harmonyWorker.postMessage(conversionMessage)
     } else {
-      const conversionData = conversionNonWorker({ data: hexColor })
+      const conversionData = conversionNonWorker({ data: conversionMessage })
       this.handleConversionData({ data: conversionData })
 
-      const closestColorData = closestColorNonWorker({ data: hexColor })
+      const closestColorData = closestColorNonWorker({
+        data: conversionMessage,
+      })
       this.handleClosestColorData({ data: closestColorData })
 
-      const harmonyData = harmonyNonWorker({ data: hexColor })
+      const harmonyData = harmonyNonWorker({ data: conversionMessage })
       this.handleHarmonyData({ data: harmonyData })
     }
   }
@@ -142,15 +155,25 @@ class ColorDisplay extends Component {
    * @arg {String} args.fg - foreground color
    * @arg {String} args.bg - background color
    */
-  updateColors({ fg, bg }) {
+  updateColors({ fg, bg }, colorsToConvert) {
     this.updateReadout({ fg, bg })
+
+    const easterEgg = checkForEgg(colorsToConvert)?.name
+
+    if (easterEgg) {
+      minerva.set('headerEasterEgg', easterEgg)
+    } else {
+      minerva.set('headerEasterEgg', '')
+    }
+
+    const { fg: conversionFg, bg: conversionBg } = colorsToConvert
 
     switch (this.activeColor) {
       case FOREGROUND:
-        this.getConversions(fg)
+        this.getConversions(conversionFg, minerva.get('colorMode'), fg)
         break
       case BACKGROUND:
-        this.getConversions(bg)
+        this.getConversions(conversionBg, minerva.get('colorMode'), bg)
     }
   }
 
@@ -178,7 +201,9 @@ class ColorDisplay extends Component {
     this.innerHTML = html`
       <div>
         <section class="color-display-container">
-          <div class="color-display-readout"><span>#000000</span></div>
+          <div class="color-display-readout">
+            <span class="color-display-hex-code">#<span>000000</span></span>
+          </div>
           <div class="color-display-selector">
             <div class="color-display-selector-description">
               <span>select color readout</span>
@@ -247,15 +272,50 @@ class ColorDisplay extends Component {
     })
 
     minerva.on(ACTIVE_COLOR, color => {
+      const { fg: hslFg, bg: hslBg } = minerva.get('colors')
       this.activeColor = color
-      this.updateColors({
-        fg: hslToHex(minerva.get('colors').fg),
-        bg: hslToHex(minerva.get('colors').bg),
-      })
+      this.updateColors(
+        {
+          fg: hslToHex(hslFg),
+          bg: hslToHex(hslBg),
+        },
+        {
+          fg: hslFg,
+          bg: hslBg,
+        }
+      )
     })
 
     minerva.on('colors', ({ fg, bg }) => {
-      this.updateColors({ fg: hslToHex(fg), bg: hslToHex(bg) })
+      const mode = minerva.get('colorMode')
+      let colorsToConvert
+
+      // display always needs to take hex colors
+      const colorsToDisplay = { fg: hslToHex(fg), bg: hslToHex(bg) }
+
+      switch (mode) {
+        case MODE_HSL:
+          colorsToConvert = {
+            fg,
+            bg,
+          }
+
+          break
+        case MODE_HEX:
+          colorsToConvert = { fg: hslToHex(fg), bg: hslToHex(bg) }
+          break
+        case MODE_RGB:
+          // TODO: give this some functionality
+          break
+      }
+
+      this.updateColors(colorsToDisplay, colorsToConvert)
+
+      setCustomProperty('--text-color', stringifyHSL(fg))
+      setCustomProperty('--color-display-color', stringifyHSL(fg))
+
+      setCustomProperty('--bg-color', stringifyHSL(bg))
+      setCustomProperty('--color-display-background', stringifyHSL(bg))
     })
 
     this.setupWorkers()

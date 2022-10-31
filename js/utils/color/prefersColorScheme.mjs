@@ -12,4 +12,4 @@ const prefersDarkMode = () => {
   return dark
 }
 
-export const colorSchemeToUse = prefersDarkMode() ? 'dark' : 'light'
+export const colorSchemeToUse = () => (prefersDarkMode() ? 'dark' : 'light')

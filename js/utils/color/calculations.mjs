@@ -9,7 +9,9 @@ import {
   LUM_G_ADDEND,
   RGB_MAX,
   BRIGHTNESS,
+  TAU,
 } from './constants.mjs'
+import { hexToHSV } from './conversions.mjs'
 
 // luminance calculation based on this:
 // https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
@@ -99,4 +101,66 @@ export const isElementBackgroundBright = element => {
     parseInt(background.b) * BRIGHTNESS.B
 
   return brightness >= 125
+}
+
+/**
+ * given an hsl color in {h, s, v} format and an array of objects
+ * containing several colors in hex format, finds the closest
+ * match for the hsl color in the array.
+ * @arg {Object} args - findClosestColor parameter
+ * @arg {Object} args.color - color in hsv format
+ * @arg {Array} args.library - list of colors to search
+ * @return {Object} closest match to given color from library
+ */
+export const findClosestColor = ({ color, library }) => {
+  const { sin, cos, pow } = Math
+
+  const { h, s, v } = color
+
+  let lowestDistance = Infinity
+  let closestColor
+
+  for (const libColor of library) {
+    const { hex } = libColor
+
+    const { h: libH, s: libS, v: libV } = hexToHSV(hex)
+
+    const [h1, s1, v1] = [h * TAU, s, v]
+    const [h2, s2, v2] = [libH * TAU, libS, libV]
+
+    const distance =
+      pow(sin(h1) * s1 * v1 - sin(h2) * s2 * v2, 2) +
+      pow(cos(h1) * s1 * v1 - cos(h2) * s2 * v2, 2) +
+      pow(v1 - v2, 2)
+
+    if (distance < lowestDistance) {
+      lowestDistance = distance
+      closestColor = libColor
+    }
+  }
+
+  return closestColor
+}
+
+/**
+ * measures the distance between two color coordinates in hsv
+ * color space.
+ * @param  {object} color          color to measure in hsv
+ * @param  {string} referenceColor color to compare with in hex
+ * @return {number}                distance between two colors
+ */
+export const getColorDistance = (color, referenceColor) => {
+  const { sin, cos, pow } = Math
+  const { h, s, v } = color
+  const { h: libH, s: libS, v: libV } = hexToHSV(referenceColor)
+
+  const [h1, s1, v1] = [h * TAU, s, v]
+  const [h2, s2, v2] = [libH * TAU, libS, libV]
+
+  const distance =
+    pow(sin(h1) * s1 * v1 - sin(h2) * s2 * v2, 2) +
+    pow(cos(h1) * s1 * v1 - cos(h2) * s2 * v2, 2) +
+    pow(v1 - v2, 2)
+
+  return distance
 }

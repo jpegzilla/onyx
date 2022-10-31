@@ -9,7 +9,7 @@ import {
   Mnemosyne,
   supportsImportInWorkers,
 } from './utils/index.mjs'
-import { hexToHSLA } from './utils/color/conversions.mjs'
+import { hexToHSLA, stringifyHSL } from './utils/color/conversions.mjs'
 import components from './components/index.mjs'
 
 export const minerva = new Minerva('jpegzilla-onyx')
@@ -42,7 +42,7 @@ const setupUserPrefs = minerva => {
   }
 
   if (!minerva.get('colorScheme')) {
-    minerva.set('colorScheme', colorSchemeToUse)
+    minerva.set('colorScheme', colorSchemeToUse())
   }
 
   if (!minerva.get('language')) {
@@ -61,6 +61,15 @@ const setupUserPrefs = minerva => {
       }
 
   minerva.set('colors', colors)
+
+  setCustomProperty(
+    '--color-display-color',
+    stringifyHSL(minerva.get('colors').fg)
+  )
+  setCustomProperty(
+    '--color-display-background',
+    stringifyHSL(minerva.get('colors').bg)
+  )
 }
 
 const allMounted = components
@@ -81,4 +90,11 @@ components.forEach(({ name, element }) => {
 Promise.all(allMounted).then(() => {
   setupUserPrefs(minerva)
   minerva.set('loaded', true)
+})
+
+window.addEventListener('storage', e => {
+  console.group()
+  arachne.warn('localStorage manually updated. new value:')
+  console.log(JSON.parse(e.newValue))
+  console.groupEnd()
 })

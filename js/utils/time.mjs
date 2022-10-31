@@ -1,7 +1,7 @@
 import { html } from './../utils/index.mjs'
 
 export const handleClock = (clockElement, minerva) => {
-  setInterval(() => {
+  const setTime = () => {
     let hour = new Date().getHours().toString()
     const minute = new Date().getMinutes().toString()
 
@@ -72,5 +72,42 @@ export const handleClock = (clockElement, minerva) => {
 
     clockElement.innerHTML = html`${day}. ${timeString} &mdash;
       <span class="time-division">${timeDivision}</span>`
-  }, 500)
+  }
+
+  setInterval(() => setTime(), 500)
+  setTime()
+}
+
+export const handleGreeting = (greetingElement, minerva) => {
+  const setGreeting = () => {
+    const timesArrived = minerva.get('arrivals')
+    let greeting
+
+    switch (true) {
+      case timesArrived <= 1:
+        greeting = 'welcome to onyx.'
+        break
+
+      case timesArrived.between(1, 10):
+        greeting = 'welcome back.'
+        break
+
+      case timesArrived.between(10, 30):
+        greeting = "it's good to see you."
+        break
+
+      // TODO: write more flavor text for this
+      case timesArrived > 30:
+        greeting = "it's good to see you."
+        break
+
+      default:
+        greeting = 'hello!'
+    }
+
+    greetingElement.textContent = greeting
+  }
+
+  setInterval(() => setGreeting(), 60000)
+  setGreeting()
 }
