@@ -2,11 +2,13 @@
 
 ## what is onyx?
 
-onyx is a color tool made for software designers and developers, specifically people who make games and things on the web.
+onyx is a color tool made for software designers and developers &mdash; people who make websites, apps, video games, and anything else that uses color.
 
-the purpose of onyx is to provide you with a way to easily create and generate custom color palettes that you can use in a variety of contexts. onyx can be your full service color tool for any and all chromatics-related research and development. designing an app and need some color inspiration? onyx can do that. want to convert colors from one format to another? onyx can do that. the list goes on &mdash; you'll never need another color app.
+the purpose of onyx is to provide you with a way to easily create and generate custom color palettes that you can use in a variety of contexts. onyx can be your full service color tool for any kind of chromatics-related research and development.
 
-it was created with the enjoyment of the user in mind.
+designing an app and need some color inspiration? onyx can do that. want to convert colors from one format to another? onyx does that too! the list goes on &mdash; you'll never need another color app.
+
+onyx was created with the comfort and enjoyment of the user in mind.
 
 <hr>
 
