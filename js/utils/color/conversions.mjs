@@ -242,7 +242,7 @@ export const hexToHWB = hex => {
   const { h } = rgbaToHSLA(r, g, b, a)
 
   const value = l + s * Math.min(l, 1 - l)
-  const delta = 2 - (2 * l) / value
+  const delta = value === 0 ? 0 : 2 - (2 * l) / value
   const white = (1 - delta) * value * 100
   const black = (1 - value) * 100
 
@@ -262,7 +262,7 @@ export const hslaToHWB = hsl => {
   const { h } = rgbaToHSLA(r, g, b, a)
 
   const value = l + s * Math.min(l, 1 - l)
-  const delta = 2 - (2 * l) / value
+  const delta = value === 0 ? 0 : 2 - (2 * l) / value
   const white = (1 - delta) * value * 100
   const black = (1 - value) * 100
 
