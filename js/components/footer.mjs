@@ -1,6 +1,6 @@
 import Component from './component.mjs'
 import { html } from './../utils/index.mjs'
-import { minerva } from './../main.mjs'
+import { minerva, env } from './../main.mjs'
 import { footerCopy } from './../data/copy.mjs'
 
 class Footer extends Component {
@@ -65,6 +65,8 @@ class Footer extends Component {
             rel="noreferrer noopener"
             >source code</a
           >
+          <span>&middot;</span>
+          ver. ${env.ONYX_VERSION}
         </div>
       </footer>
     `

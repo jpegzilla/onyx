@@ -12,6 +12,7 @@ import {
 import { hexToHSLA, stringifyHSL } from './utils/color/conversions.mjs'
 import components from './components/index.mjs'
 
+export * from './meta.mjs'
 export const minerva = new Minerva('jpegzilla-onyx')
 export const arachne = Arachne
 export const mnemosyne = new Mnemosyne('jpegzilla-onyx')
