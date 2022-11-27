@@ -7,6 +7,7 @@ import {
   MODE_HEX,
   MODE_HSL,
   MODE_RGB,
+  getContrastRatio,
 } from './../utils/color/index.mjs'
 import closestColorNonWorker from './../workers/closestColorFromPalette.nonWorker.mjs'
 import conversionNonWorker from './../workers/colorConversion.nonWorker.mjs'
@@ -23,6 +24,7 @@ const OTHER_PALETTES = 'otherColorPalettes'
 const ACTIVE_COLOR = 'activeColor'
 const BACKGROUND = 'bg'
 const FOREGROUND = 'fg'
+const CONTRAST = 'contrastRatio'
 
 /**
  * area in which information about the currently selected color is
@@ -47,8 +49,6 @@ class ColorDisplay extends Component {
 
   handleClosestColorData({ data }) {
     if (this.isOldData(data, OTHER_PALETTES)) return
-
-    // console.log('closest colors in other palettes', data)
 
     minerva.place(OTHER_PALETTES, data)
 
@@ -84,10 +84,9 @@ class ColorDisplay extends Component {
 
     minerva.place(CONVERSIONS, data)
 
-    const conversions = Object.entries(data)
     let conversionsHTML = ``
 
-    conversions.forEach(([format, value]) => {
+    data.entries.forEach(([format, value]) => {
       conversionsHTML += html`
         <div class="color-info-format-container">
           <span class="color-info-format">${format.padEnd(10)}</span>
@@ -101,6 +100,37 @@ class ColorDisplay extends Component {
     this.qs(
       '.color-info-container.conversions .color-info-container-list'
     ).innerHTML = conversionsHTML
+  }
+
+  handleContrastRatio(data) {
+    const { number, string, wcag, luminance } = data
+
+    if (this.isOldData(data, CONTRAST)) return
+
+    minerva.place(OTHER_PALETTES, data)
+
+    const dataToDisplay = {
+      wcag: wcag[0],
+      ratio: number,
+      'fg lum.': luminance.fg.toFixed(2),
+      'bg lum.': luminance.bg.toFixed(2),
+      'raw bg:fg': string,
+    }.entries
+
+    let dataHTML = ``
+
+    dataToDisplay.forEach(([format, value]) => {
+      dataHTML += html`
+        <div class="color-info-format-container">
+          <span class="color-info-format">${format.padEnd(10)}</span>
+          <span class="color-info-unit">${value}</span>
+        </div>
+      `
+    })
+
+    this.qs(
+      '.color-info-container.contrast .color-info-container-list'
+    ).innerHTML = dataHTML
   }
 
   /**
@@ -156,7 +186,14 @@ class ColorDisplay extends Component {
    * @arg {String} args.bg - background color
    */
   updateColors({ fg, bg }, colorsToConvert) {
+    const format = minerva.get('colorMode')
+
     this.updateReadout({ fg, bg })
+
+    // contrast ratio stuff really doesn't require
+    // offloading to a worker
+    const contrastRatio = getContrastRatio(colorsToConvert, format)
+    this.handleContrastRatio(contrastRatio)
 
     const easterEgg = checkForEgg(colorsToConvert)?.name
 
@@ -170,10 +207,10 @@ class ColorDisplay extends Component {
 
     switch (this.activeColor) {
       case FOREGROUND:
-        this.getConversions(conversionFg, minerva.get('colorMode'), fg)
+        this.getConversions(conversionFg, format, fg)
         break
       case BACKGROUND:
-        this.getConversions(conversionBg, minerva.get('colorMode'), bg)
+        this.getConversions(conversionBg, format, bg)
     }
   }
 
@@ -224,7 +261,7 @@ class ColorDisplay extends Component {
         <section class="color-info-container conversions">
           <div class="color-info-container-header">
             <span>conversions to other formats</span>
-            <b class="border-bottom"></b>
+            <!-- <b class="border-bottom"></b> -->
           </div>
           <div class="color-info-container-list"></div>
         </section>
@@ -232,7 +269,15 @@ class ColorDisplay extends Component {
         <section class="color-info-container palettes">
           <div class="color-info-container-header">
             <span>close analogues from external color systems</span>
-            <b class="border-bottom"></b>
+            <!-- <b class="border-bottom"></b> -->
+          </div>
+          <div class="color-info-container-list"></div>
+        </section>
+
+        <section class="color-info-container contrast">
+          <div class="color-info-container-header">
+            <span>contrast information</span>
+            <!-- <b class="border-bottom"></b> -->
           </div>
           <div class="color-info-container-list"></div>
         </section>

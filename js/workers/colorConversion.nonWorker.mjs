@@ -41,8 +41,8 @@ const fromHex = color => {
     hwb, // correct
     xyz, // correct
     ['CIELAB D50']: labD50, // CIE-L*ab D50/10 - correct
-    ['CIELAB D65']: labD65, // CIE-L*ab D65/10- correct
-    ['CIELCh D65']: lch, // CIE-L*CH° D65/10- correct
+    ['CIELAB D65']: labD65, // CIE-L*ab D65/10 - correct
+    ['CIELCh D65']: lch, // CIE-L*CH° D65/10 - correct
     ['norm. rgba']: nrgba, // normalized rgba (0 - 1)
   }
 }

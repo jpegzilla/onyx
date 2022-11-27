@@ -87,7 +87,7 @@
       margin-bottom: v.$threequartergap
       font-size: 1rem
       line-height: 1.2rem
-      display: none
+      // display: none
 
       span
         opacity: 0.6
@@ -115,3 +115,7 @@
       .color-info-format
         white-space: pre
         opacity: 0.6
+
+    &.contrast .color-info-container-list
+      grid-template-rows: repeat(3, max-content)
+      grid-template-columns: repeat(2, 42ch)

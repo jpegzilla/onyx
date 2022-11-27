@@ -10,8 +10,10 @@ import {
   RGB_MAX,
   BRIGHTNESS,
   TAU,
+  MODE_HSL,
+  ANGLE_MAX,
 } from './constants.mjs'
-import { hexToHSV } from './conversions.mjs'
+import { hexToHSV, hslaToRGB } from './conversions.mjs'
 
 // luminance calculation based on this:
 // https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
@@ -31,19 +33,38 @@ export const calculateLuminance = (r, g, b) => {
 
 /**
  * determines the contrast ratio between two colors
- * @param  {string} foreground a hex color.
- * @param  {string} background a hex color.
+ * @param  {string} foreground an hsl color.
+ * @param  {string} background an hsl color.
  * @return {object} an object containing information about the contrast between colors.
  */
-export const getContrastRatio = (foreground, background) => {
-  const foregroundRGB = hexToRGBA(foreground)
-  const backgroundRGB = hexToRGBA(background)
+export const getContrastRatio = (color, format) => {
+  let foreground, background
+  const { fg, bg } = color
+
+  switch (format) {
+    case MODE_HSL:
+      foreground = {
+        h: fg.h / ANGLE_MAX,
+        s: fg.s / 100,
+        l: fg.l / 100,
+        a: fg.a,
+      }
+      background = {
+        h: bg.h / ANGLE_MAX,
+        s: bg.s / 100,
+        l: bg.l / 100,
+        a: bg.a,
+      }
+  }
+
+  const foregroundRGB = hslaToRGB(...foreground.values)
+  const backgroundRGB = hslaToRGB(...background.values)
 
   const wcagLevels = {
     fail: {
       range: [0, 3],
     },
-    'aa Large': {
+    'aa large': {
       range: [3, 4.5],
     },
     aa: {
@@ -79,7 +100,15 @@ export const getContrastRatio = (foreground, background) => {
     ([, v]) => v.range[0] <= contrastNum && v.range[1] >= contrastNum
   )
 
-  return { number: contrastNum, string: contrastString, wcag }
+  return {
+    number: contrastNum,
+    string: contrastString,
+    wcag,
+    luminance: {
+      fg: lum1,
+      bg: lum2,
+    },
+  }
 }
 
 // determine whether the text in the
