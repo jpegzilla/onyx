@@ -146,7 +146,7 @@ class Controls extends Component {
                 'controls-add-to-palette',
                 'add <span class="bg-color-hex">#000000</span> to palette'
               )}
-              <div class="drag bg" title="drag this color">
+              <div class="drag bg" title="drag this color" tabindex="0">
                 <div>${drag``}</div>
               </div>
             </div>
@@ -162,7 +162,7 @@ class Controls extends Component {
                 'controls-add-to-palette',
                 'add <span class="fg-color-hex">#000000</span> to palette'
               )}
-              <div class="drag fg" title="drag this color">
+              <div class="drag fg" title="drag this color" tabindex="0">
                 <div>${drag``}</div>
               </div>
             </div>

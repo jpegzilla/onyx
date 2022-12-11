@@ -32,10 +32,12 @@
 
       button
         +v.destroy
+        +v.kfocus
 
         cursor: pointer
         width: 100%
         text-align: left
+        max-width: max-content
 
       button, div
         +v.colordisplaycolor
@@ -50,8 +52,7 @@
           display: block
           font-size: 1rem
           line-height: 1.2rem
-          padding-bottom: v.$small-space
-          padding-right: v.$halfgap
+          padding: v.$small-space v.$halfgap
 
     .color-display-readout
       max-height: max-content

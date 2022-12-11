@@ -8,14 +8,13 @@
 
 input[type=range]
   +v.colordisplaycolor
+  +v.kfocus
 
   $size1x1: 1rem
   $trackheight: 1px
   $thumboffset: 0
   $trackradius: v.$border-radius
   $thumbradius: 50%
-
-  @debug $thumboffset
 
   margin: v.$halfgap 0
   background-color: transparent
@@ -33,10 +32,13 @@ input[type=range]
     width: 100%
     transform: scaleY(0.25)
 
+  &:focus::before
+    transform: none
+
   &::-webkit-slider-runnable-track
     background-color: transparent
     border-radius: $trackradius
-    border: 7px solid transparent
+    border: 10px solid transparent
     cursor: pointer
     height: $trackheight
     width: 100%
@@ -54,16 +56,19 @@ input[type=range]
     margin-top: -#{v.$halfgap}
 
   &:focus::-webkit-slider-runnable-track
-    background: currentColor
+    background-color: transparent
     border-color: transparent
 
   &::-moz-range-track
     background: currentColor
     border-radius: $trackradius
     cursor: pointer
-    height: $trackheight
+    height: 0.25rem
     width: 100%
     opacity: 0.3
+
+  &:focus::-moz-range-track
+    opacity: 0.6
 
   &::-moz-range-thumb
     +thumbcolor
