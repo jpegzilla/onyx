@@ -260,7 +260,9 @@ class ColorDisplay extends Component {
             </button>
 
             <button class="display-text-color" data-color="fg">
-              <span>${this.activeColor === FOREGROUND ? '> ' : ''}text</span>
+              <span
+                >${this.activeColor === FOREGROUND ? '> ' : ''}foreground</span
+              >
             </button>
           </div>
         </section>

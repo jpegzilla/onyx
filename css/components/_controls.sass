@@ -18,11 +18,34 @@
 
   .controls-container
     display: grid
-    gap: v.$p-m
+    gap: v.$p-s
     grid-template-rows: repeat(2, auto)
 
-  .controls-container-buttons
-    +v.lightmono
+    button
+      +v.destroy
+      +v.center
+
+      position: relative
+      display: inline-block
+      font-size: 1.25rem
+      color: currentColor
+      cursor: pointer
+      padding: v.$button-padding
+      isolation: isolate
+
+      & > div:last-child
+        z-index: 2
+
+      & > div:first-child
+        +v.positionzero
+
+        background-color: currentColor
+        display: flex
+        height: 100%
+        position: absolute
+        width: 100%
+        z-index: 1
+        opacity: 0.25
 
   .controls-container-sliders
     +v.lightmono
@@ -34,51 +57,6 @@
     .controls-header
       font-size: 1.5rem
       margin-bottom: v.$p-m
-
-      button
-        +v.destroy
-        +v.center
-
-        position: relative
-        display: inline-block
-        font-size: 1.25rem
-        color: currentColor
-        cursor: pointer
-        padding: v.$button-padding
-
-        & > div:first-child
-          +v.positionzero
-          display: flex
-          position: absolute
-          width: 100%
-          height: 100%
-
-          b:first-child,
-          b:last-child
-            justify-self: center
-            align-self: flex-start
-            display: block
-            position: absolute
-            height: 1px
-            width: 100%
-            transform: scaleY(0.25)
-            background-color: currentColor
-
-          b:nth-child(2),
-          b:nth-child(3)
-            display: block
-            position: absolute
-            height: 100%
-            width: 1px
-            transform: scaleX(0.25)
-            background-color: currentColor
-
-          b:nth-child(3)
-            right: 0
-            left: 100%
-
-          b:last-child
-            align-self: flex-end
 
     .controls-sliders
       display: grid

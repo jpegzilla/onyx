@@ -16,16 +16,26 @@ input[type=range]
   margin: 0
   background-color: transparent
   -webkit-appearance: none
-  display: inline
+  display: inline-flex
+  align-items: center
+  position: relative
+
+  &::before
+    +thumbcolor
+
+    content: ''
+    height: 1px
+    margin-bottom: -1px
+    position: absolute
+    width: 100%
 
   &::-webkit-slider-runnable-track
-    +v.fadebg
-
-    border: 0
-    width: 100%
-    height: $trackheight
-    cursor: pointer
+    background: transparent
     border-radius: $trackradius
+    border: 0
+    cursor: pointer
+    height: $trackheight
+    width: 100%
 
   &::-webkit-slider-thumb
     +thumbcolor
@@ -37,17 +47,15 @@ input[type=range]
     cursor: pointer
     -webkit-appearance: none
 
-
   &:focus::-webkit-slider-runnable-track
-    +v.morebg
+    background: transparent
 
   &::-moz-range-track
-    +v.fadebg
-
-    width: 100%
-    height: $trackheight
-    cursor: pointer
+    background: transparent
     border-radius: $trackradius
+    cursor: pointer
+    height: $trackheight
+    width: 100%
 
   &::-moz-range-thumb
     +thumbcolor
@@ -67,13 +75,9 @@ input[type=range]
     cursor: pointer
     border-radius: $trackradius
 
-  &::-ms-fill-lower
-    background: #000000
-    border: 0
-
+  &::-ms-fill-lower,
   &::-ms-fill-upper
-    +v.fadebg
-
+    background: transparent
     border: 0
 
   &::-ms-thumb
@@ -85,11 +89,7 @@ input[type=range]
     cursor: pointer
     margin-top: $thumboffset
 
-    /*Needed to keep the Edge thumb centred
-
   &:focus
-    &::-ms-fill-lower
-      +v.fadebg
-
+    &::-ms-fill-lower,
     &::-ms-fill-upper
-      background: #2b2b2b
+      background: transparent

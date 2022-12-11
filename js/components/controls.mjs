@@ -128,25 +128,24 @@ class Controls extends Component {
     }
   }
 
+  thinBorderButton(className, content) {
+    return html`<button class=${className}>
+      <div></div>
+      <div>${content}</div>
+    </button>`
+  }
+
   connectedCallback() {
     this.innerHTML = html`<section>
       <div class="controls-container">
-        <div class="controls-container-buttons">
-          <!-- <div>CONTROLS</div> -->
-        </div>
         <div class="controls-container-sliders">
           <div class="controls-left">
             <div class="controls-header">
-              <button class="lock-colors-fg">
-                <div><b></b><b></b><b></b><b></b></div>
-                <div>lock background</div>
-              </button>
-              <button class="controls-add-to-palette">
-                <div><b></b><b></b><b></b><b></b></div>
-                <div>
-                  add <span class="bg-color-hex">#000000</span> to palette
-                </div>
-              </button>
+              ${this.thinBorderButton('lock-colors-fg', 'lock background')}
+              ${this.thinBorderButton(
+                'controls-add-to-palette',
+                'add <span class="bg-color-hex">#000000</span> to palette'
+              )}
             </div>
             <div class="controls-sliders background">
               ${this.renderSliders('bg')}
@@ -155,16 +154,11 @@ class Controls extends Component {
 
           <div class="controls-right">
             <div class="controls-header">
-              <button class="lock-colors-fg">
-                <div><b></b><b></b><b></b><b></b></div>
-                <div>lock foreground</div>
-              </button>
-              <button class="controls-add-to-palette">
-                <div><b></b><b></b><b></b><b></b></div>
-                <div>
-                  add <span class="fg-color-hex">#000000</span> to palette
-                </div>
-              </button>
+              ${this.thinBorderButton('lock-colors-fg', 'lock foreground')}
+              ${this.thinBorderButton(
+                'controls-add-to-palette',
+                'add <span class="fg-color-hex">#000000</span> to palette'
+              )}
             </div>
             <div class="controls-sliders foreground">
               ${this.renderSliders('fg')}
