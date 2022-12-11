@@ -1,7 +1,19 @@
+import { env } from './../meta.mjs'
+const { ARACHNE_TRACE, ARACHNE_SILENT } = env
+
 /**
  * Arachne - wrapper for pretty logs
  */
 class Arachne {
+  static #onlyShowPreLog(message) {
+    if (ARACHNE_SILENT) return true
+    if (ARACHNE_TRACE) {
+      console.trace(message)
+      return true
+    }
+
+    return false
+  }
   /**
    * @static log - outputs a styled message. to be used for logging messages in production.
    *
@@ -9,6 +21,8 @@ class Arachne {
    *
    */
   static log(message) {
+    if (this.#onlyShowPreLog(message)) return
+
     console.log(
       `%c[arachne] ${message}`.toLowerCase(),
       'color:white;background:black;padding:0.5rem;border-left:3px solid green;'
@@ -22,6 +36,8 @@ class Arachne {
    *
    */
   static warn(message) {
+    if (this.#onlyShowPreLog(message)) return
+
     console.log(
       `%c[arachne] ${message}`.toLowerCase(),
       'color:white;background:black;padding:0.5rem;border-left:3px solid orange;'
@@ -35,6 +51,8 @@ class Arachne {
    *
    */
   static error(message) {
+    if (this.#onlyShowPreLog(message)) return
+
     console.log(
       `%c[arachne] ${message}`.toLowerCase(),
       'color:white;background:black;padding:0.5rem;border-left:3px solid red;'
