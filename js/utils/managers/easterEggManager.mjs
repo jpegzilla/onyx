@@ -6,6 +6,7 @@ const easterEggPairs = {
   'blackpink in your area': ['efa7b5', '000000'], // hsl(348, 69%, 80%)
   'this is halloween': ['ff9a00', '000000'],
   'new hospital floor': ['e30000', 'ffffff'],
+  'patchouli knowledge': ['541c60', 'f9acc0'], // hsl(289, 55%, 24%), hsl(344, 87%, 83%)
 }
 
 const easterEggColors = {
