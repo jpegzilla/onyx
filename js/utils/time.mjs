@@ -19,16 +19,16 @@ export const handleClock = (clockElement, minerva) => {
     const timeString = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`
 
     const hours = new Date().getHours()
-    const isEarlyMorning = hours.between(5, 8, true)
-    const isMorning = hours.between(8, 12, true)
+    const isEarlyMorning = hours.between(5, 8)
+    const isMorning = hours.between(8, 12)
     const isNoon = hours === 12
-    const isAfterNoon = hours.between(12, 16, true)
-    const isLateAfterNoon = hours.between(16, 18, true)
-    const isEarlyEvening = hours.between(18, 19, true)
-    const isEvening = hours.between(19, 20, true)
-    const isNight = hours.between(20, 23, true)
+    const isAfterNoon = hours.between(12, 16)
+    const isLateAfterNoon = hours.between(16, 18)
+    const isEarlyEvening = hours.between(18, 19)
+    const isEvening = hours.between(19, 20)
+    const isNight = hours.between(20, 23)
     const isMidNight = hours === 0
-    const isVeryLate = hours.between(0, 5, true)
+    const isVeryLate = hours.between(0, 5)
     const dayIndex = new Date().getDay()
     const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
     const day = days[dayIndex]
