@@ -7,13 +7,17 @@
   background-color: currentColor
 
 input[type=range]
+  +v.colordisplaycolor
+
   $size1x1: 1rem
-  $trackheight: 0.45rem
-  $thumboffset: -#{v.$halfgap - math.div($trackheight, 2)}
+  $trackheight: 1px
+  $thumboffset: 0
   $trackradius: v.$border-radius
   $thumbradius: 50%
 
-  margin: 0
+  @debug $thumboffset
+
+  margin: v.$halfgap 0
   background-color: transparent
   -webkit-appearance: none
   display: inline-flex
@@ -24,15 +28,15 @@ input[type=range]
     +thumbcolor
 
     content: ''
-    height: 1px
-    margin-bottom: -1px
+    height: $trackheight
     position: absolute
     width: 100%
+    transform: scaleY(0.25)
 
   &::-webkit-slider-runnable-track
-    background: transparent
+    background-color: transparent
     border-radius: $trackradius
-    border: 0
+    border: 7px solid transparent
     cursor: pointer
     height: $trackheight
     width: 100%
@@ -46,16 +50,20 @@ input[type=range]
     border-radius: $thumbradius
     cursor: pointer
     -webkit-appearance: none
+    border: 0
+    margin-top: -#{v.$halfgap}
 
   &:focus::-webkit-slider-runnable-track
-    background: transparent
+    background: currentColor
+    border-color: transparent
 
   &::-moz-range-track
-    background: transparent
+    background: currentColor
     border-radius: $trackradius
     cursor: pointer
     height: $trackheight
     width: 100%
+    opacity: 0.3
 
   &::-moz-range-thumb
     +thumbcolor
@@ -64,12 +72,11 @@ input[type=range]
     height: $size1x1
     border-radius: $thumbradius
     cursor: pointer
-    margin-top: $thumboffset
+    border: 0
 
   &::-ms-track
-    background-color: transparent
-    border-color: transparent
-    color: transparent
+    background-color: currentColor
+    color: currentColor
     width: 100%
     height: $trackheight
     cursor: pointer
@@ -77,7 +84,7 @@ input[type=range]
 
   &::-ms-fill-lower,
   &::-ms-fill-upper
-    background: transparent
+    background: currentColor
     border: 0
 
   &::-ms-thumb
@@ -85,11 +92,11 @@ input[type=range]
 
     width: $size1x1
     height: $size1x1
-    border-radius: 50px
+    border-radius: 50%
     cursor: pointer
     margin-top: $thumboffset
 
   &:focus
     &::-ms-fill-lower,
     &::-ms-fill-upper
-      background: transparent
+      background: currentColor

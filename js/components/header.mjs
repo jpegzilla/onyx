@@ -1,6 +1,7 @@
 // ♪音楽 → GRAPHIQSGROOVE - DEEPSKYBLUE : https://www.youtube.com/watch?v=rcVFtuxx-YA
 
 import Component from './component.mjs'
+import { logo } from './icons/index.mjs'
 import { html, handleClock, handleGreeting } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
 
@@ -17,9 +18,7 @@ class Header extends Component {
   connectedCallback() {
     this.innerHTML = html`
       <header>
-        <div class="header-logo">
-          <onyx-logo />
-        </div>
+        <div class="header-logo">${logo``}</div>
         <div class="header-wordmark">
           onyx <span class="fade">chromatics research system</span>
         </div>

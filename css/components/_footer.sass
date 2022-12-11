@@ -10,11 +10,7 @@
   margin-top: v.$p-s
 
   .border-top
-    height: 1px
-    transform: scaleY(0.25)
-    width: 100%
-    background-color: currentColor
-    display: block
+    +v.thinborder
 
   footer
     +v.colordisplaycolor
@@ -46,12 +42,14 @@
         opacity: 0.6
 
     .footer-attribution
-      +v.center
-      +v.croptext(1.2)
+      +v.onyxbutton(0.8rem)
 
       font-size: 0.8rem
       gap: v.$quartergap
       line-height: 1.1rem
+
+      div
+        +v.croptext(1.2)
 
       a
         +v.kfocus

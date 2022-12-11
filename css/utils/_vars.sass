@@ -12,6 +12,7 @@ $offset: 3rem
 $offset2x: 8rem
 $button-padding: 0.15rem 0.35rem
 $button-padding-big: 0.35rem 0.5rem
+$button-padding-big-even: 0.5rem
 
 $color-transition: 0.2s
 
@@ -302,3 +303,42 @@ $layer-overlay: 54
   right: 0
   bottom: 0
   left: 0
+
+=onyxbutton($fontsize: 1.25rem)
+  +destroy
+
+  color: currentColor
+  cursor: pointer
+  display: block
+  isolation: isolate
+  position: relative
+  padding: $button-padding-big
+
+  & > div
+    +croptext(1.2)
+
+    font-size: $fontsize
+    line-height: calc(#{$fontsize} + 0.2rem)
+    z-index: 2
+
+  &::after
+    +positionzero
+
+    border-radius: $border-radius
+    content: ''
+    background-color: currentColor
+    display: flex
+    height: 100%
+    opacity: 0.125
+    position: absolute
+    z-index: 1
+
+=thinborder
+  height: 1px
+  transform: scaleY(0.25)
+  width: 100%
+  background-color: currentColor
+  display: block
+
+  @supports (-moz-appearance: none)
+    opacity: 0.3
