@@ -36,11 +36,6 @@ class Footer extends Component {
             <button title="${footerCopy.save}">save</button>
             <button title="${footerCopy.switch}">switch</button>
           </div>
-          <div class="options-selector">
-            <span class="fade">theme</span>
-            <button title="${footerCopy.dark}">dark</button>
-            <button title="${footerCopy.light}">light</button>
-          </div>
         </div>
         <b></b>
         <div class="status-indicator">

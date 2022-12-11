@@ -199,7 +199,6 @@ export const getAverageColor = img => {
     rgb.b += data[i + 2]
   }
 
-  // ~~ used to floor values
   rgb.r = ~~(rgb.r / count)
   rgb.g = ~~(rgb.g / count)
   rgb.b = ~~(rgb.b / count)
@@ -238,15 +237,22 @@ export const getCustomProperty = property => {
     .trim()
 }
 
-export const supportsImportInWorkers = minerva => {
+/**
+ * used to determine whether worker modules can be implemented.
+ * @return {Promise} a promise that resolves with true if import statements in workers are supported.
+ */
+export const supportsImportInWorkers = () => {
   return new Promise(resolve => {
-    const dummyWorker = new Worker('./js/workers/dummy.worker.mjs')
+    try {
+      const dummyWorker = new Worker('./js/workers/dummy.worker.mjs')
 
-    dummyWorker.addEventListener('message', ({ data }) => {
-      if (data === 'error')
-        resolve(minerva.set('supportsImportInWorkers', false))
-      else resolve(minerva.set('supportsImportInWorkers', true))
-    })
+      dummyWorker.addEventListener('message', ({ data }) => {
+        if (data === 'error') resolve(false)
+        else resolve(true)
+      })
+    } catch {
+      resolve(false)
+    }
   })
 }
 

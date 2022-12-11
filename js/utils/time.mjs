@@ -1,5 +1,12 @@
+// ♪音楽 → ZOC - A INNOCENCE PvP : https://www.youtube.com/watch?v=Ugc40x47JkA
 import { html } from './../utils/index.mjs'
 
+/**
+ * outputs current time and flavor text based on the date / time
+ * @param  {HTMLElement} clockElement element to print text in
+ * @param  {Minerva}     minerva      an instance of minerva
+ * @returns void
+ */
 export const handleClock = (clockElement, minerva) => {
   const setTime = () => {
     let hour = new Date().getHours().toString()
@@ -12,16 +19,16 @@ export const handleClock = (clockElement, minerva) => {
     const timeString = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`
 
     const hours = new Date().getHours()
-    const isEarlyMorning = hours > 5 && hours < 8
-    const isMorning = hours >= 8 && hours < 12
+    const isEarlyMorning = hours.between(5, 8, true)
+    const isMorning = hours.between(8, 12, true)
     const isNoon = hours === 12
-    const isAfterNoon = hours > 12 && hours < 16
-    const isLateAfterNoon = hours >= 16 && hours < 18
-    const isEarlyEvening = hours >= 18 && hours < 19
-    const isEvening = hours >= 19 && hours < 20
-    const isNight = hours >= 20 && hours < 23
+    const isAfterNoon = hours.between(12, 16, true)
+    const isLateAfterNoon = hours.between(16, 18, true)
+    const isEarlyEvening = hours.between(18, 19, true)
+    const isEvening = hours.between(19, 20, true)
+    const isNight = hours.between(20, 23, true)
     const isMidNight = hours === 0
-    const isVeryLate = hours > 0 && hours < 5
+    const isVeryLate = hours.between(0, 5, true)
     const dayIndex = new Date().getDay()
     const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
     const day = days[dayIndex]
@@ -74,16 +81,59 @@ export const handleClock = (clockElement, minerva) => {
       <span class="time-division">${timeDivision}</span>`
   }
 
-  setInterval(() => setTime(), 500)
-  setTime()
+  setTime(), setInterval(() => setTime(), 500)
 }
 
+/**
+ * outputs greeting flavor text based on the date / time
+ * @param  {HTMLElement} greetingElement element to print text in
+ * @param  {Minerva}     minerva         an instance of minerva
+ * @returns void
+ */
 export const handleGreeting = (greetingElement, minerva) => {
   const setGreeting = () => {
     const timesArrived = minerva.get('arrivals')
+    const month = new Date().getMonth() + 1
+    const day = new Date().getDate()
     let greeting
 
     switch (true) {
+      case month === 10 && day.between(30, 31, true):
+        greeting = 'happy halloween!'
+        break
+
+      case month === 12 && day.between(25, 26, true):
+        greeting = 'merry christmas!'
+        break
+
+      case month === 5 && day === 1:
+        greeting = "today is jpegzilla's birthday!"
+        break
+
+      case month === 4 && day === 6:
+        greeting = "today is my wife's birthday!"
+        break
+
+      case month === 3 && day.between(19, 21, true):
+        greeting = 'happy spring equinox!'
+        break
+
+      case month === 6 && day.between(20, 22, true):
+        greeting = 'happy summer solstice!'
+        break
+
+      case month === 9 && day.between(22, 24, true):
+        greeting = 'happy autumn equinox!'
+        break
+
+      case month === 12 && day.between(20, 22, true):
+        greeting = 'happy winter solstice!'
+        break
+
+      case month === 1 && day.between(1, 3, true):
+        greeting = 'happy new year!'
+        break
+
       case timesArrived <= 1:
         greeting = 'welcome to onyx.'
         break
@@ -108,6 +158,5 @@ export const handleGreeting = (greetingElement, minerva) => {
     greetingElement.textContent = greeting
   }
 
-  setInterval(() => setGreeting(), 60000)
-  setGreeting()
+  setGreeting(), setInterval(() => setGreeting(), 60000)
 }

@@ -44,3 +44,14 @@ Array.prototype.sum = function () {
 
   return this.reduce((a, b) => a + b)
 }
+
+/**
+ * Array.insertAt
+ * inserts a given item at the specified location in an array
+ * @param  {number} location index at which to insert the item
+ * @param  {any}    items     items to place in the array
+ * @return {array}           the modified array
+ */
+Array.prototype.insertAt = function (location, ...items) {
+  return this.splice(location, 0, ...items)
+}

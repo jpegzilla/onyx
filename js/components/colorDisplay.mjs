@@ -1,5 +1,10 @@
 import Component from './component.mjs'
-import { html, objectComparison, setCustomProperty } from './../utils/index.mjs'
+import {
+  html,
+  objectComparison,
+  setCustomProperty,
+  supportsImportInWorkers,
+} from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
 import {
   hslToHex,
@@ -26,6 +31,8 @@ const BACKGROUND = 'bg'
 const FOREGROUND = 'fg'
 const CONTRAST = 'contrastRatio'
 
+const shouldUseWorkers = await supportsImportInWorkers()
+
 /**
  * area in which information about the currently selected color is
  * displayed.
@@ -40,7 +47,8 @@ class ColorDisplay extends Component {
     this.id = ColorDisplay.name
     this.activeColor = minerva.get(ACTIVE_COLOR) || BACKGROUND
 
-    this.shouldUseWorkers = minerva.get('supportsImportInWorkers')
+    this.shouldUseWorkers = shouldUseWorkers
+    minerva.set('supportsImportInWorkers', shouldUseWorkers)
   }
 
   isOldData(data, key) {
@@ -55,7 +63,7 @@ class ColorDisplay extends Component {
     const otherPalettes = Object.entries(data)
     let otherPalettesHTML = ``
 
-    otherPalettes.forEach(([format, { name, code, hex }]) => {
+    otherPalettes.forEach(([format, { name, code }]) => {
       otherPalettesHTML += html`
         <div class="color-info-format-container">
           <span class="color-info-format">${format.padEnd(10)}</span>
@@ -160,7 +168,6 @@ class ColorDisplay extends Component {
 
   getConversions(color, format, hexColor) {
     const conversionMessage = { color, format }
-
     if (this.shouldUseWorkers) {
       this.conversionWorker.postMessage(conversionMessage)
       this.closestColorWorker.postMessage({ color: hexColor })
@@ -170,7 +177,7 @@ class ColorDisplay extends Component {
       this.handleConversionData({ data: conversionData })
 
       const closestColorData = closestColorNonWorker({
-        data: conversionMessage,
+        data: { color: hexColor },
       })
       this.handleClosestColorData({ data: closestColorData })
 

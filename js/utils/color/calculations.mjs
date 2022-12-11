@@ -15,6 +15,8 @@ import {
 } from './constants.mjs'
 import { hexToHSV, hslaToRGB } from './conversions.mjs'
 
+const { sin, cos, pow } = Math
+
 // luminance calculation based on this:
 // https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
 // which is also where these constants are from
@@ -142,15 +144,14 @@ export const isElementBackgroundBright = element => {
  * @return {Object} closest match to given color from library
  */
 export const findClosestColor = ({ color, library }) => {
-  const { sin, cos, pow } = Math
-
   const { h, s, v } = color
 
   let lowestDistance = Infinity
   let closestColor
 
-  for (const libColor of library) {
-    const { hex } = libColor
+  let length = library.length
+  for (let i = 0; i < length; i++) {
+    const { hex } = library[i]
 
     const { h: libH, s: libS, v: libV } = hexToHSV(hex)
 
@@ -164,7 +165,7 @@ export const findClosestColor = ({ color, library }) => {
 
     if (distance < lowestDistance) {
       lowestDistance = distance
-      closestColor = libColor
+      closestColor = library[i]
     }
   }
 

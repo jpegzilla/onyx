@@ -137,8 +137,16 @@ class Controls extends Component {
         <div class="controls-container-sliders">
           <div class="controls-left">
             <div class="controls-header">
-              <button class="lock-colors-bg">🔒</button> background color
-              <span class="bg-color-hex">#000000</span>
+              <button class="lock-colors-fg">
+                <div><b></b><b></b><b></b><b></b></div>
+                <div>lock background</div>
+              </button>
+              <button class="controls-add-to-palette">
+                <div><b></b><b></b><b></b><b></b></div>
+                <div>
+                  add <span class="bg-color-hex">#000000</span> to palette
+                </div>
+              </button>
             </div>
             <div class="controls-sliders background">
               ${this.renderSliders('bg')}
@@ -147,8 +155,16 @@ class Controls extends Component {
 
           <div class="controls-right">
             <div class="controls-header">
-              <button class="lock-colors-fg">🔒</button> text color
-              <span class="fg-color-hex">#000000</span>
+              <button class="lock-colors-fg">
+                <div><b></b><b></b><b></b><b></b></div>
+                <div>lock foreground</div>
+              </button>
+              <button class="controls-add-to-palette">
+                <div><b></b><b></b><b></b><b></b></div>
+                <div>
+                  add <span class="fg-color-hex">#000000</span> to palette
+                </div>
+              </button>
             </div>
             <div class="controls-sliders foreground">
               ${this.renderSliders('fg')}

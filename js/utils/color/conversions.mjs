@@ -7,6 +7,11 @@ import {
   CIE_1931_XYZ_REFERENCE,
 } from './constants.mjs'
 
+/**
+ * convert a 3, 6. or 8-digit hex string to rgba
+ * @param  {string} hex a string representing a hex code
+ * @return {object}     an rgba color
+ */
 export const hexToRGBA = hex => {
   if (!hex || typeof hex != 'string' || hex.length < 3) return false
   if (hex.split('').indexOf('#') == 0) hex = hex.substring(1)
@@ -120,7 +125,13 @@ export const hslaToRGB = (h, s, l, a) => {
   }
 }
 
-// rgb to NumberHSL
+/**
+ * convert rgb in [0. 255] to hsl in [0, 360]
+ * @param  {number} r number representing red
+ * @param  {number} g number representing green
+ * @param  {number} b number representing blue
+ * @return {object}   hsl object
+ */
 export const rgbToNHSL = (r, g, b) => {
   const red = r / RGB_MAX
   const green = g / RGB_MAX
@@ -155,6 +166,14 @@ export const rgbToNHSL = (r, g, b) => {
   }
 }
 
+/**
+ * converts rgba in [0, 255] to hsla object
+ * @param  {[type]} r number representing red
+ * @param  {[type]} g number representing green
+ * @param  {[type]} b number representing blue
+ * @param  {[type]} a number representing alpha
+ * @return {object} hsla object
+ */
 export const rgbaToHSLA = (r, g, b, a) => {
   const red = r / RGB_MAX
   const green = g / RGB_MAX

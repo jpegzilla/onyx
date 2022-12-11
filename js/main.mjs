@@ -7,7 +7,6 @@ import {
   setCustomProperty,
   getCustomProperty,
   Mnemosyne,
-  supportsImportInWorkers,
 } from './utils/index.mjs'
 import { hexToHSLA, stringifyHSL } from './utils/color/conversions.mjs'
 import components from './components/index.mjs'
@@ -73,9 +72,10 @@ const setupUserPrefs = minerva => {
   )
 }
 
-const allMounted = components
-  .map(({ name }) => customElements.whenDefined(name))
-  .concat(supportsImportInWorkers(minerva))
+const allMounted = components.map(({ name }) =>
+  customElements.whenDefined(name)
+)
+
 components.forEach(({ name, element }) => {
   if (customElements.get(name)) {
     arachne.warn(
@@ -88,7 +88,7 @@ components.forEach(({ name, element }) => {
   if (name && element) customElements.define(name, element)
 })
 
-Promise.all(allMounted).then(() => {
+Promise.all(allMounted).then(e => {
   setupUserPrefs(minerva)
   minerva.set('loaded', true)
 })
