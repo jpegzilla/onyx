@@ -1,7 +1,5 @@
 <h1><img src="assets/img/onyx-wordmark.png" aria-hidden height="80em"></h1>
 
-## what is onyx?
-
 onyx is a color tool made for software designers and developers &mdash; people who make websites, apps, video games, and anything else that uses color.
 
 the purpose of onyx is to provide you with a way to easily create and generate custom color palettes that you can use in a variety of contexts. onyx can be your full service color tool for any kind of chromatics-related research and development.
@@ -12,7 +10,11 @@ onyx was created with the comfort and enjoyment of the user in mind.
 
 <hr>
 
+## (indev) screenshots
+
 ![onyx color animation](development-screenshots/3632ac531b8e4046ac573c4ddc3e4e54.gif)
+
+![onyx indev screenshot](development-screenshots/f9a1865eebfecb1f761291dff7a5ae5a.png)
 
 <hr>
 
