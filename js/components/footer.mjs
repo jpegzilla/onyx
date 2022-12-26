@@ -44,26 +44,24 @@ class Footer extends Component {
         </div>
         <b></b>
         <div class="footer-attribution">
-          <div>
-            <span>
-              made by
-              <a
-                href="https://jpegzilla.com"
-                target="_blank"
-                rel="noreferrer noopener"
-                >jpegzilla</a
-              >
-            </span>
-            <span>&middot;</span>
+          <span>
+            made by
             <a
-              href="https://github.com/jpegzilla/onyx"
+              href="https://jpegzilla.com"
               target="_blank"
               rel="noreferrer noopener"
-              >source code</a
+              >jpegzilla</a
             >
-            <span>&middot;</span>
-            ver. ${env.ONYX_VERSION}
-          </div>
+          </span>
+          <span>&middot;</span>
+          <a
+            href="https://github.com/jpegzilla/onyx"
+            target="_blank"
+            rel="noreferrer noopener"
+            >source code</a
+          >
+          <span>&middot;</span>
+          ver. ${env.ONYX_VERSION}
         </div>
       </footer>
     `
