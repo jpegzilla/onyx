@@ -4,7 +4,6 @@ import { html, LimitedList, debounce } from './../utils/index.mjs'
 import {
   hslaToRGB,
   hslToHex,
-  MODE_HEX,
   MODE_HSL,
   MODE_RGB,
 } from './../utils/color/index.mjs'
@@ -28,6 +27,10 @@ const HSL_SETTINGS = {
   ],
 }
 
+const PALETTES = 'palettes'
+const COLOR_MODE = 'colorMode'
+const COLORS = 'colors'
+
 class Controls extends Component {
   static name = 'onyx-controls'
 
@@ -36,23 +39,22 @@ class Controls extends Component {
 
     this.id = Controls.name
     this.history = new LimitedList({ limit: minerva.get('historySize') })
-    this.colors = minerva.get('colors')
+    this.colors = minerva.get(COLORS)
     this.activeColor = 'fg'
     this.settings = {
       [MODE_RGB]: RGB_SETTINGS,
       [MODE_HSL]: HSL_SETTINGS,
-      [MODE_HEX]: RGB_SETTINGS,
     }
     this.colorMode = this.settings[MODE_HSL]
-    this.mode = minerva.get('colorMode') || MODE_HSL
+    this.mode = minerva.get(COLOR_MODE) || MODE_HSL
 
-    if (!minerva.get('colorMode')) minerva.set('colorMode', this.mode)
+    if (!minerva.get(COLOR_MODE)) minerva.set(COLOR_MODE, this.mode)
   }
 
   setControlMode(mode) {
     this.colorMode = this.settings[mode]
     this.mode = mode
-    minerva.set('colorMode', mode)
+    minerva.set(COLOR_MODE, mode)
   }
 
   updateHistory(colors) {
@@ -60,7 +62,7 @@ class Controls extends Component {
   }
 
   getColors(mode) {
-    const { bg, fg } = minerva.get('colors')
+    const { bg, fg } = minerva.get(COLORS)
 
     switch (mode) {
       case MODE_HSL:
@@ -73,18 +75,13 @@ class Controls extends Component {
           bg: hslaToRGB(...Object.values(bg)),
           fg: hslaToRGB(...Object.values(fg)),
         }
-      case MODE_HEX:
-        return {
-          bg: hslToHex(bg),
-          fg: hslToHex(fg),
-        }
     }
   }
 
   setColorForLayer(layer, hsl) {
-    minerva.set('colors', {
-      bg: layer === 'bg' ? hsl : minerva.get('colors').bg,
-      fg: layer === 'fg' ? hsl : minerva.get('colors').fg,
+    minerva.set(COLORS, {
+      bg: layer === 'bg' ? hsl : minerva.get(COLORS).bg,
+      fg: layer === 'fg' ? hsl : minerva.get(COLORS).fg,
     })
 
     this.qs(`.${layer}-color-hex`).textContent = hslToHex(hsl)
@@ -100,7 +97,7 @@ class Controls extends Component {
   //
   // this also needs be run when switching modes
   renderSliders(layer) {
-    if ([MODE_HSL, MODE_RGB, MODE_HEX].includes(this.mode)) {
+    if ([MODE_HSL, MODE_RGB].includes(this.mode)) {
       return this.settings[this.mode].ranges
         .map((range, idx) => {
           const colorValueNumber = Object.values(
@@ -129,6 +126,18 @@ class Controls extends Component {
     }
   }
 
+  handlePaletteUpdate(color, layer) {
+    const activePalette = minerva.get('activePalette')
+    const palettes = minerva.get(PALETTES)
+    const newColor = { color, layer }
+
+    if (palettes.length === 0) return minerva.set(PALETTES, [[newColor]])
+
+    palettes.at(activePalette || -1).push(newColor)
+
+    minerva.set(PALETTES, palettes)
+  }
+
   thinBorderButton(className, content) {
     return html`<button class=${className}>
       <div>${content}</div>
@@ -141,9 +150,9 @@ class Controls extends Component {
         <div class="controls-container-sliders">
           <div class="controls-left">
             <div class="controls-header">
-              ${this.thinBorderButton('lock-colors-fg', 'lock background')}
+              ${this.thinBorderButton('lock-colors-bg', 'lock background')}
               ${this.thinBorderButton(
-                'controls-add-to-palette',
+                'controls-add-to-palette-bg',
                 'add <span class="bg-color-hex">#000000</span> to palette'
               )}
               <div class="drag bg" title="drag this color" tabindex="0">
@@ -159,7 +168,7 @@ class Controls extends Component {
             <div class="controls-header">
               ${this.thinBorderButton('lock-colors-fg', 'lock foreground')}
               ${this.thinBorderButton(
-                'controls-add-to-palette',
+                'controls-add-to-palette-fg',
                 'add <span class="fg-color-hex">#000000</span> to palette'
               )}
               <div class="drag fg" title="drag this color" tabindex="0">
@@ -176,6 +185,8 @@ class Controls extends Component {
 
     this.backgroundColorInputs = this.qsa('.background .color-control')
     this.foregroundColorInputs = this.qsa('.foreground .color-control')
+    this.backgroundAddToPaletteButton = this.qs('.controls-add-to-palette-bg')
+    this.foregroundAddToPaletteButton = this.qs('.controls-add-to-palette-fg')
 
     const { fg, bg } = this.getColors(this.mode)
     this.qs('.fg-color-hex').textContent = hslToHex(fg)
@@ -207,6 +218,18 @@ class Controls extends Component {
 
     this.foregroundColorInputs.forEach((input, index) => {
       input.addEventListener('input', e => colorInputHandler(e, 'fg', index))
+    })
+
+    this.backgroundAddToPaletteButton.addEventListener('click', () => {
+      const { bg } = this.getColors(this.mode)
+
+      this.handlePaletteUpdate(bg, 'bg')
+    })
+
+    this.foregroundAddToPaletteButton.addEventListener('click', () => {
+      const { fg } = this.getColors(this.mode)
+
+      this.handlePaletteUpdate(fg, 'fg')
     })
   }
 }
