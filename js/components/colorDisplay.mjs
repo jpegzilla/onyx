@@ -375,6 +375,11 @@ class ColorDisplay extends Component {
 
       setCustomProperty('--text-color', stringifyHSL(fg))
       setCustomProperty('--color-display-color', stringifyHSL(fg))
+      setCustomProperty(
+        '--color-display-color-fade-12',
+        stringifyHSL(fg, 0.125)
+      )
+      setCustomProperty('--color-display-color-fade-7', stringifyHSL(fg, 0.075))
 
       setCustomProperty('--bg-color', stringifyHSL(bg))
       setCustomProperty('--color-display-background', stringifyHSL(bg))

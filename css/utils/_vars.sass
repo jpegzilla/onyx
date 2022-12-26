@@ -148,6 +148,24 @@ $layer-overlay: 54
 =colordisplaycolor
   color: var(--color-display-color)
 
+=colordisplayborderfade12
+  border: 1px solid var(--color-display-color-fade-12)
+
+=colordisplayborderfade7
+  border: 1px solid var(--color-display-color-fade-7)
+
+=colordisplaybgfade12
+  background-color: var(--color-display-color-fade-12)
+
+=colordisplaybgfade7
+  background-color: var(--color-display-color-fade-7)
+
+=colordisplaycolorfade12
+  color: var(--color-display-color-fade-12)
+
+=colordisplaycolorfade7
+  color: var(--color-display-color-fade-7)
+
 =inversebg
   background-color: var(--inverse-bg-color)
 
@@ -302,35 +320,19 @@ $layer-overlay: 54
 
 =onyxbutton($fontsize: 1.25rem, $bigpadding: true)
   +destroy
+  +colordisplaybgfade12
+  +croptext(1.2)
+  +center
 
   color: currentColor
   cursor: pointer
-  display: block
-  isolation: isolate
-  position: relative
   padding: $button-padding
+  border-radius: $border-radius
+  font-size: $fontsize
+  line-height: calc(#{$fontsize} + 0.2rem)
 
   @if $bigpadding == true
     padding: $button-padding-big
-
-  & > div
-    +croptext(1.2)
-
-    font-size: $fontsize
-    line-height: calc(#{$fontsize} + 0.2rem)
-    z-index: 2
-
-  &::after
-    +positionzero
-
-    border-radius: $border-radius
-    content: ''
-    background-color: currentColor
-    display: flex
-    height: 100%
-    opacity: 0.125
-    position: absolute
-    z-index: 1
 
 =thinborder
   height: 1px

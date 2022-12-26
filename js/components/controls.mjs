@@ -138,23 +138,19 @@ class Controls extends Component {
     minerva.set(PALETTES, palettes)
   }
 
-  thinBorderButton(className, content) {
-    return html`<button class=${className}>
-      <div>${content}</div>
-    </button>`
-  }
-
   connectedCallback() {
     this.innerHTML = html`<section>
       <div class="controls-container">
         <div class="controls-container-sliders">
           <div class="controls-left">
             <div class="controls-header">
-              ${this.thinBorderButton('lock-colors-bg', 'lock background')}
-              ${this.thinBorderButton(
-                'controls-add-to-palette-bg',
-                'add <span class="bg-color-hex">#000000</span> to palette'
-              )}
+              <button class="lock-colors-bg">lock background</button>
+              <button class="controls-add-to-palette-bg">
+                <span>
+                  add <span class="bg-color-hex">#000000</span> to palette
+                </span>
+              </button>
+
               <div class="drag bg" title="drag this color" tabindex="0">
                 <div>${drag``}</div>
               </div>
@@ -166,11 +162,13 @@ class Controls extends Component {
 
           <div class="controls-right">
             <div class="controls-header">
-              ${this.thinBorderButton('lock-colors-fg', 'lock foreground')}
-              ${this.thinBorderButton(
-                'controls-add-to-palette-fg',
-                'add <span class="fg-color-hex">#000000</span> to palette'
-              )}
+              <button class="lock-colors-fg">lock foreground</button>
+              <button class="controls-add-to-palette-fg">
+                <span>
+                  add <span class="fg-color-hex">#000000</span> to palette
+                </span>
+              </button>
+
               <div class="drag fg" title="drag this color" tabindex="0">
                 <div>${drag``}</div>
               </div>

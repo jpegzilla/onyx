@@ -5,6 +5,7 @@ import {
   RGB_THRESHOLD,
   PI,
   CIE_1931_XYZ_REFERENCE,
+  ANGLE_MAX,
 } from './constants.mjs'
 
 /**
@@ -157,7 +158,7 @@ export const rgbToNHSL = (r, g, b) => {
   hue = hue * 60
 
   // if hue is less than zero, wrap it around to be back in range
-  if (hue < 0) hue += 360
+  if (hue < 0) hue += ANGLE_MAX
 
   return {
     h: hue,
@@ -197,7 +198,7 @@ export const rgbaToHSLA = (r, g, b, a) => {
   l = l * 100
   s = s * 100
   h = h * 60
-  if (h < 0) h += 360
+  if (h < 0) h += ANGLE_MAX
 
   return {
     h,
@@ -275,7 +276,7 @@ export const hexToHWB = hex => {
 
 export const hslaToHWB = hsl => {
   const { h: nh, s: ns, l: nl, a: na } = hsl
-  const { r, g, b, a } = hslaToRGB(nh / 360, ns / 100, nl / 100, na)
+  const { r, g, b, a } = hslaToRGB(nh / ANGLE_MAX, ns / 100, nl / 100, na)
 
   const { s, l } = rgbToDHSL(r, g, b)
   const { h } = rgbaToHSLA(r, g, b, a)
@@ -345,14 +346,14 @@ export const rgbToLAB = (red, green, blue, alpha, type, cieRef) => {
 
 export const hslaToLAB = (hsla, type = 'D65', cieRef = '1931') => {
   const { h, s, l, a } = hsla
-  const { r, g, b } = hslaToRGB(h / 360, s / 100, l / 100, a)
+  const { r, g, b } = hslaToRGB(h / ANGLE_MAX, s / 100, l / 100, a)
 
   return rgbToLAB(r, g, b, a, type, cieRef)
 }
 
 export const hslaToXYZ = hsla => {
   const { h, s, l, a } = hsla
-  const { r, g, b } = hslaToRGB(h / 360, s / 100, l / 100, a)
+  const { r, g, b } = hslaToRGB(h / ANGLE_MAX, s / 100, l / 100, a)
   const { x, y, z } = rgbToXYZ(r, g, b)
 
   return {
@@ -382,7 +383,7 @@ export const hexToXYZ = hex => {
 export const labToLCH = (l, a, b, alpha) => {
   let h = Math.atan2(b, a)
   if (h > 0) h = (h / PI) * 180
-  else h = 360 - (Math.abs(h) / PI) * 180
+  else h = ANGLE_MAX - (Math.abs(h) / PI) * 180
 
   return {
     l: parseInt(l).toFixed(2),
@@ -473,7 +474,7 @@ export const hslaToNRGBA = hsla => {
     s: ds,
     l: dl,
   } = {
-    h: h / 360,
+    h: h / ANGLE_MAX,
     s: s / 100,
     l: l / 100,
   }
@@ -498,7 +499,7 @@ export const rgbaToHex = rgba => {
 
 export const hslToHex = ({ h, s, l }) => {
   const dhsl = {
-    h: h / 360,
+    h: h / ANGLE_MAX,
     s: s / 100,
     l: l / 100,
   }
@@ -508,4 +509,11 @@ export const hslToHex = ({ h, s, l }) => {
   return `#${rgbaToHex(rgb)}`
 }
 
-export const stringifyHSL = ({ h, s, l }) => `hsl(${h}, ${s}%, ${l}%)`
+export const stringifyHSL = ({ h, s, l }, alpha) =>
+  alpha ? `hsla(${h} ${s}% ${l}% / ${alpha})` : `hsl(${h}, ${s}%, ${l}%)`
+
+export const invertHSL = ({ h, s, l }) => ({
+  h: Math.abs(h - ANGLE_MAX),
+  s,
+  l,
+})

@@ -1,0 +1,43 @@
+@use '../../utils/vars' as v
+
+.onyx-palette
+  +v.colordisplayborderfade12
+  +v.colordisplaybgfade7
+
+  $size: 2rem
+  $vsize: 2rem
+
+  width: max-content
+  border-radius: v.$border-radius
+  padding: v.$halfgap
+  display: flex
+  gap: v.$halfgap
+  flex-direction: column
+
+  .palette-header
+    +v.lightmono
+    +v.colordisplaybgfade7
+    +v.colordisplayborderfade12
+
+    font-size: 1rem
+    padding: v.$small-space
+    justify-content: center
+    border-radius: v.$border-radius
+
+  .color-grid
+    display: grid
+    gap: v.$halfgap
+    border-radius: v.$border-radius
+    grid-template-columns: repeat(5, $size)
+    grid-template-rows: $vsize
+    width: max-content
+
+  .onyx-palette-color
+    +v.center
+    +v.colordisplayborderfade12
+
+    height: $vsize
+    overflow: hidden
+    position: relative
+    width: $size
+    border-radius: v.$border-radius

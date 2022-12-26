@@ -3,11 +3,16 @@
 
 #onyx-sidebar
   +v.fill
-  +v.colordisplaycolor
+  +v.colordisplayborderfade12
+  +v.colordisplaybgfade7
+
+  border-radius: v.$border-radius
 
   grid-area: sidebar
-  border: 1px solid currentColor
+  position: relative
 
   .data-display-container
     +v.fill
 
+  .palette-container
+    padding: v.$p-s

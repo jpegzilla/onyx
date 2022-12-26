@@ -66,6 +66,17 @@ const setupUserPrefs = minerva => {
     '--color-display-color',
     stringifyHSL(minerva.get('colors').fg)
   )
+
+  setCustomProperty(
+    '--color-display-color-fade-12',
+    stringifyHSL(minerva.get('colors').fg, 0.125)
+  )
+
+  setCustomProperty(
+    '--color-display-color-fade-7',
+    stringifyHSL(minerva.get('colors').fg, 0.075)
+  )
+
   setCustomProperty(
     '--color-display-background',
     stringifyHSL(minerva.get('colors').bg)
