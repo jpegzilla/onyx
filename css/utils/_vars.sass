@@ -68,10 +68,6 @@ $tflag-blue: #91abf7
 $tflag-pink: #f8a0cb
 $tflag-white: #edeefd
 
-$pflag-pink: #e0005d
-$pflag-yellow: #e0d100
-$pflag-blue: #007ce0
-
 // フォント
 
 $kurenaido: "zen kurenaido", sans-serif
@@ -99,6 +95,7 @@ $layer-overlay: 54
 =blurbg($distance: 2px, $sat: 180%)
   backdrop-filter: blur($distance) saturate($sat)
 
+// probably not using dark / light themes...
 =theme($theme: "dark")
   @if $theme == "light"
     --bg-color: #{$white-bright}
@@ -125,7 +122,6 @@ $layer-overlay: 54
   color: var(--text-color)
 
 =bgcolor
-  // background-color: var(--bg-color)
   background-color: var(--color-display-background)
 
 =hlcolor
@@ -304,7 +300,7 @@ $layer-overlay: 54
   bottom: 0
   left: 0
 
-=onyxbutton($fontsize: 1.25rem)
+=onyxbutton($fontsize: 1.25rem, $bigpadding: true)
   +destroy
 
   color: currentColor
@@ -312,7 +308,10 @@ $layer-overlay: 54
   display: block
   isolation: isolate
   position: relative
-  padding: $button-padding-big
+  padding: $button-padding
+
+  @if $bigpadding == true
+    padding: $button-padding-big
 
   & > div
     +croptext(1.2)
