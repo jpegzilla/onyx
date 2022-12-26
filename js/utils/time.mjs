@@ -19,16 +19,16 @@ export const handleClock = (clockElement, minerva) => {
     const timeString = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`
 
     const hours = new Date().getHours()
-    const isEarlyMorning = hours.between(5, 8)
-    const isMorning = hours.between(8, 12)
+    const isEarlyMorning = hours.between(5, 8, false, true)
+    const isMorning = hours.between(8, 12, false, true)
     const isNoon = hours === 12
-    const isAfterNoon = hours.between(12, 16)
-    const isLateAfterNoon = hours.between(16, 18)
-    const isEarlyEvening = hours.between(18, 19)
-    const isEvening = hours.between(19, 20)
-    const isNight = hours.between(20, 23)
+    const isAfterNoon = hours.between(12, 16, false, true)
+    const isLateAfterNoon = hours.between(16, 18, false, true)
+    const isEarlyEvening = hours.between(18, 19, false, true)
+    const isEvening = hours.between(19, 20, false, true)
+    const isNight = hours.between(20, 23, false, true)
     const isMidNight = hours === 0
-    const isVeryLate = hours.between(0, 5)
+    const isVeryLate = hours.between(0, 5, false, true)
     const dayIndex = new Date().getDay()
     const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
     const day = days[dayIndex]
@@ -142,7 +142,7 @@ export const handleGreeting = (greetingElement, minerva) => {
         greeting = 'welcome back.'
         break
 
-      case timesArrived.between(10, 30):
+      case timesArrived.between(10, 30, false, true):
         greeting = "it's good to see you."
         break
 
