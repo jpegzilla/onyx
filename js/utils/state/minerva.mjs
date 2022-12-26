@@ -29,6 +29,8 @@ class Minerva {
    * @property {string} processType ??? don't remember what this was
    * @property {number} historySize amount of previous color storage
    * @property {string} activeColor current color being displayed
+   * @property {object} workspaces user's workspaces
+   * @property {number|null} activePalette palette that colors will be added to
    */
   static defaultSettings = {
     [MACHINE]: 'onyx',
@@ -56,6 +58,8 @@ class Minerva {
     systemColors: { highlight: '#e0005d' },
     timeFormat: '24hr',
     volume: { effect: 100 },
+    workspaces: {},
+    activePalette: null,
   }
 
   /**
