@@ -6,11 +6,18 @@
  * @param  {boolean} [inclusive=false] max and min inclusive?
  * @return {boolean} true if number is between max and min
  */
-Number.prototype.between = function (min, max, inclusive = false) {
+Number.prototype.between = function (
+  min,
+  max,
+  inclusive = false,
+  bottomInclusive = false
+) {
   if (isNaN(min) || isNaN(max))
     throw TypeError('minimum and maximum parameters must be numbers.')
 
   if (min > max) throw RangeError('minimum must be less than maximum.')
+
+  if (bottomInclusive) return this >= min && this < max
 
   return inclusive ? this >= min && this <= max : this > min && this < max
 }
