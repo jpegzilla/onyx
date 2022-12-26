@@ -4,8 +4,6 @@ import { arachne } from './../../main.mjs'
 const BASE_PATH = './../../assets/audio/'
 
 export default class AudioManager {
-  ctx = new AudioContext()
-
   constructor(options) {
     // contains sounds loaded via the load function
     this.sounds = {}
@@ -14,6 +12,9 @@ export default class AudioManager {
     this.sources = []
 
     this.state = options.state
+
+    this.ctx = new AudioContext()
+    this.ctx.resume()
 
     return this
   }
@@ -29,6 +30,8 @@ export default class AudioManager {
    * @returns {undefined} void
    */
   play(name, { mute }) {
+    this.ctx.resume()
+
     if (mute) return
     if (Object.keys(this.sounds).length === 0) {
       arachne.warn('tried to play a sound without loading it.')
