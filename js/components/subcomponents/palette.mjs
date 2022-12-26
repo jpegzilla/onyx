@@ -3,13 +3,13 @@ import { stringifyHSL } from './../../utils/color/index.mjs'
 
 export default (palette, index) => {
   const paletteColors = palette
-    .map(({ color, layer }) => {
+    .map(({ color, layer }, colorIndex) => {
       const hslString = stringifyHSL(color)
 
       return html`
         <div
           class="onyx-palette-color"
-          data-index=${index}
+          data-index=${colorIndex}
           data-layer=${layer}
           style="background-color: ${hslString}"
         ></div>
@@ -17,7 +17,7 @@ export default (palette, index) => {
     })
     .join('')
 
-  return html`<div class="onyx-palette">
+  return html`<div class="onyx-palette" data-index=${index}>
     <div class="palette-header">palette #${index + 1}</div>
     <div class="color-grid">${paletteColors}</div>
   </div>`
