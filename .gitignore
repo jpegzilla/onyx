@@ -10,3 +10,6 @@ notes
 
 # illustrator exports
 1x
+
+# tauri stuff (ignoring for now)
+src-tauri
