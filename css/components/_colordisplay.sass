@@ -8,50 +8,59 @@
 
   grid-area: color-display
 
+  .color-display-selector
+    align-items: flex-start
+    display: flex
+    flex-direction: column
+    gap: v.$quartergap
+    padding-top: 1px
+
+    &-description
+      +v.croptext(1.32)
+
+      font-size: 1rem
+      line-height: 1.2rem
+      opacity: 0.5
+      padding-bottom: v.$small-space
+      user-select: none
+
+    button
+      +v.destroy
+      +v.kfocus
+      +v.onyxbutton(1rem)
+
+      cursor: pointer
+      width: 100%
+      text-align: left
+      max-width: max-content
+
+    button, div
+      +v.colordisplaycolor
+      +v.lightmono
+
+      max-height: max-content
+
+      span
+        +v.croptext(1.3)
+
+        display: block
+        font-size: 1rem
+        line-height: 1.2rem
+
+  .color-display-container-columns
+    display: flex
+    gap: v.$p-m
+
+  .color-display-selector-container
+    display: flex
+    flex-direction: column
+    gap: v.$p-s
+
   .color-display-container
     +v.colordisplaycolor
 
     display: flex
     gap: v.$p-m
-
-    .color-display-selector
-      align-items: flex-start
-      display: flex
-      flex-direction: column
-      gap: v.$quartergap
-      padding-top: 1px
-
-      &-description
-        +v.croptext(1.32)
-
-        font-size: 1rem
-        line-height: 1.2rem
-        opacity: 0.5
-        padding-bottom: v.$small-space
-        user-select: none
-
-      button
-        +v.destroy
-        +v.kfocus
-        +v.onyxbutton(1rem)
-
-        cursor: pointer
-        width: 100%
-        text-align: left
-        max-width: max-content
-
-      button, div
-        +v.colordisplaycolor
-
-        max-height: max-content
-
-        span
-          +v.lightmono
-          +v.croptext(1.3)
-
-          display: block
-          font-size: 1rem
-          line-height: 1.2rem
 
     .color-display-readout
       max-height: max-content
@@ -81,13 +90,15 @@
 
     margin-top: v.$p-l
 
+    &.smaller-margin
+      margin-top: v.$p-m
+
     .color-info-container-header
       +v.croptext(1.2)
 
       margin-bottom: v.$threequartergap
       font-size: 1rem
       line-height: 1.2rem
-      // display: none
 
       span
         opacity: 0.6

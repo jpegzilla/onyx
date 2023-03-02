@@ -1,5 +1,4 @@
 import Component from './component.mjs'
-import { drag } from './icons/index.mjs'
 import { html, LimitedList, debounce } from './../utils/index.mjs'
 import {
   hslaToRGB,
@@ -30,6 +29,7 @@ const HSL_SETTINGS = {
 const PALETTES = 'palettes'
 const COLOR_MODE = 'colorMode'
 const COLORS = 'colors'
+const EXTERNALUPDATE = 'externalUpdate'
 
 class Controls extends Component {
   static name = 'onyx-controls'
@@ -49,6 +49,11 @@ class Controls extends Component {
     this.mode = minerva.get(COLOR_MODE) || MODE_HSL
 
     if (!minerva.get(COLOR_MODE)) minerva.set(COLOR_MODE, this.mode)
+
+    minerva.on(EXTERNALUPDATE, () => {
+      console.log('should update these sliders now...')
+      this.connectedCallback()
+    })
   }
 
   setControlMode(mode) {
@@ -89,7 +94,8 @@ class Controls extends Component {
 
   getColorAndValue(index, colorValue) {
     const controlName = this.colorMode.names[index]
-    return `${controlName} ${colorValue}`
+    const range = this.settings[this.mode].ranges[index]
+    return `${controlName}: ${colorValue} out of ${range[1]}`
   }
 
   // use layer param to decide wether to give this html
@@ -151,9 +157,13 @@ class Controls extends Component {
                 </span>
               </button>
 
-              <div class="drag bg" title="drag this color" tabindex="0">
-                <div>${drag``}</div>
-              </div>
+              <button
+                class="derive-bg"
+                title="derive palette from background"
+                tabindex="0"
+              >
+                derive
+              </button>
             </div>
             <div class="controls-sliders background">
               ${this.renderSliders('bg')}
@@ -169,9 +179,13 @@ class Controls extends Component {
                 </span>
               </button>
 
-              <div class="drag fg" title="drag this color" tabindex="0">
-                <div>${drag``}</div>
-              </div>
+              <button
+                class="derive-fg"
+                title="derive palette from foreground"
+                tabindex="0"
+              >
+                derive
+              </button>
             </div>
             <div class="controls-sliders foreground">
               ${this.renderSliders('fg')}
@@ -229,6 +243,8 @@ class Controls extends Component {
 
       this.handlePaletteUpdate(fg, 'fg')
     })
+
+    console.log('controls re-rendered')
   }
 }
 

@@ -16,20 +16,18 @@ import {
 } from './../utils/color/index.mjs'
 import closestColorNonWorker from './../workers/closestColorFromPalette.nonWorker.mjs'
 import conversionNonWorker from './../workers/colorConversion.nonWorker.mjs'
-import harmonyNonWorker from './../workers/colorHarmonies.nonWorker.mjs'
 import { checkForEgg } from './../utils/managers/easterEggManager.mjs'
 
 const conversionWorker = './js/workers/colorConversion.worker.mjs'
 const closestColorWorker = './js/workers/closestColorFromPalette.worker.mjs'
-const harmonyWorker = './js/workers/colorHarmonies.worker.mjs'
 
-const HARMONIES = 'colorHarmonies'
 const CONVERSIONS = 'colorConversions'
 const OTHER_PALETTES = 'otherColorPalettes'
 const ACTIVE_COLOR = 'activeColor'
 const BACKGROUND = 'bg'
 const FOREGROUND = 'fg'
 const CONTRAST = 'contrastRatio'
+const EXTERNAL_UPDATE = 'externalUpdate'
 
 const shouldUseWorkers = await supportsImportInWorkers()
 
@@ -79,12 +77,6 @@ class ColorDisplay extends Component {
     this.qs(
       '.color-info-container.palettes .color-info-container-list'
     ).innerHTML = otherPalettesHTML
-  }
-
-  handleHarmonyData({ data }) {
-    if (this.isOldData(data, HARMONIES)) return
-
-    // console.log('color harmonies', data)
   }
 
   handleConversionData({ data }) {
@@ -171,7 +163,6 @@ class ColorDisplay extends Component {
     if (this.shouldUseWorkers) {
       this.conversionWorker.postMessage(conversionMessage)
       this.closestColorWorker.postMessage({ color: hexColor })
-      this.harmonyWorker.postMessage(conversionMessage)
     } else {
       const conversionData = conversionNonWorker({ data: conversionMessage })
       this.handleConversionData({ data: conversionData })
@@ -180,9 +171,6 @@ class ColorDisplay extends Component {
         data: { color: hexColor },
       })
       this.handleClosestColorData({ data: closestColorData })
-
-      const harmonyData = harmonyNonWorker({ data: conversionMessage })
-      this.handleHarmonyData({ data: harmonyData })
     }
   }
 
@@ -227,7 +215,6 @@ class ColorDisplay extends Component {
       this.closestColorWorker = new Worker(closestColorWorker, {
         type: 'module',
       })
-      this.harmonyWorker = new Worker(harmonyWorker, { type: 'module' })
 
       this.conversionWorker.addEventListener('message', ({ data }) =>
         this.handleConversionData({ data })
@@ -235,19 +222,44 @@ class ColorDisplay extends Component {
       this.closestColorWorker.addEventListener('message', ({ data }) =>
         this.handleClosestColorData({ data })
       )
-      this.harmonyWorker.addEventListener('message', ({ data }) =>
-        this.handleHarmonyData({ data })
-      )
     }
   }
 
   connectedCallback() {
     this.innerHTML = html`
-      <div>
-        <section class="color-display-container">
-          <div class="color-display-readout">
-            <span class="color-display-hex-code">#<span>000000</span></span>
-          </div>
+      <div class="color-display-container-columns">
+        <div>
+          <section class="color-display-container">
+            <div class="color-display-readout">
+              <span class="color-display-hex-code">#<span>000000</span></span>
+            </div>
+          </section>
+
+          <section class="color-info-container conversions smaller-margin">
+            <div class="color-info-container-header">
+              <span>conversions to other formats</span>
+              <!-- <b class="border-bottom"></b> -->
+            </div>
+            <div class="color-info-container-list"></div>
+          </section>
+
+          <section class="color-info-container palettes">
+            <div class="color-info-container-header">
+              <span>close analogues from external color systems</span>
+              <!-- <b class="border-bottom"></b> -->
+            </div>
+            <div class="color-info-container-list"></div>
+          </section>
+
+          <section class="color-info-container contrast">
+            <div class="color-info-container-header">
+              <span>contrast information</span>
+              <!-- <b class="border-bottom"></b> -->
+            </div>
+            <div class="color-info-container-list"></div>
+          </section>
+        </div>
+        <div class="color-display-selector-container">
           <div class="color-display-selector">
             <div class="color-display-selector-description">
               <span>select color readout</span>
@@ -273,40 +285,25 @@ class ColorDisplay extends Component {
               </div>
             </button>
           </div>
-        </section>
 
-        <section class="color-info-container conversions">
-          <div class="color-info-container-header">
-            <span>conversions to other formats</span>
-            <!-- <b class="border-bottom"></b> -->
-          </div>
-          <div class="color-info-container-list"></div>
-        </section>
+          <div class="color-display-selector">
+            <div class="color-display-selector-description">
+              <span>color config controls</span>
+            </div>
 
-        <section class="color-info-container palettes">
-          <div class="color-info-container-header">
-            <span>close analogues from external color systems</span>
-            <!-- <b class="border-bottom"></b> -->
+            <button class="randomize-colors">randomize colors</button>
+            <button class="swap-colors">swap colors</button>
           </div>
-          <div class="color-info-container-list"></div>
-        </section>
-
-        <section class="color-info-container contrast">
-          <div class="color-info-container-header">
-            <span>contrast information</span>
-            <!-- <b class="border-bottom"></b> -->
-          </div>
-          <div class="color-info-container-list"></div>
-        </section>
+        </div>
       </div>
     `
 
     const displayBackgroundColor = this.qs('.display-background-color')
     const displayTextColor = this.qs('.display-text-color')
 
-    const buttons = [displayBackgroundColor, displayTextColor]
+    const readoutButtons = [displayBackgroundColor, displayTextColor]
 
-    buttons.forEach((element, _idx, arr) => {
+    readoutButtons.forEach((element, _idx, arr) => {
       element.addEventListener('click', e => {
         const activeColor = e.currentTarget.dataset.color
         const text = e.currentTarget.querySelector('span').textContent
@@ -333,8 +330,20 @@ class ColorDisplay extends Component {
       })
     })
 
+    const randomizeButton = this.qs('.randomize-colors')
+    const swapButton = this.qs('.swap-colors')
+
+    randomizeButton.addEventListener('click', () => {
+      minerva.set(EXTERNAL_UPDATE, true)
+    })
+
+    swapButton.addEventListener('click', () => {
+      minerva.set(EXTERNAL_UPDATE, true)
+    })
+
     minerva.on(ACTIVE_COLOR, color => {
       const { fg: hslFg, bg: hslBg } = minerva.get('colors')
+
       this.activeColor = color
       this.updateColors(
         {

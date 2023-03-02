@@ -25,7 +25,7 @@ class Minerva {
    * @property {string} machine name of instance (for data export)
    * @property {boolean} mute true if sound should be muted
    * @property {boolean} newPlayer true if onyx hasn't been used
-   * @property {number} arrivals false if onyx has been used before
+   * @property {number} arrivals 0 if onyx has been used before
    * @property {string} processType ??? don't remember what this was
    * @property {number} historySize amount of previous color storage
    * @property {string} activeColor current color being displayed
@@ -130,6 +130,11 @@ class Minerva {
       })
   }
 
+  /**
+   * save an item into minerva's localStorage object.
+   * @param {string} key  name to save under
+   * @param {any}    item thing to store
+   */
   set(key, item) {
     try {
       if (key === undefined || item === undefined) {

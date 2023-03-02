@@ -1,14 +1,10 @@
 @use '../../utils/vars' as v
 
 .onyx-palette
-  +v.colordisplayborderfade12
+  // +v.colordisplayborderfade12
   +v.colordisplaybgfade7
 
-  $size: 2rem
-  $vsize: 2rem
-
-  width: max-content
-  border-radius: v.$border-radius
+  // border-radius: v.$border-radius
   padding: v.$halfgap
   display: flex
   gap: v.$halfgap
@@ -16,28 +12,21 @@
 
   .palette-header
     +v.lightmono
-    +v.colordisplaybgfade7
-    +v.colordisplayborderfade12
 
     font-size: 1rem
-    padding: v.$small-space
     justify-content: center
     border-radius: v.$border-radius
 
   .color-grid
-    display: grid
-    gap: v.$halfgap
+    // +v.colordisplaybgfade7
+    display: flex
     border-radius: v.$border-radius
-    grid-template-columns: repeat(5, $size)
-    grid-template-rows: $vsize
-    width: max-content
+    gap: v.$small-space
+    max-width: 100%
+    overflow: hidden
 
   .onyx-palette-color
     +v.center
-    +v.colordisplayborder
 
-    height: $vsize
-    overflow: hidden
-    position: relative
-    width: $size
-    border-radius: v.$border-radius
+    height: 2rem
+    flex-grow: 1

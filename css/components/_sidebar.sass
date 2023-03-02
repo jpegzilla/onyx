@@ -3,13 +3,62 @@
 
 #onyx-sidebar
   +v.fill
-  +v.colordisplayborderfade12
-  +v.colordisplaybgfade7
-
-  border-radius: v.$border-radius
+  +v.lightmono
 
   grid-area: sidebar
-  position: relative
+  min-width: 25vw
+  max-width: 25vw
+  display: grid
+  grid-template-rows: 2fr 8fr
+  gap: v.$p-m
+
+  .sidebar-harmony + .sidebar-harmony
+    margin-top: v.$halfgap
+
+  .sidebar-harmony
+    +v.colordisplayborderfade12
+
+    display: grid
+    width: 100%
+    grid-template-columns: 1fr 1fr
+    border-radius: v.$border-radius
+
+    & > div
+      display: flex
+      align-items: center
+
+  .sidebar-harmony-description
+    +v.colordisplaycolor
+    +v.colordisplaybg
+
+    padding: v.$button-padding
+
+  .color-harmony-preview
+    display: flex
+    flex-grow: 1
+
+    b
+      +v.colordisplayborderfade12
+
+      font-size: 1rem
+      display: flex
+      width: 100%
+      height: v.$p-m
+      justify-content: center
+      align-items: center
+      border-width: 0
+      border-left-width: 1px
+
+      span
+        +v.inversefontcolor
+
+        padding: 0 v.$quartergap
+
+  .sidebar-container
+    +v.colordisplayborderfade12
+
+    border-radius: v.$border-radius
+    padding: v.$halfgap
 
   .data-display-container
     +v.fill

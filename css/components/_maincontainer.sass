@@ -1,9 +1,9 @@
 @use '../utils/vars' as v
 
-$grid-area-1: "header header header"
-$grid-area-2: "color-display 3d-preview sidebar"
-$grid-area-3: "controls controls sidebar"
-$grid-area-4: "footer footer footer"
+$grid-area-1: "header header"
+$grid-area-2: "color-display sidebar"
+$grid-area-3: "controls sidebar"
+$grid-area-4: "footer footer"
 
 main
   +v.fill
@@ -12,7 +12,7 @@ main
   gap: v.$gridgap
   grid-template-areas: $grid-area-1 $grid-area-2 $grid-area-3 $grid-area-4
   grid-template-rows: auto 2fr 1fr auto
-  grid-template-columns: auto 1fr 1fr
+  grid-template-columns: 4fr min-content
   max-width: v.$max-width
   margin: 0 auto
   padding: v.$p-m v.$p-m v.$p-s v.$p-m
