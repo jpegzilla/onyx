@@ -21,7 +21,7 @@ class Minerva {
    * @property {string} timeFormat time format to display, 12 or 24hr
    * @property {object} systemColors colors to use for highlights
    * @property {object} colors ??? what was this for again?
-   * @property {array}  palettes array of palette objects
+   * @property {object} palettes list of palette objects ([id]: colors)
    * @property {string} machine name of instance (for data export)
    * @property {boolean} mute true if sound should be muted
    * @property {boolean} newPlayer true if onyx hasn't been used
@@ -54,7 +54,7 @@ class Minerva {
     },
     historySize: 100,
     newPlayer: true,
-    palettes: [],
+    palettes: {},
     systemColors: { highlight: '#e0005d' },
     timeFormat: '24hr',
     volume: { effect: 100 },

@@ -1,5 +1,5 @@
 import Component from './component.mjs'
-import { html, LimitedList, debounce } from './../utils/index.mjs'
+import { html, LimitedList, debounce, Palette } from './../utils/index.mjs'
 import {
   hslaToRGB,
   hslToHex,
@@ -30,6 +30,7 @@ const PALETTES = 'palettes'
 const COLOR_MODE = 'colorMode'
 const COLORS = 'colors'
 const EXTERNALUPDATE = 'externalUpdate'
+const ACTIVE_PALETTE = 'activePalette'
 
 class Controls extends Component {
   static name = 'onyx-controls'
@@ -132,19 +133,27 @@ class Controls extends Component {
     }
   }
 
-  handlePaletteUpdate(color, layer) {
-    const activePalette = minerva.get('activePalette')
+  handlePaletteUpdate(color, _layer) {
     const palettes = minerva.get(PALETTES)
-    const newColor = { color, layer }
+    let palette
+    const existingPalette = palettes?.[minerva.get(ACTIVE_PALETTE)]
 
-    if (palettes.length === 0) return minerva.set(PALETTES, [[newColor]])
+    if (existingPalette)
+      palette = new Palette(existingPalette, minerva.get(ACTIVE_PALETTE))
+    else palette = new Palette()
 
-    palettes.at(activePalette || -1).push(newColor)
+    minerva.set(ACTIVE_PALETTE, palette.id)
 
-    minerva.set(PALETTES, palettes)
+    palette.addColor(color)
+    // console.log('palette object:', palette)
+    // console.log('palettes list:', minerva.get('palettes'))
   }
 
   connectedCallback() {
+    // minerva.set(PALETTES, {})
+    // minerva.set(ACTIVE_PALETTE, {})
+    // remove
+
     this.innerHTML = html`<section>
       <div class="controls-container">
         <div class="controls-container-sliders">

@@ -13,20 +13,36 @@ class LimitedList {
     this.items = []
   }
 
+  setAt(index, item) {
+    this.items[index] = item
+
+    return this
+  }
+
+  removeAt(index) {
+    this.items.splice(index, 1)
+
+    return this
+  }
+
   add(item) {
+    // console.log({
+    //   items: this.items,
+    //   limit: this.limit,
+    // })
     if (this.items.length >= this.limit) {
       this.items.shift()
     }
 
     this.items.push(item)
 
-    return this.items
+    return this
   }
 
   clear() {
     this.items = []
 
-    return this.items
+    return this
   }
 }
 

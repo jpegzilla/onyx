@@ -28,6 +28,7 @@ const BACKGROUND = 'bg'
 const FOREGROUND = 'fg'
 const CONTRAST = 'contrastRatio'
 const EXTERNAL_UPDATE = 'externalUpdate'
+const COLORS = 'colors'
 
 const shouldUseWorkers = await supportsImportInWorkers()
 
@@ -342,7 +343,7 @@ class ColorDisplay extends Component {
     })
 
     minerva.on(ACTIVE_COLOR, color => {
-      const { fg: hslFg, bg: hslBg } = minerva.get('colors')
+      const { fg: hslFg, bg: hslBg } = minerva.get(COLORS)
 
       this.activeColor = color
       this.updateColors(
@@ -357,7 +358,7 @@ class ColorDisplay extends Component {
       )
     })
 
-    minerva.on('colors', ({ fg, bg }) => {
+    minerva.on(COLORS, ({ fg, bg }) => {
       const mode = minerva.get('colorMode')
       let colorsToConvert
 

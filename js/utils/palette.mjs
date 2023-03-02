@@ -1,5 +1,9 @@
 // ♪音楽 → 暁RECORDS - BLACK MIRROR ON THE WALL : https://www.youtube.com/watch?v=QyBjXlCMe7Y
 import { uuidv4 } from './misc.mjs'
+import LimitedList from './dataStructures/limitedList.mjs'
+import { minerva } from './../main.mjs'
+
+const PALETTES = 'palettes'
 
 /**
  * used to create palette objects.
@@ -7,30 +11,71 @@ import { uuidv4 } from './misc.mjs'
 class Palette {
   static defaultSettings = {}
 
-  constructor(minerva) {
-    this.colors = []
-    this.paletteId = uuidv4()
+  constructor(initializer, initialId) {
+    this.colorList = new LimitedList({
+      limit: 5,
+    })
 
-    this.#updatePalettes(minerva)
+    if (initializer) initializer.forEach(e => this.colorList.add(e))
 
-    return this.paletteId
+    this.id = initialId || uuidv4()
+
+    this.updatePalettes()
   }
 
-  addColor(colorPosition = 0, color) {
-    this.colors.insertAt(colorPosition, color)
+  createColorObject(color) {
+    return {
+      color,
+      locked: false,
+    }
   }
 
-  removeColor(colorPosition, amount = 1) {
-    this.colors.splice(colorPosition, amount)
+  addColorAtIndex(index, color) {
+    this.colorList.setAt(index, color)
+
+    this.updatePalettes()
+
+    return this
+  }
+
+  addColor(color) {
+    this.colorList.add(this.createColorObject(color))
+
+    this.updatePalettes()
+
+    return this
+  }
+
+  removeColorAtIndex(index) {
+    this.colorList.removeAt(index)
+
+    this.updatePalettes()
+
+    return this
+  }
+
+  // generate(distance) {
+  //   return this
+  // }
+
+  lock(index) {
+    this.colorList[index].locked = true
+
+    return this
   }
 
   delete() {}
 
   duplicate() {}
 
-  #updatePalettes(minerva) {
-    const currentPalettes = minerva.get('palettes')
-    minerva.set('palettes', [...currentPalettes, this.colors])
+  updatePalettes() {
+    const currentPalettes = minerva.get(PALETTES)
+
+    // console.log('object going in', this)
+    minerva.set(PALETTES, {
+      ...currentPalettes,
+      [this.id]: this.colorList.items,
+    })
   }
 }
 
