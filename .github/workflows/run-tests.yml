@@ -1,0 +1,24 @@
+name: node ci
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+    name: install dependencies and run tests
+    steps:
+      - uses: actions/checkout@v3
+      - name: use node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: install deps
+        run: yarn --frozen-lockfile
+      - name: run tests
+        run: yarn test
