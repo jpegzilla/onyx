@@ -60,5 +60,6 @@ Array.prototype.sum = function () {
  * @return {array}           the modified array
  */
 Array.prototype.insertAt = function (location, ...items) {
-  return this.splice(location, 0, ...items)
+  this.splice(location, 0, ...items)
+  return this
 }

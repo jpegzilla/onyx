@@ -20,7 +20,19 @@ const { sin, cos, pow } = Math
 // luminance calculation based on this:
 // https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
 // which is also where these constants are from
+/**
+ * calculates the luminance of an rgb color in 8-bit integers.
+ * @param  {number} r red, 0-255
+ * @param  {number} g green, 0-255
+ * @param  {number} b blue, 0-255
+ * @return {number} luminance of the given color
+ */
 export const calculateLuminance = (r, g, b) => {
+  if ([r, g, b].some(e => e > 255 || e < 0))
+    throw new RangeError('rgb values must be in range 0-255.')
+  if ([r, g, b].some(e => isNaN(e)))
+    throw new TypeError('rgb values must be numerical.')
+
   const srgb = [r, g, b].map(val => val / RGB_MAX)
   const [R, G, B] = srgb.map(val =>
     val <= LUM_LOWER
@@ -35,8 +47,8 @@ export const calculateLuminance = (r, g, b) => {
 
 /**
  * determines the contrast ratio between two colors
- * @param  {string} foreground an hsl color.
- * @param  {string} background an hsl color.
+ * @param  {object} color  object containing the fg and bg colors.
+ * @param  {string} format the format of the color.
  * @return {object} an object containing information about the contrast between colors.
  */
 export const getContrastRatio = (color, format) => {
