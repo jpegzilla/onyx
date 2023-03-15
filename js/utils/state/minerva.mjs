@@ -59,6 +59,7 @@ class Minerva {
     timeFormat: '24hr',
     volume: { effect: 100 },
     workspaces: {},
+    colorHistory: [],
     activePalette: null,
   }
 

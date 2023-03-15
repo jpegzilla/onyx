@@ -7,14 +7,23 @@ import {
   setCustomProperty,
   getCustomProperty,
   Mnemosyne,
+  LimitedList,
 } from './utils/index.mjs'
 import { hexToHSLA, stringifyHSL } from './utils/color/conversions.mjs'
 import components from './components/index.mjs'
+
+const COLOR_HISTORY = 'colorHistory'
 
 export * from './meta.mjs'
 export const minerva = new Minerva('jpegzilla-onyx')
 export const arachne = Arachne
 export const mnemosyne = new Mnemosyne('jpegzilla-onyx')
+
+const initialHistory = minerva.get(COLOR_HISTORY)
+export const colorHistory = new LimitedList({
+  limit: 100,
+  initializer: initialHistory,
+})
 
 minerva.set('loaded', false)
 

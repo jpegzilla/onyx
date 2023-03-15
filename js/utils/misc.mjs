@@ -101,11 +101,12 @@ export const enableScroll = () => {
 
 /**
  * gets a random integer between two given numbers
- * @param  {Number} min  minimum bound for number generation
- * @param  {Number} max  maximum bound for number generation
- * @return {Number}      a random number between max and min
+ * @param  {Number}  min       minimum bound for number generation
+ * @param  {Number}  max       maximum bound for number generation
+ * @param  {Boolean} inclusive true if max range is inclusive
+ * @return {Number}            a random number between max and min
  */
-export const getRandomInt = (min, max) => {
+export const getRandomInt = (min, max, inclusive = false) => {
   if (isNaN(min) || isNaN(max)) {
     arachne.error('getRandomInt must be called with two numbers.')
     return
@@ -113,7 +114,7 @@ export const getRandomInt = (min, max) => {
 
   min = Math.ceil(min)
   max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min)) + min // the maximum is exclusive and the minimum is inclusive
+  return Math.floor(Math.random() * (max - min + +inclusive)) + min // the maximum is exclusive and the minimum is inclusive
 }
 
 /**

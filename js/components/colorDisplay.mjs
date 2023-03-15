@@ -5,7 +5,7 @@ import {
   setCustomProperty,
   supportsImportInWorkers,
 } from './../utils/index.mjs'
-import { minerva } from './../main.mjs'
+import { minerva, colorHistory } from './../main.mjs'
 import {
   hslToHex,
   stringifyHSL,
@@ -13,7 +13,9 @@ import {
   MODE_HSL,
   MODE_RGB,
   getContrastRatio,
+  getRandomColor,
 } from './../utils/color/index.mjs'
+
 import closestColorNonWorker from './../workers/closestColorFromPalette.nonWorker.mjs'
 import conversionNonWorker from './../workers/colorConversion.nonWorker.mjs'
 import { checkForEgg } from './../utils/managers/easterEggManager.mjs'
@@ -29,6 +31,7 @@ const FOREGROUND = 'fg'
 const CONTRAST = 'contrastRatio'
 const EXTERNAL_UPDATE = 'externalUpdate'
 const COLORS = 'colors'
+const COLOR_HISTORY = 'colorHistory'
 
 const shouldUseWorkers = await supportsImportInWorkers()
 
@@ -294,6 +297,10 @@ class ColorDisplay extends Component {
 
             <button class="randomize-colors">randomize colors</button>
             <button class="swap-colors">swap colors</button>
+            <div class="button-container">
+              <button class="undo-color">undo</button>
+              <button class="redo-color">redo</button>
+            </div>
           </div>
         </div>
       </div>
@@ -333,14 +340,49 @@ class ColorDisplay extends Component {
 
     const randomizeButton = this.qs('.randomize-colors')
     const swapButton = this.qs('.swap-colors')
+    const undoButton = this.qs('.undo-color')
+    const redoButton = this.qs('.redo-color')
 
-    randomizeButton.addEventListener('click', () => {
+    const undoColors = () => {
       minerva.set(EXTERNAL_UPDATE, true)
-    })
+      const newColor = colorHistory.undo().current()
+      minerva.set(COLORS, newColor)
+    }
 
-    swapButton.addEventListener('click', () => {
+    const redoColors = () => {
       minerva.set(EXTERNAL_UPDATE, true)
-    })
+      const newColor = colorHistory.redo().current()
+      minerva.set(COLORS, newColor)
+    }
+
+    const randomizeColors = () => {
+      minerva.set(EXTERNAL_UPDATE, true)
+      const newColors = {
+        fg: getRandomColor('hsl'),
+        bg: getRandomColor('hsl'),
+      }
+
+      minerva.set(COLORS, newColors)
+      colorHistory.add(newColors).save(COLOR_HISTORY)
+    }
+
+    const swapColors = () => {
+      const { fg, bg } = minerva.get(COLORS)
+
+      const newColors = {
+        bg: fg,
+        fg: bg,
+      }
+
+      minerva.set(COLORS, newColors)
+      minerva.set(EXTERNAL_UPDATE, true)
+      colorHistory.add(newColors).save(COLOR_HISTORY)
+    }
+
+    randomizeButton.addEventListener('click', randomizeColors)
+    swapButton.addEventListener('click', swapColors)
+    redoButton.addEventListener('click', redoColors)
+    undoButton.addEventListener('click', undoColors)
 
     minerva.on(ACTIVE_COLOR, color => {
       const { fg: hslFg, bg: hslBg } = minerva.get(COLORS)

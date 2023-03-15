@@ -7,11 +7,13 @@ const PALETTES = 'palettes'
 
 /**
  * used to create palette objects.
+ * @param {object} initializer the initial palette in the list
+ * @param {string} initialId   the id of the first palette in the list
  */
 class Palette {
   static defaultSettings = {}
 
-  constructor(initializer, initialId) {
+  constructor({ initializer, initialId }) {
     this.colorList = new LimitedList({
       limit: 5,
     })

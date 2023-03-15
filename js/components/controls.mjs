@@ -139,7 +139,10 @@ class Controls extends Component {
     const existingPalette = palettes?.[minerva.get(ACTIVE_PALETTE)]
 
     if (existingPalette)
-      palette = new Palette(existingPalette, minerva.get(ACTIVE_PALETTE))
+      palette = new Palette({
+        initializer: existingPalette,
+        initialId: minerva.get(ACTIVE_PALETTE),
+      })
     else palette = new Palette()
 
     minerva.set(ACTIVE_PALETTE, palette.id)

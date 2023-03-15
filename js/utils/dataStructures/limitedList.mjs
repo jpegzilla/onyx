@@ -1,3 +1,5 @@
+import { minerva, arachne } from './../../main.mjs'
+
 /**
  * a list that can only be a certain length before starting to
  * remove the oldest items.
@@ -5,12 +7,13 @@
 class LimitedList {
   /**
    * creates a new limited list.
-   * @param {number} limit  the maximum amount of items to hold
+   * @param {number} limit        the maximum amount of items to hold
+   * @param {number} initializer  an initial set of items
    */
-  constructor({ limit }) {
+  constructor({ limit, initializer = [] }) {
     this.limit = limit
-
-    this.items = []
+    this.items = [...initializer]
+    this.redoList = []
   }
 
   setAt(index, item) {
@@ -25,18 +28,42 @@ class LimitedList {
     return this
   }
 
-  add(item) {
-    // console.log({
-    //   items: this.items,
-    //   limit: this.limit,
-    // })
-    if (this.items.length >= this.limit) {
-      this.items.shift()
-    }
+  undo() {
+    const item = this.items.pop()
 
-    this.items.push(item)
+    if (item) this.redoList.push(item)
 
     return this
+  }
+
+  redo() {
+    const item = this.redoList.pop()
+
+    if (item) this.items.push(item)
+
+    return this
+  }
+
+  current() {
+    return this.items.at(-1)
+  }
+
+  add(item) {
+    if (this.items.length >= this.limit) this.items.shift()
+
+    this.items.push(item)
+    this.redoList = []
+
+    return this
+  }
+
+  save(key) {
+    if (!key) {
+      arachne.error('no key provided to LimitedList.save')
+      return
+    }
+
+    minerva.set(key, this.items)
   }
 
   clear() {
