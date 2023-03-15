@@ -1,8 +1,4 @@
-yarn.lock
 node_modules
-package.json
-.eslintrc.json
-package-lock.json
 
 # literally just technical notes about measurements, colors and whatnot
 # that I made for my own reference while writing this site
