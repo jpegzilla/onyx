@@ -324,6 +324,7 @@ $layer-overlay: 54
 =onyxbutton($fontsize: 1.25rem, $bigpadding: true)
   +destroy
   +colordisplaybgfade12
+  +colordisplayborderfade12
   +croptext(1.2)
   +center
 
@@ -331,6 +332,7 @@ $layer-overlay: 54
   cursor: pointer
   padding: $button-padding
   border-radius: $border-radius
+  border-width: 1px
   font-size: $fontsize
   line-height: calc(#{$fontsize} + 0.2rem)
 

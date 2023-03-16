@@ -1,0 +1,20 @@
+@use '../utils/vars' as v
+
+#onyx-drop-target
+  +v.big
+  +v.positionzero
+  +v.lightmono
+  +v.center
+  +v.colordisplaycolor
+  +v.colordisplaybgfade7
+
+  position: absolute
+  z-index: v.$layer-overlay
+  font-size: 2rem
+  border: 4px dashed currentColor
+  pointer-events: none
+  opacity: 0
+  transition: opacity 0.2s ease-out
+
+  &.drag-over
+    opacity: 1

@@ -4,5 +4,14 @@ import ColorDisplay from './colorDisplay.mjs'
 import Sidebar from './sidebar.mjs'
 import Footer from './footer.mjs'
 import Controls from './controls.mjs'
+import DropTarget from './dropTarget.mjs'
 
-export default [LoadingScreen, Header, ColorDisplay, Sidebar, Footer, Controls]
+export default [
+  LoadingScreen,
+  Header,
+  ColorDisplay,
+  Sidebar,
+  Footer,
+  Controls,
+  DropTarget,
+]

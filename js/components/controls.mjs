@@ -31,6 +31,7 @@ const COLOR_MODE = 'colorMode'
 const COLORS = 'colors'
 const EXTERNALUPDATE = 'externalUpdate'
 const ACTIVE_PALETTE = 'activePalette'
+const LOCKS = 'locks'
 
 class Controls extends Component {
   static name = 'onyx-controls'
@@ -148,21 +149,22 @@ class Controls extends Component {
     minerva.set(ACTIVE_PALETTE, palette.id)
 
     palette.addColor(color)
-    // console.log('palette object:', palette)
-    // console.log('palettes list:', minerva.get('palettes'))
   }
 
   connectedCallback() {
-    // minerva.set(PALETTES, {})
-    // minerva.set(ACTIVE_PALETTE, {})
-    // remove
+    const { fg: fgLocked, bg: bgLocked } = minerva.get(LOCKS)
 
     this.innerHTML = html`<section>
       <div class="controls-container">
         <div class="controls-container-sliders">
           <div class="controls-left">
             <div class="controls-header">
-              <button class="lock-colors-bg">lock background</button>
+              <button
+                class="lock-colors-bg"
+                title="locks the background, preventing its randomization."
+              >
+                ${bgLocked ? 'background locked' : 'lock background'}
+              </button>
               <button class="controls-add-to-palette-bg">
                 <span>
                   add <span class="bg-color-hex">#000000</span> to palette
@@ -184,7 +186,12 @@ class Controls extends Component {
 
           <div class="controls-right">
             <div class="controls-header">
-              <button class="lock-colors-fg">lock foreground</button>
+              <button
+                class="lock-colors-fg"
+                title="locks the foreground, preventing its randomization."
+              >
+                ${fgLocked ? 'foreground locked' : 'lock foreground'}
+              </button>
               <button class="controls-add-to-palette-fg">
                 <span>
                   add <span class="fg-color-hex">#000000</span> to palette
@@ -211,6 +218,29 @@ class Controls extends Component {
     this.foregroundColorInputs = this.qsa('.foreground .color-control')
     this.backgroundAddToPaletteButton = this.qs('.controls-add-to-palette-bg')
     this.foregroundAddToPaletteButton = this.qs('.controls-add-to-palette-fg')
+
+    const lockFgButton = this.qs('.lock-colors-fg')
+    const lockBgButton = this.qs('.lock-colors-bg')
+
+    lockBgButton.addEventListener('click', () => {
+      const { fg: fgLock, bg: bgLock } = minerva.get(LOCKS)
+      lockBgButton.textContent =
+        !bgLock === true ? 'background locked' : 'lock background'
+      minerva.set(LOCKS, {
+        fg: fgLock,
+        bg: !bgLock,
+      })
+    })
+
+    lockFgButton.addEventListener('click', () => {
+      const { fg: fgLock, bg: bgLock } = minerva.get(LOCKS)
+      lockFgButton.textContent =
+        !fgLock === true ? 'foreground locked' : 'lock foreground'
+      minerva.set(LOCKS, {
+        fg: !fgLock,
+        bg: bgLock,
+      })
+    })
 
     const { fg, bg } = this.getColors(this.mode)
     this.qs('.fg-color-hex').textContent = hslToHex(fg)

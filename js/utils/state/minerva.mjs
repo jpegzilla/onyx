@@ -52,6 +52,10 @@ class Minerva {
         a: 1,
       },
     },
+    locks: {
+      fg: false,
+      bg: false,
+    },
     historySize: 100,
     newPlayer: true,
     palettes: {},
@@ -61,6 +65,7 @@ class Minerva {
     workspaces: {},
     colorHistory: [],
     activePalette: null,
+    status: 'idle',
   }
 
   /**
@@ -192,6 +197,17 @@ class Minerva {
 
   clear() {
     Minerva._store.removeItem(this.ident)
+  }
+
+  exportConfig() {
+    return JSON.stringify(this.store)
+  }
+
+  importConfig(configJSON) {
+    const config = JSON.parse(configJSON)
+    console.log(config)
+    this.store = config
+    this.save()
   }
 
   load() {

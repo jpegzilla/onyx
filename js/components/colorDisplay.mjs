@@ -32,6 +32,7 @@ const CONTRAST = 'contrastRatio'
 const EXTERNAL_UPDATE = 'externalUpdate'
 const COLORS = 'colors'
 const COLOR_HISTORY = 'colorHistory'
+const LOCKS = 'locks'
 
 const shouldUseWorkers = await supportsImportInWorkers()
 
@@ -269,7 +270,11 @@ class ColorDisplay extends Component {
               <span>select color readout</span>
             </div>
 
-            <button class="display-background-color" data-color="bg">
+            <button
+              class="display-background-color"
+              data-color="bg"
+              title="click to switch the color readout to the background color."
+            >
               <div>
                 <span
                   >${this.activeColor === BACKGROUND
@@ -279,7 +284,11 @@ class ColorDisplay extends Component {
               </div>
             </button>
 
-            <button class="display-text-color" data-color="fg">
+            <button
+              class="display-text-color"
+              data-color="fg"
+              title="click to switch the color readout to the foreground color."
+            >
               <div>
                 <span
                   >${this.activeColor === FOREGROUND
@@ -295,11 +304,31 @@ class ColorDisplay extends Component {
               <span>color config controls</span>
             </div>
 
-            <button class="randomize-colors">randomize colors</button>
-            <button class="swap-colors">swap colors</button>
+            <button
+              class="randomize-colors"
+              title="click to change the foreground and background to random colors."
+            >
+              randomize colors
+            </button>
+            <button
+              class="swap-colors"
+              title="click to swap foreground color with background color."
+            >
+              swap colors
+            </button>
             <div class="button-container">
-              <button class="undo-color">undo</button>
-              <button class="redo-color">redo</button>
+              <button
+                class="undo-color"
+                title="click to undo a color operation."
+              >
+                undo
+              </button>
+              <button
+                class="redo-color"
+                title="click to redo a color operation."
+              >
+                redo
+              </button>
             </div>
           </div>
         </div>
@@ -357,9 +386,12 @@ class ColorDisplay extends Component {
 
     const randomizeColors = () => {
       minerva.set(EXTERNAL_UPDATE, true)
+      const { fg: fgLocked, bg: bgLocked } = minerva.get(LOCKS)
+      const { fg: currFg, bg: currBg } = minerva.get(COLORS)
+
       const newColors = {
-        fg: getRandomColor('hsl'),
-        bg: getRandomColor('hsl'),
+        fg: fgLocked ? currFg : getRandomColor('hsl'),
+        bg: bgLocked ? currBg : getRandomColor('hsl'),
       }
 
       minerva.set(COLORS, newColors)
@@ -400,7 +432,7 @@ class ColorDisplay extends Component {
       )
     })
 
-    minerva.on(COLORS, ({ fg, bg }) => {
+    const colorsHandler = ({ fg, bg }) => {
       const mode = minerva.get('colorMode')
       let colorsToConvert
 
@@ -435,7 +467,19 @@ class ColorDisplay extends Component {
 
       setCustomProperty('--bg-color', stringifyHSL(bg))
       setCustomProperty('--color-display-background', stringifyHSL(bg))
+    }
+
+    const updateAllColors = () => {
+      const { fg, bg } = minerva.get(COLORS)
+      colorsHandler({ fg, bg })
+    }
+
+    minerva.on(EXTERNAL_UPDATE, type => {
+      console.log(type)
+      if (type === 'import') updateAllColors()
     })
+
+    minerva.on(COLORS, colorsHandler)
 
     this.setupWorkers()
   }
