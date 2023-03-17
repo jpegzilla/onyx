@@ -63,10 +63,8 @@ class LimitedList {
     if (this.items.length === this.limit) {
       const allUnlockedItems = this.items.filter(e => !e?.locked)
 
-      console.log(allUnlockedItems[0], allUnlockedItems.at(-1))
       allUnlockedItems.shift()
       allUnlockedItems.push(item)
-      console.log(allUnlockedItems[0], allUnlockedItems.at(-1))
 
       this.items = this.items.map(e => {
         if (e.locked) return e
