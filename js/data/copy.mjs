@@ -9,4 +9,5 @@ export const footerCopy = {
   workspaceType: 'the type of the current color workspace.',
   dark: "set onyx's interface theme to darker colors.",
   light: "set onyx's interface theme to lighter colors.",
+  controls: "show a list of onyx's hotkeys.",
 }
