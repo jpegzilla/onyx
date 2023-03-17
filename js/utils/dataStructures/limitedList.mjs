@@ -12,7 +12,7 @@ class LimitedList {
    */
   constructor({ limit, initializer = [] }) {
     this.limit = limit
-    this.items = [...initializer]
+    this.items = [...initializer.slice(0, limit)]
     this.redoList = []
   }
 
@@ -49,10 +49,33 @@ class LimitedList {
   }
 
   add(item) {
-    if (this.items.length >= this.limit) this.items.shift()
+    if (this.items.every(e => e?.locked) && this.items.length === this.limit) {
+      return this
+    }
 
-    this.items.push(item)
-    this.redoList = []
+    if (this.items.length < this.limit) {
+      this.items.push(item)
+      this.redoList = []
+
+      return this
+    }
+
+    if (this.items.length === this.limit) {
+      const allUnlockedItems = this.items.filter(e => !e?.locked)
+
+      console.log(allUnlockedItems[0], allUnlockedItems.at(-1))
+      allUnlockedItems.shift()
+      allUnlockedItems.push(item)
+      console.log(allUnlockedItems[0], allUnlockedItems.at(-1))
+
+      this.items = this.items.map(e => {
+        if (e.locked) return e
+
+        return allUnlockedItems.shift()
+      })
+
+      this.redoList = []
+    }
 
     return this
   }

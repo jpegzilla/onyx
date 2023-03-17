@@ -163,7 +163,7 @@ class Controls extends Component {
                 class="lock-colors-bg"
                 title="locks the background, preventing its randomization."
               >
-                ${bgLocked ? 'background locked' : 'lock background'}
+                ${bgLocked ? 'unlock background' : 'lock background'}
               </button>
               <button class="controls-add-to-palette-bg">
                 <span>
@@ -190,7 +190,7 @@ class Controls extends Component {
                 class="lock-colors-fg"
                 title="locks the foreground, preventing its randomization."
               >
-                ${fgLocked ? 'foreground locked' : 'lock foreground'}
+                ${fgLocked ? 'unlock foreground' : 'lock foreground'}
               </button>
               <button class="controls-add-to-palette-fg">
                 <span>
@@ -225,7 +225,7 @@ class Controls extends Component {
     lockBgButton.addEventListener('click', () => {
       const { fg: fgLock, bg: bgLock } = minerva.get(LOCKS)
       lockBgButton.textContent =
-        !bgLock === true ? 'background locked' : 'lock background'
+        !bgLock === true ? 'unlock background' : 'lock background'
       minerva.set(LOCKS, {
         fg: fgLock,
         bg: !bgLock,
@@ -235,7 +235,7 @@ class Controls extends Component {
     lockFgButton.addEventListener('click', () => {
       const { fg: fgLock, bg: bgLock } = minerva.get(LOCKS)
       lockFgButton.textContent =
-        !fgLock === true ? 'foreground locked' : 'lock foreground'
+        !fgLock === true ? 'unlock foreground' : 'lock foreground'
       minerva.set(LOCKS, {
         fg: !fgLock,
         bg: bgLock,
@@ -277,13 +277,13 @@ class Controls extends Component {
     this.backgroundAddToPaletteButton.addEventListener('click', () => {
       const { bg } = this.getColors(this.mode)
 
-      this.handlePaletteUpdate(bg, 'bg')
+      this.handlePaletteUpdate(bg)
     })
 
     this.foregroundAddToPaletteButton.addEventListener('click', () => {
       const { fg } = this.getColors(this.mode)
 
-      this.handlePaletteUpdate(fg, 'fg')
+      this.handlePaletteUpdate(fg)
     })
 
     console.log('controls re-rendered')

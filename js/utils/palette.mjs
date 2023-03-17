@@ -16,9 +16,8 @@ class Palette {
   constructor({ initializer, initialId }) {
     this.colorList = new LimitedList({
       limit: 5,
+      initializer,
     })
-
-    if (initializer) initializer.forEach(e => this.colorList.add(e))
 
     this.id = initialId || uuidv4()
 
@@ -56,24 +55,75 @@ class Palette {
     return this
   }
 
+  /**
+   * move a palette swatch in a specified direction
+   * @param  {number}  index     index of swatch to move
+   * @param  {number}  direction +1 to move right, -1 to move left
+   * @return {Palette}           the instance of the palette class
+   */
+  move(index, direction) {
+    let tryToMoveTo = index + direction
+
+    while (
+      this.colorList.items[tryToMoveTo]?.locked &&
+      (tryToMoveTo !== 0 || tryToMoveTo < this.colorList.items.length - 1)
+    ) {
+      tryToMoveTo += direction
+    }
+
+    if (tryToMoveTo === -1 || tryToMoveTo === this.colorList.items.length) {
+      return
+    }
+
+    console.log({ swap: index, with: tryToMoveTo })
+
+    const swap = this.colorList.items[index]
+    const swapWith = this.colorList.items[tryToMoveTo]
+
+    this.colorList.items[index] = swapWith
+    this.colorList.items[tryToMoveTo] = swap
+
+    this.updatePalettes()
+
+    return this
+  }
+
   // generate(distance) {
   //   return this
   // }
 
   lock(index) {
-    this.colorList[index].locked = true
+    this.colorList.items[index].locked = true
+
+    this.updatePalettes()
 
     return this
   }
 
-  delete() {}
+  unlock(index) {
+    this.colorList.items[index].locked = false
+
+    this.updatePalettes()
+
+    return this
+  }
+
+  delete(first, count) {
+    new Array(count).forEach(() => {
+      if (first) this.colorList.items.shift()
+      if (!first) this.colorList.items.pop()
+    })
+
+    this.updatePalettes()
+
+    return this
+  }
 
   duplicate() {}
 
   updatePalettes() {
     const currentPalettes = minerva.get(PALETTES)
 
-    // console.log('object going in', this)
     minerva.set(PALETTES, {
       ...currentPalettes,
       [this.id]: this.colorList.items,

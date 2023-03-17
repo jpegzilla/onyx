@@ -307,6 +307,14 @@ $layer-overlay: 54
   font-variation-settings: 'wght' 300
   font-family: $redhat
 
+=regmono
+  font-variation-settings: 'wght' 400
+  font-family: $redhat
+
+=medmono
+  font-variation-settings: 'wght' 450
+  font-family: $redhat
+
 =destroy
   font-size: 100%
   font-family: inherit
@@ -321,9 +329,13 @@ $layer-overlay: 54
   bottom: 0
   left: 0
 
-=onyxbutton($fontsize: 1.25rem, $bigpadding: true)
+// !!
+=ensurevisibility
+  mix-blend-mode: difference
+  filter: invert(0.8)
+
+=onyxbutton($fontsize: 1.25rem, $bigpadding: true, $background: true)
   +destroy
-  +colordisplaybgfade12
   +colordisplayborderfade12
   +croptext(1.2)
   +center
@@ -338,6 +350,9 @@ $layer-overlay: 54
 
   @if $bigpadding == true
     padding: $button-padding-big
+
+  @if $background == true
+    +colordisplaybgfade12
 
 =thinborder
   height: 1px

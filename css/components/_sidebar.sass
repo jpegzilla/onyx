@@ -9,53 +9,12 @@
   min-width: 25vw
   max-width: 25vw
   display: grid
-  grid-template-rows: 2fr 8fr
+  grid-template-rows: auto 8fr
   gap: v.$p-m
-
-  .sidebar-harmony + .sidebar-harmony
-    margin-top: v.$halfgap
-
-  .sidebar-harmony
-    +v.colordisplayborderfade12
-
-    display: grid
-    width: 100%
-    grid-template-columns: 1fr 1fr
-    border-radius: v.$border-radius
-
-    & > div
-      display: flex
-      align-items: center
-
-  .sidebar-harmony-description
-    +v.colordisplaycolor
-    +v.colordisplaybg
-
-    padding: v.$button-padding
-
-  .color-harmony-preview
-    display: flex
-    flex-grow: 1
-
-    b
-      +v.colordisplayborderfade12
-
-      font-size: 1rem
-      display: flex
-      width: 100%
-      height: v.$p-m
-      justify-content: center
-      align-items: center
-      border-width: 0
-      border-left-width: 1px
-
-      span
-        +v.inversefontcolor
-
-        padding: 0 v.$quartergap
 
   .sidebar-container
     +v.colordisplayborderfade12
+    +v.colordisplaybgfade7
 
     border-radius: v.$border-radius
     padding: v.$halfgap
@@ -63,5 +22,75 @@
   .data-display-container
     +v.fill
 
-  .palette-container
-    padding: v.$p-s
+  .palette-history-container
+    +v.lightmono
+
+    height: 100%
+    font-size: 1.25rem
+    display: flex
+
+    .empty-notifier
+      +v.center
+
+      height: 100%
+      width: 100%
+      opacity: 0.5
+
+  .primary-palette-container
+    height: 100%
+    display: flex
+    flex-direction: column
+    gap: v.$quartergap
+
+  .controls
+    display: flex
+    gap: v.$quartergap
+    // justify-content: flex-end
+
+    button
+      +v.destroy
+      +v.onyxbutton($bigpadding: false)
+
+  .palette
+    height: 100%
+    width: 100%
+    display: flex
+    gap: v.$quartergap
+    border-radius: v.$border-radius
+
+    .palette-swatch
+      flex-grow: 1
+      display: flex
+      height: 10rem
+      flex-direction: column
+      gap: v.$quartergap
+
+      div
+        +v.center
+
+        height: 100%
+        border-radius: v.$border-radius
+        display: flex
+        gap: v.$quartergap
+
+        div
+          display: flex
+          flex-direction: column
+
+          button
+            height: max-content
+            width: 100%
+
+        button
+          +v.destroy
+          +v.colordisplaycolor
+          +v.onyxbutton(0.75rem, false)
+          +v.colordisplayborder
+          +v.medmono
+          +v.ensurevisibility
+
+          border-width: 1px
+          cursor: pointer
+
+  .empty-notifier
+    +v.ensurevisibility
