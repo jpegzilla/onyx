@@ -118,22 +118,33 @@ describe('findClosestColor', () => {
   ]
 
   test('finds the closest color within a library, given a library object and a color to search for', () => {
-    // TODO:
+    // COMBAK:
     // this [0, 1] normalized hsv is very confusing, maybe don't use this
-    const closestColorBlack = findClosestColor({
-      color: { h: 0, s: 0, v: 0 },
-      library: MOCK_CSS_COLOR_LIBRARY,
-    })
+    const closestColorBlack = findClosestColor(
+      {
+        color: { h: 0.23, s: 1, v: 0.1 },
+        library: MOCK_CSS_COLOR_LIBRARY,
+      },
+      'labDiff'
+    )
 
-    const closestColorAquamarine = findClosestColor({
-      color: { h: 0.36, s: 1, v: 1 },
-      library: MOCK_CSS_COLOR_LIBRARY,
-    })
+    const closestColorAquamarine = findClosestColor(
+      {
+        // real hsv: 129.6, 100, 100
+        color: { h: 0.36, s: 1, v: 1 },
+        library: MOCK_CSS_COLOR_LIBRARY,
+      },
+      'labDiff'
+    )
 
-    const closestColorAliceBlue = findClosestColor({
-      color: { h: 0.54, s: 0.06, v: 1 },
-      library: MOCK_CSS_COLOR_LIBRARY,
-    })
+    const closestColorAliceBlue = findClosestColor(
+      {
+        // real hsv: 194.4, 6, 100
+        color: { h: 0.54, s: 0.06, v: 1 },
+        library: MOCK_CSS_COLOR_LIBRARY,
+      },
+      'labDiff'
+    )
 
     expect(closestColorBlack.name).toBe('black')
     expect(closestColorAquamarine.name).toBe('aquamarine')

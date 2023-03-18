@@ -275,17 +275,25 @@ export const getColorDistance = (color, referenceColor, calculationForm) => {
   const [h1, s1, v1] = [h * TAU, s, v]
   const [h2, s2, v2] = [libH * TAU, libS, libV]
 
+  const refLab = hsvToLab({
+    h: libH,
+    s: libS,
+    v: libV,
+  })
+
   let distance
 
   switch (calculationForm) {
     case 'deltaE2000':
-      const refLab = hsvToLab({
-        h: libH,
-        s: libS,
-        v: libV,
-      })
-
+      // dramatically slower than euclidean
       distance = calculateCIEE2000(hsvToLab(color), refLab)
+    case 'labDiff':
+      // slightly slower than euclidean
+      const { l: l1, a: a1, b: b1 } = hsvToLab(color)
+      const { l: l2, a: a2, b: b2 } = refLab
+
+      distance =
+        Math.pow(l1 - l2, 2) + Math.pow(a1 - a2, 2) + Math.pow(b1 - b2, 2)
     case 'euclidean':
     default:
       distance =
@@ -302,12 +310,13 @@ export const getColorDistance = (color, referenceColor, calculationForm) => {
  * containing several colors in hex format, finds the closest
  * match for the hsl color in the array.
  * the distance function is
- * @arg {Object} args - findClosestColor parameter
- * @arg {Object} args.color - color in hsv format in [0, 1] range
- * @arg {Array} args.library - list of colors to search
+ * @arg {Object}   args - findClosestColor parameter
+ * @arg {Object}   args.color - color in hsv format in [0, 1] range
+ * @arg {Array}    args.library - list of colors to search
+ * @param {string} type measurement type: euclidean, labdiff, deltaE2000
  * @return {Object} closest match to given color from library
  */
-export const findClosestColor = ({ color, library }) => {
+export const findClosestColor = ({ color, library }, type = 'euclidean') => {
   const { h, s, v } = color
 
   let lowestDistance = Infinity
@@ -317,7 +326,7 @@ export const findClosestColor = ({ color, library }) => {
   for (let i = 0; i < length; i++) {
     const { hex } = library[i]
 
-    const distance = getColorDistance({ h, s, v }, hex, 'euclidean')
+    const distance = getColorDistance({ h, s, v }, hex, type)
     // const distance = getColorDistance({ h, s, v }, hex, 'deltaE2000')
 
     if (distance < lowestDistance) {
