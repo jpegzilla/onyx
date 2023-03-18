@@ -214,6 +214,19 @@ export const hexToHSLA = hex => {
   return rgbaToHSLA(r, g, b, a)
 }
 
+export const hsvToHSL = hsv => {
+  const { h, s, v } = hsv
+
+  const l = v * (1 - s / 2)
+  const hslS = l === 0 ? 0 : (v - l) / Math.min(1, 1 - l)
+
+  return {
+    h: h * 360,
+    s: hslS,
+    l,
+  }
+}
+
 // returns h, s, and l in the set [0, 1]
 export const rgbToDHSL = (r, g, b) => {
   const red = r / RGB_MAX
@@ -317,7 +330,7 @@ export const rgbToXYZ = (red, green, blue) => {
   return { x, y, z }
 }
 
-export const rgbToLAB = (red, green, blue, alpha, type, cieRef) => {
+export const rgbToLAB = (red, green, blue, alpha, type, cieRef, lIn100) => {
   const { x, y, z } = rgbToXYZ(red, green, blue)
 
   let standardX = x / CIE_1931_XYZ_REFERENCE[type][0]
@@ -341,14 +354,40 @@ export const rgbToLAB = (red, green, blue, alpha, type, cieRef) => {
   const a = 500 * (standardX - standardY)
   const b = 200 * (standardY - standardZ)
 
-  return { l: l.toFixed(2), a: a.toFixed(2), b: b.toFixed(2), alpha }
+  return {
+    l: lIn100 ? (l * 100).toFixed(2) : l.toFixed(2),
+    a: a.toFixed(2),
+    b: b.toFixed(2),
+    alpha,
+  }
 }
 
-export const hslaToLAB = (hsla, type = 'D65', cieRef = '1931') => {
+export const hslaToLAB = (
+  hsla,
+  type = 'D65',
+  cieRef = '1931',
+  lIn100 = false
+) => {
   const { h, s, l, a } = hsla
   const { r, g, b } = hslaToRGB(h / ANGLE_MAX, s / 100, l / 100, a)
 
-  return rgbToLAB(r, g, b, a, type, cieRef)
+  return rgbToLAB(r, g, b, a, type, cieRef, lIn100)
+}
+
+export const hsvToLab = hsv => {
+  const { h, s, l, a } = hsvToHSL(hsv)
+
+  return hslaToLAB(
+    {
+      h: h * 100,
+      s: s,
+      l: l,
+      a: a || 1,
+    },
+    undefined,
+    undefined,
+    true
+  )
 }
 
 export const hslaToXYZ = hsla => {
@@ -380,6 +419,14 @@ export const hexToXYZ = hex => {
   }
 }
 
+/**
+ * convert a lab color to an lch color
+ * @param  {number} l     l number
+ * @param  {number} a     a number
+ * @param  {number} b     b number
+ * @param  {number} alpha alpha number
+ * @return {object}       lch object
+ */
 export const labToLCH = (l, a, b, alpha) => {
   let h = Math.atan2(b, a)
   if (h > 0) h = (h / PI) * 180
@@ -399,13 +446,26 @@ export const hslaToLCH = hsla => {
   return labToLCH(l, a, b, alpha)
 }
 
+/**
+ * converts hex string to lch via lab.
+ * @param  {string} hex hex string to convert.
+ * @return {object}     lch object
+ */
 export const hexToLCH = hex => {
   const { l, a, b, a: alpha } = hexToLAB(hex)
 
   return labToLCH(l, a, b, alpha)
 }
 
-export const hexToHSV = hex => {
+/**
+ * converts a hex string to hsv via rgba.
+ * @param  {string}  hex        hex string to convert.
+ * @param  {boolean} normalized normalizes to [0, 1] if true
+ * @return {object}             hsv with all elements in range [0, 1].
+ *                              or [0, 360], [0, 100], [0, 100]
+ *                              if normalize is false
+ */
+export const hexToHSV = (hex, normalized = true) => {
   const { r, g, b } = hexToRGBA(hex)
 
   let red = r / 255
@@ -439,7 +499,15 @@ export const hexToHSV = hex => {
     if (h > 1) h -= 1
   }
 
-  return { h, s, v }
+  if (normalized) {
+    return { h, s, v }
+  }
+
+  return {
+    h: h * 360,
+    s: s * 100,
+    v: v * 100,
+  }
 }
 
 export const hslToHSV = ({ h, s, l }) => {

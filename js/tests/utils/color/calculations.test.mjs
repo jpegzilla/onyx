@@ -1,6 +1,13 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import {
   calculateLuminance,
   getContrastRatio,
+  isElementBackgroundBright,
+  findClosestColor,
+  calculateCIEDE2000,
 } from './../../../utils/color/calculations.mjs'
 
 describe('calculateLuminance', () => {
@@ -51,5 +58,146 @@ describe('getContrastRatio', () => {
 
     expect(number).toBe(1)
     expect(code).toBe('fail')
+  })
+})
+
+describe('isElementBackgroundBright', () => {
+  test('black background is reported as dark', () => {
+    const div = document.createElement('div')
+    div.style.backgroundColor = 'rgb(0, 0, 0)'
+
+    expect(isElementBackgroundBright(div)).toBe(false)
+  })
+
+  test('white background is reported as bright', () => {
+    const div = document.createElement('div')
+    div.style.backgroundColor = 'rgb(255, 255, 255)'
+
+    expect(isElementBackgroundBright(div)).toBe(true)
+  })
+})
+
+describe('findClosestColor', () => {
+  const MOCK_CSS_COLOR_LIBRARY = [
+    {
+      name: 'aliceblue',
+      hex: '#f0f8ff',
+    },
+    {
+      name: 'antiquewhite',
+      hex: '#faebd7',
+    },
+    {
+      name: 'aqua',
+      hex: '#00ffff',
+    },
+    {
+      name: 'aquamarine',
+      hex: '#7fffd4',
+    },
+    {
+      name: 'azure',
+      hex: '#f0ffff',
+    },
+    {
+      name: 'beige',
+      hex: '#f5f5dc',
+    },
+    {
+      name: 'bisque',
+      hex: '#ffe4c4',
+    },
+    {
+      name: 'black',
+      hex: '#000000',
+    },
+    {
+      name: 'white',
+      hex: '#ffffff',
+    },
+  ]
+
+  test('finds the closest color within a library, given a library object and a color to search for', () => {
+    // TODO:
+    // this [0, 1] normalized hsv is very confusing, maybe don't use this
+    const closestColorBlack = findClosestColor({
+      color: { h: 0, s: 0, v: 0 },
+      library: MOCK_CSS_COLOR_LIBRARY,
+    })
+
+    const closestColorAquamarine = findClosestColor({
+      color: { h: 0.36, s: 1, v: 1 },
+      library: MOCK_CSS_COLOR_LIBRARY,
+    })
+
+    const closestColorAliceBlue = findClosestColor({
+      color: { h: 0.54, s: 0.06, v: 1 },
+      library: MOCK_CSS_COLOR_LIBRARY,
+    })
+
+    expect(closestColorBlack.name).toBe('black')
+    expect(closestColorAquamarine.name).toBe('aquamarine')
+    expect(closestColorAliceBlue.name).toBe('aliceblue')
+  })
+})
+
+describe('calculateCIEDE2000', () => {
+  // hajim.rochester.edu/ece/sites/gsharma/ciede2000/ciede2000noteCRNA.pdf
+  // data source: page four
+  const COLOR_DIFFERENCE_TEST_DATA = [
+    {
+      color1: { l: 50.0, a: 2.6772, b: -79.7751 },
+      color2: { l: 50.0, a: 0.0, b: -82.7485 },
+      deltaE: 2.0425,
+    },
+    {
+      color1: { l: 60.2574, a: -34.0099, b: 36.2677 },
+      color2: { l: 60.4626, a: -34.1751, b: 39.4387 },
+      deltaE: 1.2644,
+    },
+    {
+      color1: { l: 2.0776, a: 0.0795, b: -1.135 },
+      color2: { l: 0.9033, a: -0.0636, b: -0.5514 },
+      deltaE: 0.9082,
+    },
+    {
+      color1: { l: 90.9257, a: -0.5406, b: -0.9208 },
+      color2: { l: 88.6381, a: -0.8985, b: -0.7239 },
+      deltaE: 1.5381,
+    },
+  ]
+
+  const isWithinRange = (num1, num2, deviation) => num1 - num2 <= deviation
+
+  test(`returns an accurate cie delta e 2000 for a given pair of colors (${COLOR_DIFFERENCE_TEST_DATA.length} color pairs)`, () => {
+    for (const { deltaE, color1, color2 } of COLOR_DIFFERENCE_TEST_DATA) {
+      const distance = calculateCIEDE2000(color1, color2)
+
+      expect(isWithinRange(distance, deltaE, 0.0001)).toBe(true)
+    }
+  })
+
+  test('equation is symmetric', () => {
+    const EXPECTED_DELTA = 0.9082
+    const COLOR_PAIR_DATA = [
+      {
+        color1: { l: 2.0776, a: 0.0795, b: -1.135 },
+        color2: { l: 0.9033, a: -0.0636, b: -0.5514 },
+        deltaE: EXPECTED_DELTA,
+      },
+      {
+        color1: { l: 0.9033, a: -0.0636, b: -0.5514 },
+        color2: { l: 2.0776, a: 0.0795, b: -1.135 },
+        deltaE: EXPECTED_DELTA,
+      },
+    ]
+
+    const [pair1, pair2] = COLOR_PAIR_DATA
+
+    const distance1 = calculateCIEDE2000(pair1.color1, pair1.color2)
+    const distance2 = calculateCIEDE2000(pair2.color1, pair2.color2)
+
+    expect(distance1).toEqual(distance2)
+    expect(isWithinRange(distance1, EXPECTED_DELTA, 0.0001)).toBe(true)
   })
 })

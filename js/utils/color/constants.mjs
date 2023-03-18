@@ -29,6 +29,7 @@ export const KAPPA = 24389 / 27
 export const TAU = 2 * Math.PI
 export const PI = Math.PI
 export const ANGLE_MAX = 360
+export const ANGLE_HALF = 180
 
 // standard white points
 
