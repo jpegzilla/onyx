@@ -178,7 +178,8 @@ describe('calculateCIEDE2000', () => {
     },
   ]
 
-  const isWithinRange = (num1, num2, deviation) => num1 - num2 <= deviation
+  const isWithinRange = (num1, num2, deviation) =>
+    Math.abs(num1 - num2) <= deviation
 
   test(`returns an accurate cie delta e 2000 for a given pair of colors (${COLOR_DIFFERENCE_TEST_DATA.length} color pairs)`, () => {
     for (const { deltaE, color1, color2 } of COLOR_DIFFERENCE_TEST_DATA) {
