@@ -42,9 +42,19 @@ while onyx is still in development, you can run it by downloading this repositor
 -   drag and drop controls makes creating and organizing palettes easier
 -   simulate color different types of color blindness with your palettes
 
+### contributing
+
+_... tbd_
+
 ### also maybe coming
 
 -   yiq, ycbcr, y'uv color
 -   cieluv
 -   customizable keyboard shortcuts
 -   create palette from image
+
+### todo
+
+-   jsdoc literally everything
+-   add ui tests
+-   add performance tests
