@@ -373,19 +373,18 @@ class ColorDisplay extends Component {
     const redoButton = this.qs('.redo-color')
 
     const undoColors = () => {
-      minerva.set(EXTERNAL_UPDATE, true)
       const newColor = colorHistory.undo().current()
       minerva.set(COLORS, newColor)
+      minerva.set(EXTERNAL_UPDATE, true)
     }
 
     const redoColors = () => {
-      minerva.set(EXTERNAL_UPDATE, true)
       const newColor = colorHistory.redo().current()
       minerva.set(COLORS, newColor)
+      minerva.set(EXTERNAL_UPDATE, true)
     }
 
     const randomizeColors = () => {
-      minerva.set(EXTERNAL_UPDATE, true)
       const { fg: fgLocked, bg: bgLocked } = minerva.get(LOCKS)
       const { fg: currFg, bg: currBg } = minerva.get(COLORS)
 
@@ -396,6 +395,7 @@ class ColorDisplay extends Component {
 
       minerva.set(COLORS, newColors)
       colorHistory.add(newColors).save(COLOR_HISTORY)
+      minerva.set(EXTERNAL_UPDATE, true)
     }
 
     const swapColors = () => {
@@ -407,8 +407,8 @@ class ColorDisplay extends Component {
       }
 
       minerva.set(COLORS, newColors)
-      minerva.set(EXTERNAL_UPDATE, true)
       colorHistory.add(newColors).save(COLOR_HISTORY)
+      minerva.set(EXTERNAL_UPDATE, true)
     }
 
     randomizeButton.addEventListener('click', randomizeColors)
