@@ -5,6 +5,7 @@ import {
   RGB_THRESHOLD,
   PI,
   CIE_1931_XYZ_REFERENCE,
+  CIE_1964_XYZ_REFERENCE,
   ANGLE_MAX,
 } from './constants.mjs'
 
@@ -127,7 +128,7 @@ export const hslaToRGB = (h, s, l, a) => {
 }
 
 /**
- * convert rgb in [0. 255] to hsl in [0, 360]
+ * convert rgb in [0. 255] to hsl in [0, 360], [0, 100], [0, 100]
  * @param  {number} r number representing red
  * @param  {number} g number representing green
  * @param  {number} b number representing blue
@@ -169,10 +170,10 @@ export const rgbToNHSL = (r, g, b) => {
 
 /**
  * converts rgba in [0, 255] to hsla object
- * @param  {[type]} r number representing red
- * @param  {[type]} g number representing green
- * @param  {[type]} b number representing blue
- * @param  {[type]} a number representing alpha
+ * @param  {number} r number representing red
+ * @param  {number} g number representing green
+ * @param  {number} b number representing blue
+ * @param  {number} a number representing alpha
  * @return {object} hsla object
  */
 export const rgbaToHSLA = (r, g, b, a) => {
@@ -214,6 +215,11 @@ export const hexToHSLA = hex => {
   return rgbaToHSLA(r, g, b, a)
 }
 
+/**
+ * converts hsv to hsl
+ * @param  {object} hsv hsv color in range [0, 1]
+ * @return {object}     hsl object
+ */
 export const hsvToHSL = hsv => {
   const { h, s, v } = hsv
 
@@ -262,13 +268,6 @@ export const rgbToDHSL = (r, g, b) => {
   return { h: hue, s: sat, l: lum }
 }
 
-// convert number literal to hex string
-export const numToHex = num => {
-  return isNaN(num)
-    ? '00'
-    : hexDigits[(num - (num % 16)) / 16] + hexDigits[num % 16]
-}
-
 export const hexToHWB = hex => {
   const { r, g, b, a } = hexToRGBA(hex)
   const { s, l } = rgbToDHSL(r, g, b)
@@ -281,8 +280,8 @@ export const hexToHWB = hex => {
 
   return {
     h: +h,
-    w: white.toFixed(2),
-    b: black.toFixed(2),
+    w: +white.toFixed(2),
+    b: +black.toFixed(2),
     a,
   }
 }
@@ -301,8 +300,8 @@ export const hslaToHWB = hsl => {
 
   return {
     h: +h,
-    w: white.toFixed(2),
-    b: black.toFixed(2),
+    w: +white.toFixed(2),
+    b: +black.toFixed(2),
     a,
   }
 }
@@ -330,7 +329,26 @@ export const rgbToXYZ = (red, green, blue) => {
   return { x, y, z }
 }
 
-export const rgbToLAB = (red, green, blue, alpha, type, cieRef, lIn100) => {
+/**
+ * converts rgb color to lab color
+ * @param  {number}  red    red number of rgb color
+ * @param  {number}  green  green number of rgb color
+ * @param  {number}  blue   blue number of rgb color
+ * @param  {number}  alpha  alpha number of color
+ * @param  {string}  type   white type ex. d65
+ * @param  {string}  cieRef cie ref code
+ * @param  {boolean} lIn100 should l be normalized to [0, 100]?
+ * @return {object}         lab color
+ */
+export const rgbToLAB = (
+  red,
+  green,
+  blue,
+  alpha,
+  type,
+  cieRef,
+  lIn100 = false
+) => {
   const { x, y, z } = rgbToXYZ(red, green, blue)
 
   let standardX = x / CIE_1931_XYZ_REFERENCE[type][0]
@@ -338,9 +356,9 @@ export const rgbToLAB = (red, green, blue, alpha, type, cieRef, lIn100) => {
   let standardZ = z / CIE_1931_XYZ_REFERENCE[type][2]
 
   if (cieRef === '1964') {
-    standardX = x / CIE_1931_XYZ_REFERENCE[type][0]
-    standardY = y / CIE_1931_XYZ_REFERENCE[type][1]
-    standardZ = z / CIE_1931_XYZ_REFERENCE[type][2]
+    standardX = x / CIE_1964_XYZ_REFERENCE[type][0]
+    standardY = y / CIE_1964_XYZ_REFERENCE[type][1]
+    standardZ = z / CIE_1964_XYZ_REFERENCE[type][2]
   }
 
   if (standardX > 0.008856) standardX = standardX ** (1 / 3)
