@@ -8,6 +8,7 @@ import {
   CIE_1964_XYZ_REFERENCE,
   ANGLE_MAX,
 } from './constants.mjs'
+import './../prototypeExtensions.mjs'
 
 /**
  * convert a 3, 6. or 8-digit hex string to rgba
@@ -227,7 +228,7 @@ export const hsvToHSL = hsv => {
   const hslS = l === 0 ? 0 : (v - l) / Math.min(1, 1 - l)
 
   return {
-    h: h * 360,
+    h,
     s: hslS,
     l,
   }
@@ -392,6 +393,66 @@ export const hslaToLAB = (
   return rgbToLAB(r, g, b, a, type, cieRef, lIn100)
 }
 
+/**
+ * converts hsv color with elements in range [0, 1] [0, 1] [0, 1]
+ * to an rgb number
+ * @param  {object} hsv hsv color
+ * @return {object}     rgb color
+ */
+export const hsvToRGB = hsv => {
+  let r, g, b
+
+  const { h, s, v } = hsv
+  const chroma = v * s
+  const hPrime = h / 60
+  const x = chroma * (1 - Math.abs((hPrime % 2) - 1))
+  const m = v - chroma
+
+  switch (true) {
+    case hPrime.between(0, 1, false, true):
+      r = chroma
+      g = x
+      b = 0
+      break
+    case hPrime.between(1, 2, false, true):
+      r = x
+      g = chroma
+      b = 0
+      break
+    case hPrime.between(2, 3, false, true):
+      r = 0
+      g = chroma
+      b = x
+      break
+    case hPrime.between(3, 4, false, true):
+      r = 0
+      g = x
+      b = chroma
+      break
+    case hPrime.between(4, 5, false, true):
+      r = x
+      g = 0
+      b = chroma
+      break
+    case hPrime.between(5, 6, false, true):
+      r = chroma
+      g = 0
+      b = x
+      break
+  }
+
+  return {
+    r: (r + m) * 255,
+    g: (g + m) * 255,
+    b: (b + m) * 255,
+  }
+}
+
+/**
+ * converts an hsv color in range [0, 1] to a cielab color
+ * @param  {object} hsv hsv color object
+ * @return {object}     cielab color object
+ */
 export const hsvToLab = hsv => {
   const { h, s, l, a } = hsvToHSL(hsv)
 
@@ -408,6 +469,12 @@ export const hsvToLab = hsv => {
   )
 }
 
+/**
+ * convert hsla color in range [0, 360] [0, 100] [0, 100]
+ * to an xyz color
+ * @param  {object} hsla hsla color object
+ * @return {object}      xyz color
+ */
 export const hslaToXYZ = hsla => {
   const { h, s, l, a } = hsla
   const { r, g, b } = hslaToRGB(h / ANGLE_MAX, s / 100, l / 100, a)
@@ -420,6 +487,13 @@ export const hslaToXYZ = hsla => {
   }
 }
 
+/**
+ * converts a hex color to an xyz color
+ * @param  {string} hex             hex string
+ * @param  {string} [type='D65']    white point type
+ * @param  {string} [cieRef='1931'] cie reference year
+ * @return {object}                 xyz color object
+ */
 export const hexToLAB = (hex, type = 'D65', cieRef = '1931') => {
   const { r, g, b, a } = hexToRGBA(hex)
 
@@ -458,6 +532,11 @@ export const labToLCH = (l, a, b, alpha) => {
   }
 }
 
+/**
+ * converts an hsla color to a cielch color
+ * @param  {object} hsla hsla color
+ * @return {object}      lch color
+ */
 export const hslaToLCH = hsla => {
   const { l, a, b, alpha } = hslaToLAB(hsla)
 
@@ -528,12 +607,15 @@ export const hexToHSV = (hex, normalized = true) => {
   }
 }
 
-export const hslToHSV = ({ h, s, l }) => {
-  const ds = s / 100
-  const dl = l / 100
-
-  const val = dl + ds * Math.min(dl, 1 - dl)
-  const sat = val === 0 ? 0 : 2 * (1 - dl / val)
+/**
+ * converts an hsl color to an hsv color
+ * @param  {object} hsl hsl color
+ * @return {object}     hsv color
+ */
+export const hslToHSV = hsl => {
+  const { h, s, l } = hsl
+  const val = l + s * Math.min(l, 1 - l)
+  const sat = val === 0 ? 0 : 2 * (1 - l / val)
 
   return {
     h,
@@ -542,6 +624,11 @@ export const hslToHSV = ({ h, s, l }) => {
   }
 }
 
+/**
+ * converts a hex color to an rgba color with all elements in range [0, 1]
+ * @param  {string} hex hex color
+ * @return {object}     rgba color
+ */
 export const hexToNRGBA = hex => {
   const { r, g, b, a } = hexToRGBA(hex)
 
@@ -553,6 +640,11 @@ export const hexToNRGBA = hex => {
   }
 }
 
+/**
+ * converts an hsla color to an rgba color with all elements in range [0, 1]
+ * @param  {object} hsla hsla color
+ * @return {object}      rgba color
+ */
 export const hslaToNRGBA = hsla => {
   const { h, s, l, a } = hsla
   const {
@@ -575,6 +667,11 @@ export const hslaToNRGBA = hsla => {
   }
 }
 
+/**
+ * converts an rgba color with elements in range [0, 255] to a hex color
+ * @param  {object} rgba rgba color
+ * @return {string}      hex color
+ */
 export const rgbaToHex = rgba => {
   const { r, g, b } = rgba
 
@@ -583,7 +680,14 @@ export const rgbaToHex = rgba => {
     .slice(1)}${(b | (1 << 8)).toString(16).slice(1)}`
 }
 
-export const hslToHex = ({ h, s, l }) => {
+/**
+ * converts an rgba color with elements in range [0, 360] [0, 100] [0, 100]
+ * to a hex color
+ * @param  {object} hsl hsl color
+ * @return {string}     hex color
+ */
+export const hslToHex = hsl => {
+  const { h, s, l } = hsl
   const dhsl = {
     h: h / ANGLE_MAX,
     s: s / 100,
@@ -595,9 +699,27 @@ export const hslToHex = ({ h, s, l }) => {
   return `#${rgbaToHex(rgb)}`
 }
 
+/**
+ * turns an hsl object with an alpha number into a string formatted like:
+ * hsla(h s l / a) or hsl(h, s, l) when not given an alpha number
+ * @param  {object} hsl   hsl object
+ * @param  {number} hsl.h hue number
+ * @param  {number} hsl.s saturation number
+ * @param  {number} hsl.l lightness number
+ * @param  {number} alpha alpha number
+ * @return {string}       hsl represented as a string
+ */
 export const stringifyHSL = ({ h, s, l }, alpha) =>
   alpha ? `hsla(${h} ${s}% ${l}% / ${alpha})` : `hsl(${h}, ${s}%, ${l}%)`
 
+/**
+ * inverts the hue of an hsl color object
+ * @param  {object} hsl   hsl object
+ * @param  {number} hsl.h hue number
+ * @param  {number} hsl.s saturation number
+ * @param  {number} hsl.l lightness number
+ * @return {object}       inverted hsl color
+ */
 export const invertHSL = ({ h, s, l }) => ({
   h: Math.abs(h - ANGLE_MAX),
   s,
