@@ -111,6 +111,7 @@ components.forEach(({ name, element }) => {
 Promise.all(allMounted).then(e => {
   setupUserPrefs(minerva)
   minerva.set('loaded', true)
+  minerva.set('status', 'idle')
 })
 
 window.addEventListener('storage', e => {
