@@ -14,7 +14,7 @@ import {
   ANGLE_MAX,
   ANGLE_HALF,
 } from './constants.mjs'
-import { hexToHSV, hslaToRGB, hsvToLab } from './conversions.mjs'
+import { hexToHSV, hslaToRGB, hsvToLab, hsvToRGB } from './conversions.mjs'
 
 // luminance calculation based on this:
 // https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
@@ -124,8 +124,12 @@ export const getContrastRatio = (color, format) => {
   }
 }
 
-// determine whether the text in the
-// element should be black or white
+/**
+ * determines whether the background color of the element
+ * provided is bright or dark.
+ * @param  {HTMLElement} element html element to check
+ * @return {Boolean}             true if the element is bright
+ */
 export const isElementBackgroundBright = element => {
   let elementRGB = getComputedStyle(element)['background-color']
 
@@ -257,7 +261,32 @@ export const calculateCIEDE2000 = (labColor1, labColor2) => {
       rT * (DeltaCPrime / (kC * sC)) * (DeltaHPrime / (kH * sH))
   )
 
-  return fixedToFloat(deltaE)
+  return deltaE
+}
+
+/**
+ * calculates the redmean distance between two rgb colors
+ * https://www.compuphase.com/cmetric.htm
+ * @param  {object} color1 rgb color in range [0, 255]
+ * @param  {object} color2 rgb color in range [0, 255]
+ * @return {number}        distance between colors
+ */
+export const calculateRedmean = (color1, color2) => {
+  const { r1, g1, b1 } = color1
+  const { r2, g2, b2 } = color2
+
+  const deltaR = r1 - r2
+  const deltaG = g1 - g2
+  const deltaB = b1 - b2
+  const avgR = (r1 + r2) / 2
+
+  const deltaC = Math.sqrt(
+    (2 + avgR / 256) * Math.pow(deltaR, 2) +
+      4 * Math.pow(deltaG, 2) +
+      (2 + (255 - avgR / 256)) * Math.pow(deltaB, 2)
+  )
+
+  return deltaC
 }
 
 /**
@@ -268,7 +297,7 @@ export const calculateCIEDE2000 = (labColor1, labColor2) => {
  * @return {number}                distance between two colors
  */
 export const getColorDistance = (color, referenceColor, calculationForm) => {
-  const { sin, cos, pow } = Math
+  const { sin, cos, pow, sqrt, min, abs } = Math
   const { h, s, v } = color
   const { h: libH, s: libS, v: libV } = hexToHSV(referenceColor)
 
@@ -283,17 +312,29 @@ export const getColorDistance = (color, referenceColor, calculationForm) => {
 
   let distance
 
-  switch (calculationForm) {
-    case 'deltaE2000':
-      // dramatically slower than euclidean
-      distance = calculateCIEE2000(hsvToLab(color), refLab)
-    case 'labDiff':
+  switch (calculationForm.toLowerCase()) {
+    case 'deltae2000':
+      // dramatically slower than euclidean, but better measurement
+      distance = calculateCIEDE2000(hsvToLab(color), refLab)
+    case 'labdiff':
       // slightly slower than euclidean
       const { l: l1, a: a1, b: b1 } = hsvToLab(color)
       const { l: l2, a: a2, b: b2 } = refLab
 
-      distance =
-        Math.pow(l1 - l2, 2) + Math.pow(a1 - a2, 2) + Math.pow(b1 - b2, 2)
+      distance = pow(l1 - l2, 2) + pow(a1 - a2, 2) + pow(b1 - b2, 2)
+    case 'hsvmetric':
+      // maybe faster than euclidean?
+      const dh = min(abs(libH - h), ANGLE_MAX - abs(libH - h)) / ANGLE_HALF
+      const ds = abs(libS - s)
+      const dv = abs(libV - v) / 255
+
+      distance = sqrt(dh * dh + ds * ds + dv * dv)
+    case 'redmean':
+      // maybe slower than hsvMetric but fairly fast and more accurate?
+      const rgb1 = hsvToRGB(color)
+      const rgb2 = hsvToRGB({ h: libH, s: libS, v: libV })
+
+      distance = calculateRedmean(rgb1, rgb2)
     case 'euclidean':
     default:
       distance =
@@ -313,10 +354,11 @@ export const getColorDistance = (color, referenceColor, calculationForm) => {
  * @arg {Object}   args - findClosestColor parameter
  * @arg {Object}   args.color - color in hsv format in [0, 1] range
  * @arg {Array}    args.library - list of colors to search
- * @param {string} type measurement type: euclidean, labdiff, deltaE2000
+ * @param {string} type measurement type:
+ *                      euclidean, labdiff, deltae2000, redmean, hsvmetric
  * @return {Object} closest match to given color from library
  */
-export const findClosestColor = ({ color, library }, type = 'euclidean') => {
+export const findClosestColor = ({ color, library }, type = 'redmean') => {
   const { h, s, v } = color
 
   let lowestDistance = Infinity
