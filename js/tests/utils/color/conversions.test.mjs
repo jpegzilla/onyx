@@ -131,7 +131,7 @@ describe('hsvToHSL', () => {
       v: 0.5,
     })
 
-    expect(isWithinRange(h, 48, 1)).toBe(true)
+    expect(h).toBe(0.134)
     expect(isWithinRange(s, 0.2, 1)).toBe(true)
     expect(isWithinRange(l, 0.3, 1)).toBe(true)
   })
