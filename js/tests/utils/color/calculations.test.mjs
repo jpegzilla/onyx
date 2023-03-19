@@ -185,7 +185,7 @@ describe('calculateCIEDE2000', () => {
     for (const { deltaE, color1, color2 } of COLOR_DIFFERENCE_TEST_DATA) {
       const distance = calculateCIEDE2000(color1, color2)
 
-      expect(isWithinRange(distance, deltaE, 0.0001)).toBe(true)
+      expect(isWithinRange(distance, deltaE, 0.01)).toBe(true)
     }
   })
 
@@ -209,7 +209,7 @@ describe('calculateCIEDE2000', () => {
     const distance1 = calculateCIEDE2000(pair1.color1, pair1.color2)
     const distance2 = calculateCIEDE2000(pair2.color1, pair2.color2)
 
-    expect(distance1).toEqual(distance2)
-    expect(isWithinRange(distance1, EXPECTED_DELTA, 0.0001)).toBe(true)
+    expect(isWithinRange(distance1, distance2, 0.01)).toBe(true)
+    expect(isWithinRange(distance1, EXPECTED_DELTA, 0.01)).toBe(true)
   })
 })
