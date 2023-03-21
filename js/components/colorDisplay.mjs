@@ -115,7 +115,7 @@ class ColorDisplay extends Component {
     minerva.place(OTHER_PALETTES, data)
 
     const dataToDisplay = {
-      wcag: wcag[0],
+      wcag2: wcag[0],
       ratio: number,
       'fg lum.': luminance.fg.toFixed(2),
       'bg lum.': luminance.bg.toFixed(2),
