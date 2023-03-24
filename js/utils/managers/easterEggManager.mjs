@@ -2,7 +2,6 @@ import { hexToRGBA, hslaToRGB } from './../../utils/color/index.mjs'
 
 const easterEggPairs = {
   'blondie - pollinator': ['fff1d4', 'e32028'],
-  // 'I call it onyx': ['060408', 'fcfdff'],
   'blackpink in your area': ['efa7b5', '000000'], // hsl(348, 69%, 80%)
   'this is halloween': ['ff9a00', '000000'],
   'new hospital floor': ['e30000', 'ffffff'],
