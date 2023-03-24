@@ -40,7 +40,7 @@ class DropTarget extends Component {
 
       let file
 
-      if (e.dataTransfer.items) {
+      if (e.dataTransfer.items.length) {
         const item = e.dataTransfer.items[0]
 
         if (item.kind === 'file') {
@@ -50,7 +50,10 @@ class DropTarget extends Component {
         file = e.dataTransfer.files[0]
       }
 
-      if (!file) arachne.warn('no file available in DropTarget.')
+      if (!file) {
+        arachne.warn('no file available in DropTarget.')
+        return
+      }
 
       minerva.set(STATUS, 'working')
 
