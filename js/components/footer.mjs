@@ -98,7 +98,7 @@ class Footer extends Component {
     `
 
     const exportButton = this.qs('.export-config')
-    const importButton = this.qs('.import-config-input')
+    const importInput = this.qs('.import-config-input')
     const hotkeyMode = this.qs('.hotkey-mode')
 
     minerva.on(HOTKEY_MODE, e => {
@@ -130,7 +130,7 @@ class Footer extends Component {
       minerva.set(STATUS, 'idle')
     })
 
-    importButton.addEventListener('change', e => {
+    importInput.addEventListener('change', e => {
       minerva.set(STATUS, 'waiting')
 
       let file

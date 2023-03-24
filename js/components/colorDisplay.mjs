@@ -5,7 +5,7 @@ import {
   setCustomProperty,
   supportsImportInWorkers,
 } from './../utils/index.mjs'
-import { minerva, colorHistory } from './../main.mjs'
+import { minerva, colorHistory, arachne } from './../main.mjs'
 import {
   hslToHex,
   stringifyHSL,
@@ -153,15 +153,15 @@ class ColorDisplay extends Component {
    */
   updateReadout({ fg, bg }) {
     const readout = this.qs(
-      '.color-display-readout .color-display-hex-code input'
+      '.color-display-readout .color-display-hex-code span'
     )
 
     if (this.activeColor === BACKGROUND) {
-      readout.value = bg
+      readout.textContent = bg
     }
 
     if (this.activeColor === FOREGROUND) {
-      readout.value = fg
+      readout.textContent = fg
     }
 
     this.colors = {
@@ -202,12 +202,16 @@ class ColorDisplay extends Component {
     const contrastRatio = getContrastRatio(colorsToConvert, format)
     this.handleContrastRatio(contrastRatio)
 
-    const easterEgg = checkForEgg(colorsToConvert)?.name
+    try {
+      const easterEgg = checkForEgg(colorsToConvert)?.name
 
-    if (easterEgg) {
-      minerva.set('headerEasterEgg', easterEgg)
-    } else {
-      minerva.set('headerEasterEgg', '')
+      if (easterEgg) {
+        minerva.set('headerEasterEgg', easterEgg)
+      } else {
+        minerva.set('headerEasterEgg', '')
+      }
+    } catch {
+      arachne.warn('easter egg failed.')
     }
 
     const { fg: conversionFg, bg: conversionBg } = colorsToConvert
@@ -243,9 +247,7 @@ class ColorDisplay extends Component {
         <div>
           <section class="color-display-container">
             <div class="color-display-readout">
-              <div class="color-display-hex-code">
-                <input value="#000000" placeholder="#000000" />
-              </div>
+              <span class="color-display-hex-code"><span>#000000</span></span>
             </div>
           </section>
 

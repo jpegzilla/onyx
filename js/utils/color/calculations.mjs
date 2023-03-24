@@ -176,9 +176,6 @@ export const calculateCIEDE2000 = (labColor1, labColor2) => {
   const kL = 1
   const kC = 1
   const kH = 1
-  const SIGNIFICANT_FIGURES = 4
-  const fixedToFloat = (num, digits = SIGNIFICANT_FIGURES) =>
-    parseFloat(num.toFixed(digits))
 
   const c1 = sqrt(pow(a1, 2) + pow(b1, 2))
   const c2 = sqrt(pow(a2, 2) + pow(b2, 2))
@@ -272,8 +269,8 @@ export const calculateCIEDE2000 = (labColor1, labColor2) => {
  * @return {number}        distance between colors
  */
 export const calculateRedmean = (color1, color2) => {
-  const { r1, g1, b1 } = color1
-  const { r2, g2, b2 } = color2
+  const [r1, g1, b1] = color1.values
+  const [r2, g2, b2] = color2.values
 
   const deltaR = r1 - r2
   const deltaG = g1 - g2

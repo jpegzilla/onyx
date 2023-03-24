@@ -210,6 +210,11 @@ export const rgbaToHSLA = (r, g, b, a) => {
   }
 }
 
+/**
+ * converts a hex string to an hsla object
+ * @param  {string} hex hex string
+ * @return {object}     hsla object
+ */
 export const hexToHSLA = hex => {
   const { r, g, b, a } = hexToRGBA(hex)
 
