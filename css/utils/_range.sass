@@ -31,6 +31,7 @@ input[type=range]
     position: absolute
     width: 100%
     transform: scaleY(0.25)
+    transition: transform v.$color-transition ease-out
 
   &:focus::before
     transform: none
@@ -60,6 +61,7 @@ input[type=range]
 
   &::-moz-range-track
     background: currentColor
+    background-color: currentColor
     border-radius: $trackradius
     cursor: pointer
     height: 0.25rem

@@ -5,6 +5,7 @@ import { footerCopy } from './../data/copy.mjs'
 
 const STATUS = 'status'
 const EXTERNAL_UPDATE = 'externalUpdate'
+const HOTKEY_MODE = 'hotkeyMode'
 
 class Footer extends Component {
   static name = 'onyx-footer'
@@ -49,17 +50,22 @@ class Footer extends Component {
             />
           </div>
 
-          <div class="options-selector">
+          <!-- <div class="options-selector">
             <span class="fade">workspace</span>
             <button title="${footerCopy.save}">save</button>
             <button title="${footerCopy.switch}">switch</button>
-          </div>
+          </div> -->
 
           <div class="options-selector">
             <span class="fade">show</span>
             <button title="${footerCopy.controls}" class="show-controls">
               controls
             </button>
+          </div>
+
+          <div class="options-selector noselect">
+            <span class="fade">mode</span>
+            <span class="hotkey-mode">${minerva.get(HOTKEY_MODE)}</span>
           </div>
         </div>
         <b></b>
@@ -93,6 +99,11 @@ class Footer extends Component {
 
     const exportButton = this.qs('.export-config')
     const importButton = this.qs('.import-config-input')
+    const hotkeyMode = this.qs('.hotkey-mode')
+
+    minerva.on(HOTKEY_MODE, e => {
+      hotkeyMode.textContent = e
+    })
 
     exportButton.addEventListener('click', () => {
       minerva.set(STATUS, 'working')

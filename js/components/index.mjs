@@ -5,6 +5,7 @@ import Sidebar from './sidebar.mjs'
 import Footer from './footer.mjs'
 import Controls from './controls.mjs'
 import DropTarget from './dropTarget.mjs'
+import PaletteModal from './paletteModal.mjs'
 
 export default [
   LoadingScreen,
@@ -14,4 +15,5 @@ export default [
   Footer,
   Controls,
   DropTarget,
+  PaletteModal,
 ]

@@ -28,6 +28,16 @@
       display: flex
       gap: v.$quartergap
 
+      button:first-of-type
+        border-radius: v.$border-radius
+        border-top-right-radius: 0
+        border-bottom-right-radius: 0
+
+      button:last-of-type
+        border-radius: v.$border-radius
+        border-top-left-radius: 0
+        border-bottom-left-radius: 0
+
     button
       +v.destroy
       +v.kfocus
@@ -72,7 +82,7 @@
       overflow: hidden
       text-transform: uppercase
 
-      .color-display-hex-code
+      .color-display-hex-code, input
         +v.croptext(1.3)
 
         font-family: v.$redhat
@@ -87,6 +97,15 @@
         @media (max-width: v.$breakpoint-miniscule)
           font-size: 6rem
           line-height: 6.2rem
+
+        input
+          +v.destroy
+          +v.kfocus
+
+          display: inline
+          color: currentColor
+          text-transform: uppercase
+          width: 7ch
 
   .color-info-container
     +v.lightmono
@@ -106,6 +125,7 @@
 
       span
         opacity: 0.6
+        white-space: nowrap
 
       .border-bottom
         margin-top: v.$halfgap
@@ -128,8 +148,12 @@
         max-width: max-content
 
       .color-info-format
-        white-space: pre
         opacity: 0.6
+
+      .color-info-padding
+        white-space: pre
+        user-select: none
+        pointer-events: none
 
     &.contrast .color-info-container-list
       grid-template-rows: repeat(3, max-content)

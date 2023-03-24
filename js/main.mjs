@@ -8,11 +8,20 @@ import {
   getCustomProperty,
   Mnemosyne,
   LimitedList,
+  setupHotkeys,
 } from './utils/index.mjs'
 import { hexToHSLA, stringifyHSL } from './utils/color/conversions.mjs'
 import components from './components/index.mjs'
 
 const COLOR_HISTORY = 'colorHistory'
+const LOADED = 'loaded'
+const STATUS = 'status'
+const HOTKEY_MODE = 'hotkeyMode'
+const COLORS = 'colors'
+const ARRIVALS = 'arrivals'
+const LANGUAGE = 'language'
+const COLOR_SCHEME = 'colorScheme'
+const NEW_PLAYER = 'newPlayer'
 
 export * from './meta.mjs'
 export const minerva = new Minerva('jpegzilla-onyx')
@@ -21,7 +30,7 @@ export const mnemosyne = new Mnemosyne('jpegzilla-onyx')
 
 const initialHistory = minerva.get(COLOR_HISTORY)
 export const colorHistory = new LimitedList({
-  limit: 100,
+  limit: 1000,
   initializer: initialHistory,
 })
 
@@ -38,57 +47,57 @@ const setupUserPrefs = minerva => {
     document.documentElement.setAttribute('lang', language)
   }
 
-  setColorScheme(minerva.get('colorScheme'))
-  setLanguage(minerva.get('language'))
+  setColorScheme(minerva.get(COLOR_SCHEME))
+  setLanguage(minerva.get(LANGUAGE))
 
-  minerva.set('arrivals', minerva.get('arrivals') + 1)
+  minerva.set(ARRIVALS, minerva.get(ARRIVALS) + 1)
 
-  minerva.on('language', setLanguage)
-  minerva.on('colorScheme', setColorScheme)
+  minerva.on(LANGUAGE, setLanguage)
+  minerva.on(COLOR_SCHEME, setColorScheme)
 
-  if (minerva.get('arrivals') > 0) {
-    minerva.set('newPlayer', false)
+  if (minerva.get(ARRIVALS) > 0) {
+    minerva.set(NEW_PLAYER, false)
   }
 
-  if (!minerva.get('colorScheme')) {
-    minerva.set('colorScheme', colorSchemeToUse())
+  if (!minerva.get(COLOR_SCHEME)) {
+    minerva.set(COLOR_SCHEME, colorSchemeToUse())
   }
 
-  if (!minerva.get('language')) {
-    minerva.set('language', translationToUse)
+  if (!minerva.get(LANGUAGE)) {
+    minerva.set(LANGUAGE, translationToUse)
   }
 
   setCustomProperty('--hl-color-override', highlight)
 
-  const hasStoredColors = minerva.get('colors') && 'fg' in minerva.get('colors')
+  const hasStoredColors = minerva.get(COLORS) && 'fg' in minerva.get(COLORS)
 
   const colors = hasStoredColors
-    ? minerva.get('colors')
+    ? minerva.get(COLORS)
     : {
         fg: hexToHSLA(getCustomProperty('--text-color')),
         bg: hexToHSLA(getCustomProperty('--bg-color')),
       }
 
-  minerva.set('colors', colors)
+  minerva.set(COLORS, colors)
 
   setCustomProperty(
     '--color-display-color',
-    stringifyHSL(minerva.get('colors').fg)
+    stringifyHSL(minerva.get(COLORS).fg)
   )
 
   setCustomProperty(
     '--color-display-color-fade-12',
-    stringifyHSL(minerva.get('colors').fg, 0.125)
+    stringifyHSL(minerva.get(COLORS).fg, 0.125)
   )
 
   setCustomProperty(
     '--color-display-color-fade-7',
-    stringifyHSL(minerva.get('colors').fg, 0.075)
+    stringifyHSL(minerva.get(COLORS).fg, 0.075)
   )
 
   setCustomProperty(
     '--color-display-background',
-    stringifyHSL(minerva.get('colors').bg)
+    stringifyHSL(minerva.get(COLORS).bg)
   )
 }
 
@@ -108,10 +117,12 @@ components.forEach(({ name, element }) => {
   if (name && element) customElements.define(name, element)
 })
 
-Promise.all(allMounted).then(e => {
+Promise.all(allMounted).then(() => {
   setupUserPrefs(minerva)
-  minerva.set('loaded', true)
-  minerva.set('status', 'idle')
+  setupHotkeys(minerva)
+  minerva.set(LOADED, true)
+  minerva.set(STATUS, 'idle')
+  minerva.set(HOTKEY_MODE, 'default')
 })
 
 window.addEventListener('storage', e => {

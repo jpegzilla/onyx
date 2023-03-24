@@ -26,7 +26,7 @@ export const handleClock = (clockElement, minerva) => {
     const isLateAfterNoon = hours.between(16, 18, false, true)
     const isEarlyEvening = hours.between(18, 19, false, true)
     const isEvening = hours.between(19, 20, false, true)
-    const isNight = hours.between(20, 23, false, true)
+    const isNight = hours.between(20, 23, true)
     const isMidNight = hours === 0
     const isVeryLate = hours.between(0, 5, false, true)
     const dayIndex = new Date().getDay()
@@ -142,14 +142,35 @@ export const handleGreeting = (greetingElement, minerva) => {
         greeting = 'welcome back.'
         break
 
-      case timesArrived.between(10, 30, false, true):
-        greeting = "it's good to see you."
+      case timesArrived.between(10, 100, true):
+        greeting = "it's good to see you!"
+        break
+
+      case timesArrived.between(100, 150):
+        greeting = 'how are you feeling today?'
+        break
+
+      case timesArrived.between(200, 300, true):
+        greeting = 'wanna collect some colors?'
+        break
+
+      case timesArrived.between(300, 400, true):
+        greeting = "I'm glad you're still here."
+        break
+
+      case timesArrived.between(400, 5000, true):
+        greeting = 'I thought of a new color today!'
+        break
+
+      case timesArrived.between(5000, 5500, true):
+        greeting = 'I know all the colors in the sky...'
+        break
+
+      case timesArrived > 5500:
+        greeting = 'the world is so beautiful!'
         break
 
       // TODO: write more flavor text for this
-      case timesArrived > 30:
-        greeting = "it's good to see you."
-        break
 
       default:
         greeting = 'hello!'

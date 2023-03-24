@@ -6,7 +6,7 @@ import {
   MODE_HSL,
   MODE_RGB,
 } from './../utils/color/index.mjs'
-import { minerva } from './../main.mjs'
+import { minerva, colorHistory } from './../main.mjs'
 
 const RGB_SETTINGS = {
   names: ['red', 'green', 'blue'],
@@ -29,9 +29,10 @@ const HSL_SETTINGS = {
 const PALETTES = 'palettes'
 const COLOR_MODE = 'colorMode'
 const COLORS = 'colors'
-const EXTERNALUPDATE = 'externalUpdate'
+const EXTERNAL_UPDATE = 'externalUpdate'
 const ACTIVE_PALETTE = 'activePalette'
 const LOCKS = 'locks'
+const COLOR_HISTORY = 'colorHistory'
 
 class Controls extends Component {
   static name = 'onyx-controls'
@@ -52,8 +53,7 @@ class Controls extends Component {
 
     if (!minerva.get(COLOR_MODE)) minerva.set(COLOR_MODE, this.mode)
 
-    minerva.on(EXTERNALUPDATE, () => {
-      console.log('should update these sliders now...')
+    minerva.on(EXTERNAL_UPDATE, () => {
       this.connectedCallback()
     })
   }
@@ -64,8 +64,9 @@ class Controls extends Component {
     minerva.set(COLOR_MODE, mode)
   }
 
-  updateHistory(colors) {
-    this.history.add(colors)
+  updateHistory() {
+    const colors = this.getColors(this.mode)
+    colorHistory.add(colors).save(COLOR_HISTORY)
   }
 
   getColors(mode) {
@@ -120,7 +121,14 @@ class Controls extends Component {
             <div class="slider-container">
               <span class="color-value-${layer}-${idx}">${colorAndValue}</span>
               <input
-                class="color-control"
+                title="changes the ${this.settings[this.mode].names[
+                  idx
+                ]} of the ${layer === 'bg'
+                  ? 'background'
+                  : 'foreground'}. (shift+${layer[0]} shift+${idx + 1})"
+                class="color-control ${layer}-${this.settings[this.mode].names[
+                  idx
+                ]}"
                 type="range"
                 min="${range[0]}"
                 max="${range[1]}"
@@ -161,11 +169,14 @@ class Controls extends Component {
             <div class="controls-header">
               <button
                 class="lock-colors-bg"
-                title="locks the background, preventing its randomization."
+                title="locks the background, preventing its randomization. (shift+b shift+x)"
               >
                 ${bgLocked ? 'unlock background' : 'lock background'}
               </button>
-              <button class="controls-add-to-palette-bg">
+              <button
+                class="controls-add-to-palette-bg"
+                title="adds the foreground color to the active palette. (shift+b shift+a)"
+              >
                 <span>
                   add <span class="bg-color-hex">#000000</span> to palette
                 </span>
@@ -173,7 +184,7 @@ class Controls extends Component {
 
               <button
                 class="derive-bg"
-                title="derive palette from background"
+                title="derives a new monochromatic palette from the background color."
                 tabindex="0"
               >
                 derive
@@ -188,11 +199,14 @@ class Controls extends Component {
             <div class="controls-header">
               <button
                 class="lock-colors-fg"
-                title="locks the foreground, preventing its randomization."
+                title="locks the foreground, preventing its randomization. (shift+f shift+x)"
               >
                 ${fgLocked ? 'unlock foreground' : 'lock foreground'}
               </button>
-              <button class="controls-add-to-palette-fg">
+              <button
+                class="controls-add-to-palette-fg"
+                title="adds the foreground color to the active palette. (shift+f shift+a)"
+              >
                 <span>
                   add <span class="fg-color-hex">#000000</span> to palette
                 </span>
@@ -200,7 +214,7 @@ class Controls extends Component {
 
               <button
                 class="derive-fg"
-                title="derive palette from foreground"
+                title="derives a new monochromatic palette from the foreground color."
                 tabindex="0"
               >
                 derive
@@ -245,10 +259,7 @@ class Controls extends Component {
     const { fg, bg } = this.getColors(this.mode)
     this.qs('.fg-color-hex').textContent = hslToHex(fg)
     this.qs('.bg-color-hex').textContent = hslToHex(bg)
-    const handleHistoryUpdate = debounce(
-      () => this.updateHistory({ fg, bg }),
-      200
-    )
+    const handleHistoryUpdate = debounce(() => this.updateHistory(), 200)
 
     const colorInputHandler = (e, layer, index) => {
       const newColor = Object.fromEntries(
@@ -285,8 +296,6 @@ class Controls extends Component {
 
       this.handlePaletteUpdate(fg)
     })
-
-    console.log('controls re-rendered')
   }
 }
 

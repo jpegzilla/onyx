@@ -1,23 +1,36 @@
+// ♪音楽 → AESOP ROCK - THE GATES : https://youtu.be/2RecBY1Mh-8
+
 @use 'sass:color' as c
+@use 'sass:math' as m
 @use '../utils/vars' as v
 
 #onyx-sidebar
   +v.fill
   +v.lightmono
 
-  grid-area: sidebar
-  min-width: 25vw
-  max-width: 25vw
   display: grid
-  grid-template-rows: auto 8fr
-  gap: v.$p-m
+  gap: v.$p-s
+  grid-area: sidebar
+  grid-template-rows: 2fr 8fr
+  max-width: 25vw
+  min-width: 25vw
 
   .sidebar-container
-    +v.colordisplayborderfade12
     +v.colordisplaybgfade7
+    +v.colordisplayborderfade12
 
-    border-radius: v.$border-radius
+    border-radius: v.$border-radius-inner
     padding: v.$halfgap
+
+  .empty-notifier
+    +v.center
+    +v.morebg
+
+    border-radius: v.$border-radius-inner
+    font-size: 1.25rem
+    height: 100%
+    opacity: 0.5
+    width: 100%
 
   .data-display-container
     +v.fill
@@ -25,72 +38,97 @@
   .palette-history-container
     +v.lightmono
 
-    height: 100%
-    font-size: 1.25rem
     display: flex
-
-    .empty-notifier
-      +v.center
-
-      height: 100%
-      width: 100%
-      opacity: 0.5
+    height: 100%
 
   .primary-palette-container
-    height: 100%
     display: flex
     flex-direction: column
-    gap: v.$quartergap
+    gap: v.$halfgap
+    height: 100%
 
   .controls
     display: flex
-    gap: v.$quartergap
+    gap: v.$halfgap
     // justify-content: flex-end
 
     button
       +v.destroy
       +v.onyxbutton($bigpadding: false)
 
+      border-radius: 0
+
+      &:first-of-type
+        border-radius: v.$border-radius-inner
+        border-top-right-radius: 0
+        border-bottom-right-radius: 0
+
+      &:last-of-type
+        border-radius: v.$border-radius-inner
+        border-top-left-radius: 0
+        border-bottom-left-radius: 0
+
   .palette
+    display: grid
+    grid-template-columns: repeat(5, 1fr)
+    gap: v.$halfgap
     height: 100%
     width: 100%
-    display: flex
-    gap: v.$quartergap
-    border-radius: v.$border-radius
 
     .palette-swatch
-      flex-grow: 1
       display: flex
-      height: 10rem
       flex-direction: column
+      flex-grow: 1
       gap: v.$quartergap
+      height: 100%
 
       div
+        width: 100%
+
+      &-color
+        +v.colordisplayborderfade7
+
+        border-radius: v.$border-radius-inner
+        border-bottom-left-radius: 0
+        border-bottom-right-radius: 0
+        display: flex
+        flex-grow: 1
+        gap: v.$quartergap
+
+      &-controls
         +v.center
 
-        height: 100%
-        border-radius: v.$border-radius
         display: flex
         gap: v.$quartergap
 
-        div
-          display: flex
-          flex-direction: column
-
-          button
-            height: max-content
-            width: 100%
-
         button
           +v.destroy
-          +v.colordisplaycolor
           +v.onyxbutton(0.75rem, false)
-          +v.colordisplayborder
           +v.medmono
-          +v.ensurevisibility
 
           border-width: 1px
           cursor: pointer
+          height: 100%
+          border-radius: v.$border-radius-inner
 
-  .empty-notifier
-    // +v.ensurevisibility
+          &:first-of-type
+            border-bottom-right-radius: 0
+            border-top-left-radius: 0
+            border-top-right-radius: 0
+
+          &:last-of-type
+            border-bottom-left-radius: 0
+            border-top-left-radius: 0
+            border-top-right-radius: 0
+
+        .center-button-container
+          display: flex
+          flex-direction: column
+          flex-grow: 1
+          gap: v.$quartergap
+          padding: 0
+
+          button
+            border-radius: 0
+            height: auto
+            width: 100%

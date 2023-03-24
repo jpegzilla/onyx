@@ -33,6 +33,7 @@ const EXTERNAL_UPDATE = 'externalUpdate'
 const COLORS = 'colors'
 const COLOR_HISTORY = 'colorHistory'
 const LOCKS = 'locks'
+const COLOR_MODE = 'colorMode'
 
 const shouldUseWorkers = await supportsImportInWorkers()
 
@@ -67,10 +68,12 @@ class ColorDisplay extends Component {
     let otherPalettesHTML = ``
 
     otherPalettes.forEach(([format, { name, code }]) => {
+      const padding = Math.abs(format.length - format.padEnd(10).length) + 1
       otherPalettesHTML += html`
         <div class="color-info-format-container">
-          <span class="color-info-format">${format.padEnd(10)}</span>
-          <span class="color-info-unit"
+          <span class="color-info-format">${format}</span
+          ><span class="color-info-padding">${' '.repeat(padding)}</span
+          ><span class="color-info-unit"
             >${name}${code ? ' [' + code + '] ' : ''}</span
           >
         </div>
@@ -92,10 +95,12 @@ class ColorDisplay extends Component {
     let conversionsHTML = ``
 
     data.entries.forEach(([format, value]) => {
+      const padding = Math.abs(format.length - format.padEnd(10).length) + 1
       conversionsHTML += html`
         <div class="color-info-format-container">
-          <span class="color-info-format">${format.padEnd(10)}</span>
-          <span class="color-info-unit">${value}</span>
+          <span class="color-info-format">${format}</span
+          ><span class="color-info-padding">${' '.repeat(padding)}</span
+          ><span class="color-info-unit">${value}</span>
         </div>
       `
     })
@@ -125,10 +130,12 @@ class ColorDisplay extends Component {
     let dataHTML = ``
 
     dataToDisplay.forEach(([format, value]) => {
+      const padding = Math.abs(format.length - format.padEnd(10).length) + 1
       dataHTML += html`
         <div class="color-info-format-container">
-          <span class="color-info-format">${format.padEnd(10)}</span>
-          <span class="color-info-unit">${value}</span>
+          <span class="color-info-format">${format}</span
+          ><span class="color-info-padding">${' '.repeat(padding)}</span
+          ><span class="color-info-unit">${value}</span>
         </div>
       `
     })
@@ -146,15 +153,15 @@ class ColorDisplay extends Component {
    */
   updateReadout({ fg, bg }) {
     const readout = this.qs(
-      '.color-display-readout .color-display-hex-code span'
+      '.color-display-readout .color-display-hex-code input'
     )
 
     if (this.activeColor === BACKGROUND) {
-      readout.textContent = bg.replace('#', '')
+      readout.value = bg
     }
 
     if (this.activeColor === FOREGROUND) {
-      readout.textContent = fg.replace('#', '')
+      readout.value = fg
     }
 
     this.colors = {
@@ -186,7 +193,7 @@ class ColorDisplay extends Component {
    * @arg {String} args.bg - background color
    */
   updateColors({ fg, bg }, colorsToConvert) {
-    const format = minerva.get('colorMode')
+    const format = minerva.get(COLOR_MODE)
 
     this.updateReadout({ fg, bg })
 
@@ -236,7 +243,9 @@ class ColorDisplay extends Component {
         <div>
           <section class="color-display-container">
             <div class="color-display-readout">
-              <span class="color-display-hex-code">#<span>000000</span></span>
+              <div class="color-display-hex-code">
+                <input value="#000000" placeholder="#000000" />
+              </div>
             </div>
           </section>
 
@@ -273,7 +282,7 @@ class ColorDisplay extends Component {
             <button
               class="display-background-color"
               data-color="bg"
-              title="click to switch the color readout to the background color."
+              title="switches the color readout to the background color. (shift+b shift+b)"
             >
               <div>
                 <span
@@ -287,7 +296,7 @@ class ColorDisplay extends Component {
             <button
               class="display-text-color"
               data-color="fg"
-              title="click to switch the color readout to the foreground color."
+              title="switches the color readout to the foreground color. (shift+f shift+f)"
             >
               <div>
                 <span
@@ -306,26 +315,26 @@ class ColorDisplay extends Component {
 
             <button
               class="randomize-colors"
-              title="click to change the foreground and background to random colors."
+              title="changes the foreground and background to random colors. (shift+r)"
             >
               randomize colors
             </button>
             <button
               class="swap-colors"
-              title="click to swap foreground color with background color."
+              title="swaps foreground color with background color. (shift+s)"
             >
               swap colors
             </button>
             <div class="button-container">
               <button
                 class="undo-color"
-                title="click to undo a color operation."
+                title="undo a color operation. (ctrl+z)"
               >
                 undo
               </button>
               <button
                 class="redo-color"
-                title="click to redo a color operation."
+                title="redo a color operation. (ctrl+shift+z)"
               >
                 redo
               </button>
@@ -433,7 +442,7 @@ class ColorDisplay extends Component {
     })
 
     const colorsHandler = ({ fg, bg }) => {
-      const mode = minerva.get('colorMode')
+      const mode = minerva.get(COLOR_MODE)
       let colorsToConvert
 
       // display always needs to take hex colors
@@ -475,7 +484,6 @@ class ColorDisplay extends Component {
     }
 
     minerva.on(EXTERNAL_UPDATE, type => {
-      console.log(type)
       if (type === 'import') updateAllColors()
     })
 

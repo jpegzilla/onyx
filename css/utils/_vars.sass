@@ -33,6 +33,7 @@ $resolution-3: 288dpi
 $resolution-4: 554dpi
 
 $border-radius: 4px
+$border-radius-inner: 2px
 $small-space: 4px
 
 // 色
@@ -329,15 +330,15 @@ $layer-overlay: 54
   bottom: 0
   left: 0
 
-// !!
+// I don't know what to do here.
 =ensurevisibility
-  mix-blend-mode: difference
-  filter: invert(0.8)
+  // filter: drop-shadow(0 0 1rem var(--color-display-background))
+  // mix-blend-mode: exclusion
 
 =onyxbutton($fontsize: 1.25rem, $bigpadding: true, $background: true)
   +destroy
   +colordisplayborderfade12
-  +croptext(1.2)
+  +croptext(1.25)
   +center
 
   color: currentColor
@@ -346,7 +347,12 @@ $layer-overlay: 54
   border-radius: $border-radius
   border-width: 1px
   font-size: $fontsize
-  line-height: calc(#{$fontsize} + 0.2rem)
+  line-height: calc(#{$fontsize} + 0.25rem)
+  transition: border-color 0.2s ease-out
+
+  &:hover
+    +colordisplayborder
+    // +blurbg
 
   @if $bigpadding == true
     padding: $button-padding-big

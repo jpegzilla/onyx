@@ -66,6 +66,7 @@ class Minerva {
     colorHistory: [],
     activePalette: null,
     status: 'idle',
+    hotkeyMode: 'default',
   }
 
   /**
@@ -105,6 +106,37 @@ class Minerva {
 
   set workspaceType(name) {
     this.set(PROCESS_TYPE, name.toLowerCase())
+  }
+
+  saveWorkspace() {
+    const workspaceName = this.workspaceName
+    const workspaceType = this.workspaceType
+
+    this.workspaces[workspaceName] = {
+      store: this.store,
+      type: workspaceType,
+    }
+  }
+
+  loadWorkspace(workspaceName) {
+    let workspaceData
+
+    try {
+      workspaceData = this.get(workspaceName)
+    } catch (e) {
+      arachne.error('failed to load workspace json.')
+      arachne.error(e)
+    }
+
+    if (workspaceData) {
+      const { store, type } = workspaceData
+
+      this.store = store
+      this.workspaceType = type
+      this.workspaceName = workspaceName
+
+      this.save()
+    }
   }
 
   get audio() {

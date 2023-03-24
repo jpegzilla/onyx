@@ -1,0 +1,1 @@
+const drawOnyxPalette = (size, palette) => {}

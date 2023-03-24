@@ -34,7 +34,14 @@
 
   height: 100vh
   z-index: v.$layer-sections
+  font-size: 16px
 
-*
-  &.ensure-visibility
-    +v.ensurevisibility
+  @media (max-width: v.$breakpoint-large)
+    font-size: 14px
+
+
+.ensure-visibility
+  +v.ensurevisibility
+
+.noselect
+  user-select: none

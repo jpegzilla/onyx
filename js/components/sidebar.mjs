@@ -1,7 +1,6 @@
 import Component from './component.mjs'
 import { html, Palette } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
-import { palette } from './subcomponents/index.mjs'
 import { hslToHex } from './../utils/color/index.mjs'
 
 const PALETTES = 'palettes'
@@ -20,16 +19,24 @@ class Sidebar extends Component {
     this.id = Sidebar.name
   }
 
-  renderPrimaryPalette(colors) {
-    return html`
+  renderPrimaryPalette(colors = []) {
+    if (!colors.length) {
+      return `<div class="empty-notifier">no active palette</div>`
+    }
+
+    return `
       ${colors
         .map(
           ({ color, locked }, idx) =>
             html`<div class="palette-swatch">
-              <div style="background-color:${color};">
+              <div
+                class="palette-swatch-color"
+                style="background-color:${color};"
+              ></div>
+              <div class="palette-swatch-controls">
                 <button class="shift-left" data-color="${idx}">&lt;</button>
 
-                <div>
+                <div class="center-button-container">
                   <button
                     data-color="${idx}"
                     class="lock-color"
@@ -111,6 +118,20 @@ class Sidebar extends Component {
     minerva.set(ACTIVE_PALETTE, palette.id)
   }
 
+  handlePaletteSave() {
+    const allPalettes = minerva.get(PALETTES)
+    const newActivePalette = new Palette()
+    const newActivePaletteId = newActivePalette.id
+
+    const newPalettes = {
+      ...allPalettes,
+      [newActivePaletteId]: newActivePalette,
+    }
+
+    minerva.set(ACTIVE_PALETTE, newActivePaletteId)
+    minerva.set(PALETTES, newPalettes)
+  }
+
   connectedCallback() {
     this.innerHTML = html`
       <div class="sidebar-container">
@@ -118,30 +139,24 @@ class Sidebar extends Component {
           <div class="controls">
             <button
               class="save-palette"
-              title="click to save this palette to the library."
+              title="save this palette to the library."
             >
               save
             </button>
             <button
-              class="delete-palette"
-              title="click to delete this palette."
-            >
-              delete
-            </button>
-            <button
               class="generate-palette"
-              title="click to generate a new five-color palette."
+              title="generate a new five-color palette. this will overwrite the current palette!"
             >
               generate
             </button>
             <button
               class="export-palette"
-              title="click to export this palette."
+              title="export this palette for use in other contexts."
             >
               export
             </button>
           </div>
-          <div class="palette"></div>
+          <div class="palette">${this.renderPrimaryPalette()}</div>
         </div>
       </div>
       <div class="sidebar-container">
@@ -188,10 +203,12 @@ class Sidebar extends Component {
       })
     }
 
-    console.log(minerva)
-
     const maybeUpdatePrimaryPalette = (palette, id) => {
-      if (!palette) return
+      if (!palette) {
+        this.renderPrimaryPalette()
+
+        return
+      }
 
       primaryPalette = palette
       primaryPaletteId = id
@@ -206,6 +223,22 @@ class Sidebar extends Component {
 
       setSwatchListeners()
     }
+
+    const saveButton = this.qs('.save-palette')
+    const generateButton = this.qs('.generate-palette')
+    const exportButton = this.qs('.export-palette')
+
+    saveButton.addEventListener('click', () => {
+      console.log('save palette')
+    })
+
+    generateButton.addEventListener('click', () => {
+      console.log('generate palette')
+    })
+
+    exportButton.addEventListener('click', () => {
+      console.log('export palette')
+    })
 
     minerva.on(EXTERNAL_UPDATE, () => {
       const externalPrimaryPaletteId = minerva.get(ACTIVE_PALETTE)

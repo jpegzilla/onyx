@@ -13,7 +13,7 @@ const PALETTES = 'palettes'
 class Palette {
   static defaultSettings = {}
 
-  constructor({ initializer, initialId }) {
+  constructor({ initializer = [], initialId = uuidv4 } = {}) {
     this.colorList = new LimitedList({
       limit: 5,
       initializer,
@@ -74,8 +74,6 @@ class Palette {
     if (tryToMoveTo === -1 || tryToMoveTo === this.colorList.items.length) {
       return
     }
-
-    console.log({ swap: index, with: tryToMoveTo })
 
     const swap = this.colorList.items[index]
     const swapWith = this.colorList.items[tryToMoveTo]

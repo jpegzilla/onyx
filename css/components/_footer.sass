@@ -16,8 +16,8 @@
     +v.colordisplaycolor
 
     align-items: center
-    display: flex
-    flex-direction: row
+    display: grid
+    grid-template-columns: repeat(5, 1fr)
     gap: v.$halfgap
     padding-top: v.$p-s
 
@@ -37,6 +37,7 @@
       font-size: 0.8rem
       line-height: 1.1rem
       user-select: none
+      text-align: center
 
       &-label
         opacity: 0.6
@@ -95,3 +96,7 @@
       @media (max-width: v.$breakpoint-miniscule)
         grid-template-columns: 1fr
         grid-template-rows: 1fr 1fr
+
+    .footer-attribution
+      display: flex
+      justify-content: flex-end

@@ -1,6 +1,6 @@
 export const footerCopy = {
   export:
-    'export all your palettes and settings as a .json file for you to download.',
+    'export all your palettes and settings as a .json file for you to download. (ctrl+e)',
   import:
     'upload a .json file containing palettes and settings that you (or someone else) previously exported.',
   save: 'locally save all current palettes and settings to your color workspace library.',

@@ -9,6 +9,7 @@ export { default as html } from './html.mjs'
 export { LimitedList } from './dataStructures/index.mjs'
 export { default as Palette } from './palette.mjs'
 export { default as Mnemosyne } from './state/mnemosyne.mjs'
+export { setupHotkeys } from './managers/hotkeyManager.mjs'
 
 // side effects only
 import './prototypeExtensions.mjs'
