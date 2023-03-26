@@ -3,10 +3,11 @@ import { html } from './../../utils/index.mjs'
 /**
  * the onyx logo.
  */
-export default () => html` <svg
+export default classes => html` <svg
   id="onyx-logo"
   xmlns="http://www.w3.org/2000/svg"
   viewBox="0 0 172.85 172.85"
+  class="${classes}"
 >
   <defs>
     <style>

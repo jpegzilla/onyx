@@ -3,6 +3,11 @@
 import Component from './component.mjs'
 import { html } from './../utils/index.mjs'
 import { arachne, minerva } from './../main.mjs'
+import logo from './icons/logo.mjs'
+import {
+  CONVERSIONS,
+  OTHER_PALETTES,
+} from './../utils/state/minervaActions.mjs'
 
 const sounds = ['click_small', 'click', 'failure', 'hover', 'success']
 
@@ -45,6 +50,20 @@ class LoadingScreen extends Component {
     return true
   }
 
+  waitForAllMinervaActions() {
+    return new Promise(resolve => {
+      let actionsCompleted = 0
+      const actions = [CONVERSIONS, OTHER_PALETTES]
+
+      actions.forEach(a =>
+        minerva.on(a, () => {
+          actionsCompleted++
+          if (actionsCompleted === actions.length) resolve()
+        })
+      )
+    })
+  }
+
   allDone() {
     this.querySelector('.loading-screen-container').addEventListener(
       'animationend',
@@ -68,12 +87,13 @@ class LoadingScreen extends Component {
 
   async waitForEverything() {
     await this.waitForAllComponents()
+    await this.waitForAllMinervaActions()
 
     const assetsLoadedCorrectly = await this.loadAssets()
 
     if (assetsLoadedCorrectly) {
       minerva.hasAllSounds = true
-      console.log('everything loaded correctly.')
+      // console.log('everything loaded correctly.')
     } else minerva.hasAllSounds = false
 
     return true
@@ -82,16 +102,13 @@ class LoadingScreen extends Component {
   connectedCallback() {
     this.innerHTML = html`<section class="loading-screen-container">
       <b class="filters noise"></b>
-      <div class="loading-screen">
-        <onyx-logo class="loading-screen-logo" style="display: none;" />
-      </div>
+      <div class="loading-screen">${logo('loading-screen-logo')}</div>
     </section>`
 
     this.waitForEverything().then(() => {
       this.allDone()
+      setTimeout(() => {}, 4000)
     })
-
-    this.querySelector('.loading-screen-logo').setAttribute('style', '')
   }
 }
 
