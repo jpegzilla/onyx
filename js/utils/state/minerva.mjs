@@ -206,6 +206,15 @@ class Minerva {
   }
 
   on(ev, fn) {
+    if (Array.isArray(ev)) {
+      for (const e of ev) {
+        if (this.events[e]) this.events[e].push(fn)
+        else this.events[e] = [fn]
+      }
+
+      return
+    }
+
     if (this.events[ev]) this.events[ev].push(fn)
     else this.events[ev] = [fn]
   }
