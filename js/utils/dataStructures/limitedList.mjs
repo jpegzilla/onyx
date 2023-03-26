@@ -7,8 +7,9 @@ import { minerva, arachne } from './../../main.mjs'
 class LimitedList {
   /**
    * creates a new limited list.
-   * @param {number} limit        the maximum amount of items to hold
-   * @param {number} initializer  an initial set of items
+   * @param {object} args              arguments to LimitedList
+   * @param {number} args.limit        the maximum amount of items to hold
+   * @param {number} args.initializer  an initial set of items
    */
   constructor({ limit, initializer = [] }) {
     this.limit = limit
@@ -42,6 +43,10 @@ class LimitedList {
     if (item) this.items.push(item)
 
     return this
+  }
+
+  previous() {
+    return this.items.at(-2)
   }
 
   current() {
