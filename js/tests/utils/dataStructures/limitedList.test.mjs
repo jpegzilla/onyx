@@ -88,7 +88,7 @@ describe('LimitedList', () => {
       expect(testLimitedList.items.at(-1)).toBe(8)
     })
 
-    test('respects locked items, adding items around locked items', () => {
+    test('respects locked items, adding items around locked items (preserving the index of locked items)', () => {
       // 3 locked items at 0, 2, and 4
       // 2 unlocked items at 1 and 3, 5 doesn't matter
       testLimitedList.add({ locked: true, index: 0 })
