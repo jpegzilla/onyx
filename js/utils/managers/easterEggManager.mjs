@@ -6,7 +6,7 @@ const easterEggPairs = {
   'this is halloween': ['ff9a00', '000000'],
   'new hospital floor': ['e30000', 'ffffff'],
   'patchouli knowledge': ['541c60', 'f9acc0'], // hsl(289, 55%, 24%), hsl(344, 87%, 83%)
-  'delicious coffee...': ['48332b', 'f4efe8'], // hsl(17.5, 25.7%, 22.5%), hsl(31.7, 34.7%, 93.4%)
+  'delicious coffee...': ['48332b', 'ffffff'], // hsl(17.5, 25.7%, 22.5%), hsl(31.7, 34.7%, 93.4%)
 }
 
 const easterEggColors = {
@@ -14,9 +14,9 @@ const easterEggColors = {
 }
 
 const colorIsClose = color => {
-  const RED_THRESHOLD = 20
-  const GREEN_THRESHOLD = 20
-  const BLUE_THRESHOLD = 20
+  const RED_THRESHOLD = 5
+  const GREEN_THRESHOLD = 10
+  const BLUE_THRESHOLD = 10
 
   return (
     color[0] <= RED_THRESHOLD &&
