@@ -9,12 +9,16 @@ import { minerva, colorHistory, arachne } from './../main.mjs'
 import {
   hslToHex,
   stringifyHSL,
+  hexToHSLA,
+  hexToRGBA,
   MODE_HEX,
   MODE_HSL,
   MODE_RGB,
   getContrastRatio,
   getRandomColor,
+  calculateAPCAContrast,
 } from './../utils/color/index.mjs'
+import { colorDisplayCopy } from './../data/copy.mjs'
 
 import closestColorNonWorker from './../workers/closestColorFromPalette.nonWorker.mjs'
 import conversionNonWorker from './../workers/colorConversion.nonWorker.mjs'
@@ -80,8 +84,6 @@ class ColorDisplay extends Component {
       `
     })
 
-    // console.log('analogues in other palettes', data)
-
     this.qs(
       '.color-info-container.palettes .color-info-container-list'
     ).innerHTML = otherPalettesHTML
@@ -105,15 +107,13 @@ class ColorDisplay extends Component {
       `
     })
 
-    // console.log('conversions to other formats', data)
-
     this.qs(
       '.color-info-container.conversions .color-info-container-list'
     ).innerHTML = conversionsHTML
   }
 
   handleContrastRatio(data) {
-    const { number, string, wcag, luminance } = data
+    const { number, string, wcag, luminance, perceptualContrast } = data
 
     if (this.isOldData(data, CONTRAST)) return
 
@@ -125,6 +125,7 @@ class ColorDisplay extends Component {
       'fg lum.': luminance.fg.toFixed(2),
       'bg lum.': luminance.bg.toFixed(2),
       'raw bg:fg': string,
+      'apca Lc': perceptualContrast,
     }.entries
 
     let dataHTML = ``
@@ -153,15 +154,17 @@ class ColorDisplay extends Component {
    */
   updateReadout({ fg, bg }) {
     const readout = this.qs(
-      '.color-display-readout .color-display-hex-code span'
+      '.color-display-readout .color-display-hex-code input'
     )
 
+    readout.classList.remove('pattern-mismatch')
+
     if (this.activeColor === BACKGROUND) {
-      readout.textContent = bg
+      readout.value = bg
     }
 
     if (this.activeColor === FOREGROUND) {
-      readout.textContent = fg
+      readout.value = fg
     }
 
     this.colors = {
@@ -188,19 +191,26 @@ class ColorDisplay extends Component {
 
   /**
    * updates colors on the display - changes the readout and gets the closest color match along with conversions to the other color formats.
-   * @arg {Object} args - updateColors parameters
-   * @arg {String} args.fg - foreground color
-   * @arg {String} args.bg - background color
+   * @param {Object} hexColors          hex colors, used for display
+   * @param {String} hexColors.fg       foreground color (hex)
+   * @param {String} hexColors.bg       background color (hex)
+   * @param {Object} colorsToConvert    hsl colors, used for conversion
+   * @param {Object} colorsToConvert.fg foreground color (hsl)
+   * @param {Object} colorsToConvert.bg background color (hsl)
    */
-  updateColors({ fg, bg }, colorsToConvert) {
+  updateColors(hexColors, colorsToConvert) {
+    const { fg, bg } = hexColors
     const format = minerva.get(COLOR_MODE)
 
     this.updateReadout({ fg, bg })
 
     // contrast ratio stuff really doesn't require
     // offloading to a worker
+    const rgbFg = hexToRGBA(fg)
+    const rgbBg = hexToRGBA(bg)
     const contrastRatio = getContrastRatio(colorsToConvert, format)
-    this.handleContrastRatio(contrastRatio)
+    const perceptualContrast = calculateAPCAContrast(rgbFg, rgbBg).toFixed(2)
+    this.handleContrastRatio({ ...contrastRatio, perceptualContrast })
 
     try {
       const easterEgg = checkForEgg(colorsToConvert)?.name
@@ -247,13 +257,13 @@ class ColorDisplay extends Component {
         <div>
           <section class="color-display-container">
             <div class="color-display-readout">
-              <span class="color-display-hex-code"><span>#000000</span></span>
+              <span class="color-display-hex-code"><input class="color-display-input" type="text" value="#000000"  placeholder="#000000" pattern="#[a-fA-F0-9]{6}" maxlength="7" minlength="7">
             </div>
           </section>
 
           <section class="color-info-container conversions smaller-margin">
             <div class="color-info-container-header">
-              <span>conversions to other formats</span>
+              <span>${colorDisplayCopy.conversionsHeader}</span>
               <!-- <b class="border-bottom"></b> -->
             </div>
             <div class="color-info-container-list"></div>
@@ -261,7 +271,7 @@ class ColorDisplay extends Component {
 
           <section class="color-info-container palettes">
             <div class="color-info-container-header">
-              <span>close analogues from external color systems</span>
+              <span>${colorDisplayCopy.analoguesHeader}</span>
               <!-- <b class="border-bottom"></b> -->
             </div>
             <div class="color-info-container-list"></div>
@@ -269,7 +279,7 @@ class ColorDisplay extends Component {
 
           <section class="color-info-container contrast">
             <div class="color-info-container-header">
-              <span>contrast information</span>
+              <span>${colorDisplayCopy.contrastInformationHeader}</span>
               <!-- <b class="border-bottom"></b> -->
             </div>
             <div class="color-info-container-list"></div>
@@ -278,19 +288,19 @@ class ColorDisplay extends Component {
         <div class="color-display-selector-container">
           <div class="color-display-selector">
             <div class="color-display-selector-description">
-              <span>select color readout</span>
+              <span>${colorDisplayCopy.colorReadoutHeader}</span>
             </div>
 
             <button
               class="display-background-color"
               data-color="bg"
-              title="switches the color readout to the background color. (shift+b shift+b)"
+              title="${colorDisplayCopy.backgroundReadoutButton.title}"
             >
               <div>
                 <span
-                  >${this.activeColor === BACKGROUND
-                    ? '> '
-                    : ''}background</span
+                  >${this.activeColor === BACKGROUND ? '> ' : ''}${
+      colorDisplayCopy.backgroundReadoutButton.text
+    }</span
                 >
               </div>
             </button>
@@ -298,13 +308,13 @@ class ColorDisplay extends Component {
             <button
               class="display-text-color"
               data-color="fg"
-              title="switches the color readout to the foreground color. (shift+f shift+f)"
+              title="${colorDisplayCopy.foregroundReadoutButton.title}"
             >
               <div>
                 <span
-                  >${this.activeColor === FOREGROUND
-                    ? '> '
-                    : ''}foreground</span
+                  >${this.activeColor === FOREGROUND ? '> ' : ''}${
+      colorDisplayCopy.foregroundReadoutButton.text
+    }</span
                 >
               </div>
             </button>
@@ -312,33 +322,33 @@ class ColorDisplay extends Component {
 
           <div class="color-display-selector">
             <div class="color-display-selector-description">
-              <span>color config controls</span>
+              <span>${colorDisplayCopy.colorConfigHeader}</span>
             </div>
 
             <button
               class="randomize-colors"
-              title="changes the foreground and background to random colors. (shift+r)"
+              title="${colorDisplayCopy.randomizeButton.title}"
             >
-              randomize colors
+              ${colorDisplayCopy.randomizeButton.text}
             </button>
             <button
               class="swap-colors"
-              title="swaps foreground color with background color. (shift+s)"
+              title="${colorDisplayCopy.swapButton.title}"
             >
-              swap colors
+              ${colorDisplayCopy.swapButton.text}
             </button>
             <div class="button-container">
               <button
                 class="undo-color"
-                title="undo a color operation. (ctrl+z)"
+                title="${colorDisplayCopy.undoButton.title}"
               >
-                undo
+                ${colorDisplayCopy.undoButton.text}
               </button>
               <button
                 class="redo-color"
-                title="redo a color operation. (ctrl+shift+z)"
+                title="${colorDisplayCopy.redoButton.title}"
               >
-                redo
+                ${colorDisplayCopy.redoButton.text}
               </button>
             </div>
           </div>
@@ -348,6 +358,11 @@ class ColorDisplay extends Component {
 
     const displayBackgroundColor = this.qs('.display-background-color')
     const displayTextColor = this.qs('.display-text-color')
+    const colorInput = this.qs('.color-display-input')
+    const randomizeButton = this.qs('.randomize-colors')
+    const swapButton = this.qs('.swap-colors')
+    const undoButton = this.qs('.undo-color')
+    const redoButton = this.qs('.redo-color')
 
     const readoutButtons = [displayBackgroundColor, displayTextColor]
 
@@ -378,13 +393,128 @@ class ColorDisplay extends Component {
       })
     })
 
-    const randomizeButton = this.qs('.randomize-colors')
-    const swapButton = this.qs('.swap-colors')
-    const undoButton = this.qs('.undo-color')
-    const redoButton = this.qs('.redo-color')
+    /**
+     * determines what happens when a color input is locked.
+     * @param  {object}  locks
+     * @param  {boolean} locks.fg true if the foreground is locked
+     * @param  {boolean} locks.bg true if the background is locked
+     */
+    const handleColorInputLock = locks => {
+      if (locks[minerva.get(ACTIVE_COLOR)]) {
+        colorInput.disabled = true
+        colorInput.title = 'editing locked.'
+      } else {
+        colorInput.disabled = false
+        colorInput.title = ''
+      }
+
+      ;[swapButton, undoButton, redoButton, randomizeButton].forEach(e => {
+        e.disabled = false
+      })
+
+      const prevColors = colorHistory.previous()
+      const currentColors = colorHistory.current()
+      const redoList = colorHistory.redoList
+
+      swapButton.title = colorDisplayCopy.swapButton.title
+      undoButton.title = colorDisplayCopy.undoButton.title
+      redoButton.title = colorDisplayCopy.redoButton.title
+      randomizeButton.title = colorDisplayCopy.redoButton.title
+
+      if (!redoList.length) {
+        redoButton.disabled = true
+        redoButton.title = colorDisplayCopy.redoButton.disabledTitleAlternate
+      }
+
+      if (!prevColors) {
+        undoButton.disabled = true
+        undoButton.title = colorDisplayCopy.undoButton.disabledTitleAlternate2
+      }
+
+      if (
+        prevColors &&
+        ((locks.fg && !objectComparison(prevColors.fg, currentColors.fg)) ||
+          (locks.bg && !objectComparison(prevColors.bg, currentColors.bg)))
+      ) {
+        undoButton.disabled = true
+        undoButton.title = colorDisplayCopy.undoButton.disabledTitleAlternate
+      }
+
+      switch (locks.values.sum()) {
+        // both colors locked: you cannot undo, redo, randomize or swap
+        case 2:
+          ;[swapButton, undoButton, redoButton, randomizeButton].forEach(e => {
+            e.disabled = true
+          })
+
+          swapButton.title = colorDisplayCopy.swapButton.disabledTitle
+          undoButton.title = colorDisplayCopy.undoButton.disabledTitle
+          redoButton.title = colorDisplayCopy.redoButton.disabledTitle
+          randomizeButton.title = colorDisplayCopy.redoButton.disabledTitle
+
+        // only one color locked: you can still undo / redo / randomize
+        // but you can't swap since one color can't be modified
+        case 1:
+          swapButton.disabled = true
+          swapButton.title = colorDisplayCopy.swapButton.disabledTitle
+
+        // nothing locked, all operations are enabled (do nothing)
+        case 0:
+        default:
+          return
+      }
+    }
+
+    minerva.on(LOCKS, handleColorInputLock)
+    minerva.on([ACTIVE_COLOR, COLORS, EXTERNAL_UPDATE, COLOR_HISTORY], () =>
+      handleColorInputLock(minerva.get(LOCKS))
+    )
+
+    handleColorInputLock(minerva.get(LOCKS))
+
+    colorInput.addEventListener('input', e => {
+      const { value } = e.target
+
+      if (!/#[a-f0-9]{6}/i.test(value)) {
+        e.target.classList.add('pattern-mismatch')
+        return
+      }
+
+      e.target.classList.remove('pattern-mismatch')
+
+      const activeColor = minerva.get(ACTIVE_COLOR)
+      const locks = minerva.get(LOCKS)
+
+      if (locks[activeColor]) return
+
+      const inactiveColor = activeColor === 'bg' ? 'fg' : 'bg'
+      const unchangedColor = minerva.get(COLORS)[inactiveColor]
+
+      const newColors = {
+        [activeColor]: hexToHSLA(value),
+        [inactiveColor]: unchangedColor,
+      }
+
+      if (objectComparison(newColors, minerva.get(COLORS))) return
+
+      minerva.set(COLORS, newColors)
+      colorHistory.add(newColors).save(COLOR_HISTORY)
+      minerva.set(EXTERNAL_UPDATE, true)
+    })
 
     const undoColors = () => {
+      const locks = minerva.get(LOCKS)
+      const prevColors = colorHistory.previous()
+      const currentColors = colorHistory.current()
+
+      if (
+        (locks.fg && !objectComparison(prevColors.fg, currentColors.fg)) ||
+        (locks.bg && !objectComparison(prevColors.bg, currentColors.bg))
+      )
+        return
+
       const newColor = colorHistory.undo().current()
+
       minerva.set(COLORS, newColor)
       minerva.set(EXTERNAL_UPDATE, true)
     }
@@ -396,12 +526,14 @@ class ColorDisplay extends Component {
     }
 
     const randomizeColors = () => {
-      const { fg: fgLocked, bg: bgLocked } = minerva.get(LOCKS)
+      const locks = minerva.get(LOCKS)
       const { fg: currFg, bg: currBg } = minerva.get(COLORS)
 
+      if (locks.fg && locks.bg) return
+
       const newColors = {
-        fg: fgLocked ? currFg : getRandomColor('hsl'),
-        bg: bgLocked ? currBg : getRandomColor('hsl'),
+        fg: locks.fg ? currFg : getRandomColor('hsl'),
+        bg: locks.bg ? currBg : getRandomColor('hsl'),
       }
 
       minerva.set(COLORS, newColors)
@@ -411,6 +543,11 @@ class ColorDisplay extends Component {
 
     const swapColors = () => {
       const { fg, bg } = minerva.get(COLORS)
+      const locks = minerva.get(LOCKS).values
+
+      // there's no reason to do this, but since true + true = 2 in javscript
+      // I can check if either lock is true by summing up the lock values lol
+      if (locks.sum() > 0) return
 
       const newColors = {
         bg: fg,
