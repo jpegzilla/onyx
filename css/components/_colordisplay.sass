@@ -80,29 +80,43 @@
       max-height: max-content
       padding-bottom: v.$small-space
       overflow: hidden
-      text-transform: uppercase
 
-      .color-display-hex-code
-        +v.croptext(1.26)
+      .color-display-hex-code, input
+        +v.croptext(1.2)
 
         font-family: v.$redhat
         width: 7ch
         display: inline-block
         font-variation-settings: 'wght' 300
         font-size: 12rem
-        line-height: 12.26rem
+        line-height: 12.2rem
         overflow: hidden
 
         @media (max-width: v.$breakpoint-tiny)
           font-size: 8rem
-          line-height: 8.26rem
+          line-height: 8.2rem
 
         @media (max-width: v.$breakpoint-miniscule)
           font-size: 6rem
-          line-height: 6.26rem
+          line-height: 6.2rem
 
         input
           +v.destroy
+          +v.kfocus
+
+          color: currentColor
+          text-transform: uppercase
+          transition: opacity v.$color-transition ease-out
+          opacity: 1
+
+          &:disabled
+            cursor: not-allowed
+
+          &.pattern-mismatch
+            opacity: 0.5
+
+          &::placeholder
+            +v.fadecolor
 
   .color-info-container
     +v.lightmono
