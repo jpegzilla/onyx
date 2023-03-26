@@ -10,6 +10,14 @@ export const setupHotkeys = minerva => {
 
     if (e.repeat) return
 
+    if (
+      [...document.activeElement.classList].some(e =>
+        ['color-display-input'].includes(e)
+      )
+    ) {
+      return
+    }
+
     if (e.ctrlKey) {
       if (letter === 'z' && !e.shiftKey) {
         document.querySelector('.undo-color').focus()
