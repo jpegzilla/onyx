@@ -75,20 +75,22 @@ describe('LimitedList', () => {
 
     test('prevents number of items from exceeding the given limit', () => {
       testLimitedList.add(1)
-      testLimitedList.add(1)
-      testLimitedList.add(1)
-      testLimitedList.add(1)
-      testLimitedList.add(1)
-      testLimitedList.add(1)
-      testLimitedList.add(1)
-      testLimitedList.add(1)
+      testLimitedList.add(2)
+      testLimitedList.add(3)
+      testLimitedList.add(4)
+      testLimitedList.add(5)
+      testLimitedList.add(6)
+      testLimitedList.add(7)
+      testLimitedList.add(8)
 
       expect(testLimitedList.items.length).toBe(TEST_LIMIT)
+      expect(testLimitedList.items[0]).toBe(4)
+      expect(testLimitedList.items.at(-1)).toBe(8)
     })
 
     test('respects locked items, adding items around locked items', () => {
       // 3 locked items at 0, 2, and 4
-      // 2 unlocked items at 1 and 3, 5 is doesn't matter
+      // 2 unlocked items at 1 and 3, 5 doesn't matter
       testLimitedList.add({ locked: true, index: 0 })
       testLimitedList.add({ locked: false, index: 1 })
       testLimitedList.add({ locked: true, index: 2 })
