@@ -3,12 +3,11 @@ import { html, Palette } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
 import { hslToHex } from './../utils/color/index.mjs'
 
-const PALETTES = 'palettes'
-const FOREGROUND = 'fg'
-const ACTIVE_COLOR = 'activeColor'
-const ACTIVE_PALETTE = 'activePalette'
-const EXTERNAL_UPDATE = 'externalUpdate'
-const COLORS = 'colors'
+import {
+  ACTIVE_PALETTE,
+  EXTERNAL_UPDATE,
+  PALETTES,
+} from './../utils/state/minervaActions.mjs'
 
 class Sidebar extends Component {
   static name = 'onyx-sidebar'

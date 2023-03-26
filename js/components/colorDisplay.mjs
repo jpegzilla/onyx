@@ -5,6 +5,19 @@ import {
   setCustomProperty,
   supportsImportInWorkers,
 } from './../utils/index.mjs'
+import {
+  CONVERSIONS,
+  OTHER_PALETTES,
+  ACTIVE_COLOR,
+  BACKGROUND,
+  FOREGROUND,
+  CONTRAST,
+  EXTERNAL_UPDATE,
+  COLORS,
+  COLOR_HISTORY,
+  LOCKS,
+  COLOR_MODE,
+} from './../utils/state/minervaActions.mjs'
 import { minerva, colorHistory, arachne } from './../main.mjs'
 import {
   hslToHex,
@@ -26,18 +39,6 @@ import { checkForEgg } from './../utils/managers/easterEggManager.mjs'
 
 const conversionWorker = './js/workers/colorConversion.worker.mjs'
 const closestColorWorker = './js/workers/closestColorFromPalette.worker.mjs'
-
-const CONVERSIONS = 'colorConversions'
-const OTHER_PALETTES = 'otherColorPalettes'
-const ACTIVE_COLOR = 'activeColor'
-const BACKGROUND = 'bg'
-const FOREGROUND = 'fg'
-const CONTRAST = 'contrastRatio'
-const EXTERNAL_UPDATE = 'externalUpdate'
-const COLORS = 'colors'
-const COLOR_HISTORY = 'colorHistory'
-const LOCKS = 'locks'
-const COLOR_MODE = 'colorMode'
 
 const shouldUseWorkers = await supportsImportInWorkers()
 
@@ -117,7 +118,7 @@ class ColorDisplay extends Component {
 
     if (this.isOldData(data, CONTRAST)) return
 
-    minerva.place(OTHER_PALETTES, data)
+    minerva.place(CONTRAST, data)
 
     const dataToDisplay = {
       wcag2: wcag[0],
@@ -154,7 +155,7 @@ class ColorDisplay extends Component {
    */
   updateReadout({ fg, bg }) {
     const readout = this.qs(
-      '.color-display-readout .color-display-hex-code input'
+      '.color-display-readout .color-display-hex-code .color-display-input'
     )
 
     readout.classList.remove('pattern-mismatch')

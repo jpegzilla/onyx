@@ -7,14 +7,17 @@
   +v.center
   +v.colordisplaycolor
   +v.colordisplaybgfade7
+  +v.blurbg
 
   position: absolute
   z-index: v.$layer-overlay
   font-size: 2rem
   border: 4px dashed currentColor
   pointer-events: none
+  user-select: none
   opacity: 0
-  transition: opacity 0.2s ease-out
+  text-align: center
 
   &.drag-over
+    transition: opacity 0.2s ease-out
     opacity: 1

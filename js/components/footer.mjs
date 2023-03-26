@@ -2,10 +2,11 @@ import Component from './component.mjs'
 import { html } from './../utils/index.mjs'
 import { minerva, env, arachne } from './../main.mjs'
 import { footerCopy } from './../data/copy.mjs'
-
-const STATUS = 'status'
-const EXTERNAL_UPDATE = 'externalUpdate'
-const HOTKEY_MODE = 'hotkeyMode'
+import {
+  STATUS,
+  EXTERNAL_UPDATE,
+  HOTKEY_MODE,
+} from './../utils/state/minervaActions.mjs'
 
 class Footer extends Component {
   static name = 'onyx-footer'

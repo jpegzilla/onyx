@@ -1,9 +1,7 @@
 import Component from './component.mjs'
 import { html } from './../utils/index.mjs'
 import { minerva, arachne } from './../main.mjs'
-
-const STATUS = 'status'
-const EXTERNAL_UPDATE = 'externalUpdate'
+import { STATUS, EXTERNAL_UPDATE } from './../utils/state/minervaActions.mjs'
 
 class DropTarget extends Component {
   static name = 'onyx-drop-target'
@@ -16,53 +14,61 @@ class DropTarget extends Component {
 
   connectedCallback() {
     this.innerHTML = html`<section class="drop-target-container">
-      (drop configuration files here)
+      drop configuration json files here. this will overwrite all your data.
     </section>`
 
     const main = document.querySelector('main')
 
     main.addEventListener('dragover', e => {
       e.preventDefault()
+
       this.addClass('drag-over')
     })
 
     const removeDragoverClass = e => {
+      e.stopPropagation()
       e.preventDefault()
-      this.removeClass('drag-over')
+
+      if (!main.contains(e.target)) this.removeClass('drag-over')
     }
 
     main.addEventListener('dragleave', removeDragoverClass)
     main.addEventListener('dragend', removeDragoverClass)
-    main.addEventListener('dragend', removeDragoverClass)
 
     const handleFileDrop = async e => {
-      removeDragoverClass(e)
+      e.preventDefault()
+      e.stopPropagation()
+      this.removeClass('drag-over')
 
-      let file
+      try {
+        let file
 
-      if (e.dataTransfer.items.length) {
-        const item = e.dataTransfer.items[0]
+        if (e.dataTransfer.items.length) {
+          const item = e.dataTransfer.items[0]
 
-        if (item.kind === 'file') {
-          file = item.getAsFile()
+          if (item.kind === 'file') {
+            file = item.getAsFile()
+          }
+        } else {
+          file = e.dataTransfer.files[0]
         }
-      } else {
-        file = e.dataTransfer.files[0]
+
+        if (!file) {
+          arachne.warn('no file available in DropTarget.')
+          return
+        }
+
+        minerva.set(STATUS, 'working')
+
+        const text = await file.text()
+
+        minerva.set(STATUS, 'idle')
+
+        minerva.importConfig(text)
+        minerva.set(EXTERNAL_UPDATE, 'import')
+      } catch {
+        this.removeClass('drag-over')
       }
-
-      if (!file) {
-        arachne.warn('no file available in DropTarget.')
-        return
-      }
-
-      minerva.set(STATUS, 'working')
-
-      const text = await file.text()
-
-      minerva.set(STATUS, 'idle')
-
-      minerva.importConfig(text)
-      minerva.set(EXTERNAL_UPDATE, 'import')
     }
 
     main.addEventListener('drop', handleFileDrop)

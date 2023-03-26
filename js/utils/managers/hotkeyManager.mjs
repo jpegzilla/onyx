@@ -1,4 +1,4 @@
-const HOTKEY_MODE = 'hotkeyMode'
+import { HOTKEY_MODE } from './../state/minervaActions.mjs'
 
 // keymap
 // ctrl+z: undo
@@ -30,7 +30,7 @@ export const setupHotkeys = minerva => {
       }
     }
 
-    if (e.shiftKey) {
+    if (e.shiftKey && !e.ctrlKey) {
       if (letter === 'f') {
         if (minerva.get(HOTKEY_MODE) === 'foreground') {
           document.querySelector('.display-text-color').focus()

@@ -6,6 +6,15 @@ import {
   MODE_HSL,
   MODE_RGB,
 } from './../utils/color/index.mjs'
+import {
+  PALETTES,
+  COLOR_MODE,
+  COLORS,
+  EXTERNAL_UPDATE,
+  ACTIVE_PALETTE,
+  LOCKS,
+  COLOR_HISTORY,
+} from './../utils/state/minervaActions.mjs'
 import { minerva, colorHistory } from './../main.mjs'
 
 const RGB_SETTINGS = {
@@ -25,14 +34,6 @@ const HSL_SETTINGS = {
     [0, 100],
   ],
 }
-
-const PALETTES = 'palettes'
-const COLOR_MODE = 'colorMode'
-const COLORS = 'colors'
-const EXTERNAL_UPDATE = 'externalUpdate'
-const ACTIVE_PALETTE = 'activePalette'
-const LOCKS = 'locks'
-const COLOR_HISTORY = 'colorHistory'
 
 class Controls extends Component {
   static name = 'onyx-controls'
@@ -98,7 +99,9 @@ class Controls extends Component {
   getColorAndValue(index, colorValue) {
     const controlName = this.colorMode.names[index]
     const range = this.settings[this.mode].ranges[index]
-    return `${controlName}: ${colorValue} out of ${range[1]}`
+    return `${controlName}: ${parseFloat((+colorValue).toFixed(2))} out of ${
+      range[1]
+    }`
   }
 
   // use layer param to decide wether to give this html
@@ -142,7 +145,7 @@ class Controls extends Component {
     }
   }
 
-  handlePaletteUpdate(color, _layer) {
+  handlePaletteUpdate(color) {
     const palettes = minerva.get(PALETTES)
     let palette
     const existingPalette = palettes?.[minerva.get(ACTIVE_PALETTE)]
@@ -169,7 +172,7 @@ class Controls extends Component {
             <div class="controls-header">
               <button
                 class="lock-colors-bg"
-                title="locks the background, preventing its randomization. (shift+b shift+x)"
+                title="locks the background, preventing it from changing. (shift+b shift+x)"
               >
                 ${bgLocked ? 'unlock background' : 'lock background'}
               </button>
@@ -199,7 +202,7 @@ class Controls extends Component {
             <div class="controls-header">
               <button
                 class="lock-colors-fg"
-                title="locks the foreground, preventing its randomization. (shift+f shift+x)"
+                title="locks the foreground, preventing it from changing. (shift+f shift+x)"
               >
                 ${fgLocked ? 'unlock foreground' : 'lock foreground'}
               </button>
@@ -276,6 +279,29 @@ class Controls extends Component {
 
       handleHistoryUpdate()
     }
+
+    const handleInputLocks = locks => {
+      this.backgroundColorInputs.forEach(input => {
+        const sliders = this.qs('.controls-sliders.background')
+        input.disabled = locks.bg
+        locks.bg
+          ? sliders.classList.add('disabled')
+          : sliders.classList.remove('disabled')
+        sliders.title = locks.bg ? 'editing locked.' : ''
+      })
+
+      this.foregroundColorInputs.forEach(input => {
+        const sliders = this.qs('.controls-sliders.foreground')
+        input.disabled = locks.fg
+        locks.fg
+          ? sliders.classList.add('disabled')
+          : sliders.classList.remove('disabled')
+        sliders.title = locks.fg ? 'editing locked.' : ''
+      })
+    }
+
+    handleInputLocks(minerva.get(LOCKS))
+    minerva.on(LOCKS, handleInputLocks)
 
     this.backgroundColorInputs.forEach((input, index) => {
       input.addEventListener('input', e => colorInputHandler(e, 'bg', index))
