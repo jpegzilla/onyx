@@ -348,11 +348,15 @@ $layer-overlay: 54
   border-width: 1px
   font-size: $fontsize
   line-height: calc(#{$fontsize} + 0.25rem)
-  transition: border-color 0.2s ease-out
+  transition: border-color $color-transition ease-out, opacity $color-transition ease-out
+  opacity: 1
 
-  &:hover
+  &:disabled
+    opacity: 0.5
+    cursor: not-allowed
+
+  &:hover:not(:disabled)
     +colordisplayborder
-    // +blurbg
 
   @if $bigpadding == true
     padding: $button-padding-big
