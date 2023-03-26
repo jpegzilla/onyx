@@ -376,3 +376,76 @@ export const findClosestColor = ({ color, library }, type = 'redmean') => {
 
   return closestColor
 }
+
+/**
+ * calculate the perceptual lightness contrast between two colors
+ * based on the apca contrast prediction equation
+ * https://github.com/Myndex/apca-w3
+ *
+ * @param  {object} fgcolor   rgb foreground color object
+ * @param  {number} fgcolor.r red number [0, 255]
+ * @param  {number} fgcolor.g green number [0, 255]
+ * @param  {number} fgcolor.b blue number [0, 255]
+ * @param  {object} bgColor   rgb background color ojbect
+ * @param  {number} bgColor.r red number [0, 255]
+ * @param  {number} bgColor.g blue number [0, 255]
+ * @param  {number} bgColor.b rgb background color ojbect
+ * @return {number}          perceptual lightness contrast
+ */
+export const calculateAPCAContrast = (fgcolor, bgColor) => {
+  const { pow, abs } = Math
+
+  // powercurve exponents
+  const S_TRC = 2.4
+  const N_tx = 0.57
+  const N_bg = 0.56
+  const R_tx = 0.62
+  const R_bg = 0.65
+
+  // clamps and scalers
+  const B_clip = 1.414
+  const B_thrsh = 0.022
+  const W_scale = 1.14
+  const W_offset = 0.027
+  const W_clamp = 0.1
+
+  const { r: fgR, g: fgG, b: fgB } = fgcolor
+  const { r: bgR, g: bgG, b: bgB } = bgColor
+
+  const softClip = num => {
+    if (num < 0) return 0
+    if (num < B_thrsh) return num + pow(B_thrsh - num, B_clip)
+    return num
+  }
+
+  // Ytxt
+  const foregroundLuminance = softClip(
+    pow(fgR / RGB_MAX, S_TRC) * 0.2126729 +
+      pow(fgG / RGB_MAX, S_TRC) * 0.7151522 +
+      pow(fgB / RGB_MAX, S_TRC) * 0.072175
+  )
+
+  // Ybg
+  const backgroundLuminance = softClip(
+    pow(bgR / RGB_MAX, S_TRC) * 0.2126729 +
+      pow(bgG / RGB_MAX, S_TRC) * 0.7151522 +
+      pow(bgB / RGB_MAX, S_TRC) * 0.072175
+  )
+
+  const backgroundDarkerThanForeground =
+    backgroundLuminance > foregroundLuminance
+
+  const S_apc = backgroundDarkerThanForeground
+    ? (pow(backgroundLuminance, N_bg) - pow(foregroundLuminance, N_tx)) *
+      W_scale
+    : (pow(backgroundLuminance, R_bg) - pow(foregroundLuminance, R_tx)) *
+      W_scale
+
+  const calculateLightnessContrast = sapc => {
+    if (abs(sapc) < W_clamp) return 0
+    if (sapc > 0) return (sapc - W_offset) * 100
+    if (sapc < 0) return (sapc + W_offset) * 100
+  }
+
+  return calculateLightnessContrast(S_apc)
+}
