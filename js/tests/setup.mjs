@@ -1,5 +1,6 @@
 import './../utils/prototypeExtensions.mjs'
 import './../utils/color/conversions.mjs'
+import { jest } from '@jest/globals'
 
 global.localStorage = {
   state: {},
@@ -10,3 +11,5 @@ global.localStorage = {
     return this.state[key]
   },
 }
+
+global.jest = jest
