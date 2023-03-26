@@ -1,5 +1,16 @@
 // ♪音楽 → MOJO-P - PINK MOON : https://www.youtube.com/watch?v=kMcTFR2hUGc
 import {
+  COLOR_HISTORY,
+  LOADED,
+  STATUS,
+  HOTKEY_MODE,
+  COLORS,
+  ARRIVALS,
+  LANGUAGE,
+  COLOR_SCHEME,
+  NEW_PLAYER,
+} from './utils/state/minervaActions.mjs'
+import {
   Arachne,
   colorSchemeToUse,
   Minerva,
@@ -12,16 +23,6 @@ import {
 } from './utils/index.mjs'
 import { hexToHSLA, stringifyHSL } from './utils/color/conversions.mjs'
 import components from './components/index.mjs'
-
-const COLOR_HISTORY = 'colorHistory'
-const LOADED = 'loaded'
-const STATUS = 'status'
-const HOTKEY_MODE = 'hotkeyMode'
-const COLORS = 'colors'
-const ARRIVALS = 'arrivals'
-const LANGUAGE = 'language'
-const COLOR_SCHEME = 'colorScheme'
-const NEW_PLAYER = 'newPlayer'
 
 export * from './meta.mjs'
 export const minerva = new Minerva('jpegzilla-onyx')
