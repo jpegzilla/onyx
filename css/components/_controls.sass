@@ -75,6 +75,15 @@
       display: grid
       grid-template-rows: repeat(3, 1fr)
       gap: v.$p-m
+      opacity: 1
+      transition: opacity v.$color-transition ease-out
+
+      &.disabled
+        opacity: 0.5
+        cursor: not-allowed
+
+        & > *
+          pointer-events: none
 
       .slider-container
         display: flex
