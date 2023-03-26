@@ -158,12 +158,12 @@ export const handleGreeting = (greetingElement, minerva) => {
         greeting = "I'm glad you're still here."
         break
 
-      case timesArrived.between(400, 5000, true):
+      case [401, 430, 500, 554, 600, 706, 898].includes(timesArrived):
         greeting = 'I thought of a new color today!'
         break
 
       case timesArrived.between(5000, 5500, true):
-        greeting = 'I know all the colors in the sky...'
+        greeting = "I've seen all the colors in the sky..."
         break
 
       case timesArrived > 5500:
@@ -173,7 +173,7 @@ export const handleGreeting = (greetingElement, minerva) => {
       // TODO: write more flavor text for this
 
       default:
-        greeting = 'hello!'
+        greeting = "it's nice to see you!"
     }
 
     greetingElement.textContent = greeting
