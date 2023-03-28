@@ -14,10 +14,13 @@ class DropTarget extends Component {
 
   connectedCallback() {
     this.innerHTML = html`<section class="drop-target-container">
-      drop configuration json files here. this will overwrite all your data.
+      <p>
+        drop configuration json files here. this will overwrite all your data.
+      </p>
     </section>`
 
     const main = document.querySelector('main')
+    const dropTarget = document.querySelector(`#${DropTarget.name}`)
 
     main.addEventListener('dragover', e => {
       e.preventDefault()
@@ -29,11 +32,18 @@ class DropTarget extends Component {
       e.stopPropagation()
       e.preventDefault()
 
-      if (!main.contains(e.target)) this.removeClass('drag-over')
+      if (
+        e.target === main ||
+        e.target === dropTarget ||
+        !dropTarget.contains(e.target)
+      )
+        this.removeClass('drag-over')
     }
 
-    main.addEventListener('dragleave', removeDragoverClass)
-    main.addEventListener('dragend', removeDragoverClass)
+    dropTarget.addEventListener('dragleave', removeDragoverClass)
+    dropTarget.addEventListener('dragend', removeDragoverClass)
+    // main.addEventListener('dragleave', removeDragoverClass)
+    // main.addEventListener('dragend', removeDragoverClass)
 
     const handleFileDrop = async e => {
       e.preventDefault()
@@ -71,7 +81,7 @@ class DropTarget extends Component {
       }
     }
 
-    main.addEventListener('drop', handleFileDrop)
+    dropTarget.addEventListener('drop', handleFileDrop)
   }
 }
 

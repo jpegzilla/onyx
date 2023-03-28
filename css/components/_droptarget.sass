@@ -9,15 +9,22 @@
   +v.colordisplaybgfade7
   +v.blurbg
 
-  position: absolute
-  z-index: v.$layer-overlay
-  font-size: 2rem
   border: 4px dashed currentColor
-  pointer-events: none
-  user-select: none
+  font-size: 2rem
   opacity: 0
-  text-align: center
+  pointer-events: none
+  position: absolute
+  transition: opacity 0.2s ease-out
+  user-select: none
+  z-index: v.$layer-overlay
 
   &.drag-over
-    transition: opacity 0.2s ease-out
+    pointer-events: auto
     opacity: 1
+
+  p
+    +v.bgcolor
+
+    border-radius: v.$border-radius
+    padding: v.$button-padding-big
+    text-align: center
