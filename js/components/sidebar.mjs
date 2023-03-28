@@ -9,6 +9,8 @@ import {
   PALETTES,
 } from './../utils/state/minervaActions.mjs'
 
+const listeners = []
+
 class Sidebar extends Component {
   static name = 'onyx-sidebar'
 
@@ -23,42 +25,91 @@ class Sidebar extends Component {
       return `<div class="empty-notifier">no active palette</div>`
     }
 
-    return `
-      ${colors
-        .map(
-          ({ color, locked }, idx) =>
-            html`<div class="palette-swatch">
-              <div
-                class="palette-swatch-color"
-                style="background-color:${color};"
-              ></div>
-              <div class="palette-swatch-controls">
-                <button class="shift-left" data-color="${idx}">&lt;</button>
+    return colors
+      .map(
+        ({ color, locked }, idx) =>
+          html`<div class="palette-swatch">
+            <div
+              class="palette-swatch-color"
+              style="background-color:${color};"
+            ></div>
+            <div class="palette-swatch-controls">
+              <button class="shift-left" data-color="${idx}">&lt;</button>
 
-                <div class="center-button-container">
-                  <button
-                    data-color="${idx}"
-                    class="lock-color"
-                    title="click to lock this color in the palette."
-                  >
-                    ${locked ? 'locked' : 'lock'}
-                  </button>
+              <div class="center-button-container">
+                <button
+                  data-color="${idx}"
+                  class="lock-color"
+                  title="click to lock this color in the palette."
+                >
+                  ${locked ? 'locked' : 'lock'}
+                </button>
 
-                  <button
-                    data-color="${idx}"
-                    title="click to clear this color from the palette."
-                    class="clear-color"
-                  >
-                    clear
-                  </button>
-                </div>
-
-                <button class="shift-right" data-color="${idx}">&gt;</button>
+                <button
+                  data-color="${idx}"
+                  title="click to clear this color from the palette."
+                  class="clear-color"
+                >
+                  clear
+                </button>
               </div>
-            </div>`
-        )
-        .join('')}
-    `
+
+              <button class="shift-right" data-color="${idx}">&gt;</button>
+            </div>
+          </div>`
+      )
+      .join('')
+  }
+
+  renderPaletteHistory() {
+    const palettes = structuredClone(minerva.get(PALETTES))
+    delete palettes?.[minerva.get(ACTIVE_PALETTE)]
+
+    console.log(palettes)
+
+    if (!palettes.values.length)
+      return html`<div class="empty-notifier">no palettes saved</div>`
+
+    return palettes.entries
+      .map(
+        ([id, palette]) => html`<div class="saved-palette" data-ident="${id}">
+          <div class="saved-palette-controls">
+            <button class="saved-palette-activate" data-ident="${id}">
+              set as active
+            </button>
+            <button class="saved-palette-export" data-ident="${id}">
+              export
+            </button>
+            <button class="saved-palette-delete" data-ident="${id}">
+              delete
+            </button>
+          </div>
+          <div class="saved-palette-swatches">
+            ${palette
+              .map(
+                ({ color }) =>
+                  html`<div
+                    class="swatch"
+                    style="background-color:${hslToHex(color)}"
+                  ></div>`
+              )
+              .join('')}
+          </div>
+        </div>`
+      )
+      .join('')
+  }
+
+  handleSavedPaletteActivate(ident) {
+    if (!ident) return
+    minerva.set(ACTIVE_PALETTE, ident)
+  }
+
+  handleSavedPaletteDelete(ident) {
+    const palettes = structuredClone(minerva.get(PALETTES))
+    delete palettes?.[ident]
+
+    minerva.set(PALETTES, palettes)
   }
 
   handleColorSwap(index, direction) {
@@ -118,17 +169,16 @@ class Sidebar extends Component {
   }
 
   handlePaletteSave() {
-    const allPalettes = minerva.get(PALETTES)
+    if (!minerva.get(PALETTES)?.[minerva.get(ACTIVE_PALETTE)]?.length) {
+      return
+    }
+
     const newActivePalette = new Palette()
     const newActivePaletteId = newActivePalette.id
 
-    const newPalettes = {
-      ...allPalettes,
-      [newActivePaletteId]: newActivePalette,
-    }
-
     minerva.set(ACTIVE_PALETTE, newActivePaletteId)
-    minerva.set(PALETTES, newPalettes)
+
+    newActivePalette.updatePalettes()
   }
 
   connectedCallback() {
@@ -160,7 +210,7 @@ class Sidebar extends Component {
       </div>
       <div class="sidebar-container">
         <div class="palette-history-container">
-          <div class="empty-notifier">no palettes saved</div>
+          <div class="palettes">${this.renderPaletteHistory()}</div>
         </div>
       </div>
     `
@@ -170,6 +220,9 @@ class Sidebar extends Component {
     const primaryPaletteContainer = this.qs(
       '.primary-palette-container .palette'
     )
+    const paletteHistoryContainer = this.qs(
+      '.palette-history-container .palettes'
+    )
 
     const setSwatchListeners = () => {
       const shiftLeft = this.qsa('.shift-left')
@@ -178,36 +231,81 @@ class Sidebar extends Component {
       const lockColor = this.qsa('.lock-color')
 
       shiftLeft.forEach(button => {
-        button.addEventListener('click', e =>
+        listeners.forEach(e => button.removeEventListener('click', e))
+        const listener = button.addEventListener('click', e =>
           this.handleColorSwap(+e.target.dataset.color, -1)
         )
+
+        listeners.push(listener)
       })
 
       shiftRight.forEach(button => {
-        button.addEventListener('click', e =>
+        listeners.forEach(e => button.removeEventListener('click', e))
+        const listener = button.addEventListener('click', e =>
           this.handleColorSwap(+e.target.dataset.color, 1)
         )
+
+        listeners.push(listener)
       })
 
       clearColor.forEach(button => {
-        button.addEventListener('click', e =>
+        listeners.forEach(e => button.removeEventListener('click', e))
+        const listener = button.addEventListener('click', e =>
           this.handlePaletteRemove(+e.target.dataset.color)
         )
+
+        listeners.push(listener)
       })
 
       lockColor.forEach(button => {
-        button.addEventListener('click', e =>
+        listeners.forEach(e => button.removeEventListener('click', e))
+        const listener = button.addEventListener('click', e =>
           this.handlePaletteLock(+e.target.dataset.color)
         )
+
+        listeners.push(listener)
+      })
+    }
+
+    const setSavedPaletteListeners = () => {
+      const activatePalette = this.qsa('.saved-palette-activate')
+      const exportPalette = this.qsa('.saved-palette-export')
+      const deletePalette = this.qsa('.saved-palette-delete')
+
+      activatePalette.forEach(button => {
+        listeners.forEach(e => button.removeEventListener('click', e))
+        const listener = button.addEventListener('click', e => {
+          console.log(e.target.dataset.ident)
+
+          this.handleSavedPaletteActivate(e.target.dataset.ident)
+        })
+
+        listeners.push(listener)
+      })
+
+      exportPalette.forEach(button => {
+        listeners.forEach(e => button.removeEventListener('click', e))
+        const listener = button.addEventListener('click', e => {
+          console.log(e.target.dataset.ident)
+          // this.handleColorSwap(+e.target.dataset.color, 1)
+        })
+
+        listeners.push(listener)
+      })
+
+      deletePalette.forEach(button => {
+        listeners.forEach(e => button.removeEventListener('click', e))
+        const listener = button.addEventListener('click', e => {
+          console.log(e.target.dataset.ident)
+          this.handleSavedPaletteDelete(e.target.dataset.ident)
+        })
+
+        listeners.push(listener)
       })
     }
 
     const maybeUpdatePrimaryPalette = (palette, id) => {
-      if (!palette) {
-        this.renderPrimaryPalette()
-
-        return
-      }
+      if (!palette) return
 
       primaryPalette = palette
       primaryPaletteId = id
@@ -223,20 +321,26 @@ class Sidebar extends Component {
       setSwatchListeners()
     }
 
+    const renderPaletteHistory = () => {
+      paletteHistoryContainer.innerHTML = this.renderPaletteHistory()
+      setSavedPaletteListeners()
+    }
+
     const saveButton = this.qs('.save-palette')
     const generateButton = this.qs('.generate-palette')
     const exportButton = this.qs('.export-palette')
 
     saveButton.addEventListener('click', () => {
-      console.log('save palette')
+      this.handlePaletteSave()
     })
 
     generateButton.addEventListener('click', () => {
-      console.log('generate palette')
+      // generate new palette, save the current one if it exists
+      console.log('generating new palette')
     })
 
     exportButton.addEventListener('click', () => {
-      console.log('export palette')
+      console.log('opening export modal')
     })
 
     minerva.on(EXTERNAL_UPDATE, () => {
@@ -244,6 +348,7 @@ class Sidebar extends Component {
       const externalPrimaryPalette =
         minerva.get(PALETTES)?.[externalPrimaryPaletteId]
 
+      renderPaletteHistory()
       maybeUpdatePrimaryPalette(
         externalPrimaryPalette,
         externalPrimaryPaletteId
@@ -254,15 +359,19 @@ class Sidebar extends Component {
       primaryPaletteId = id
       primaryPalette = minerva.get(PALETTES)[id]
 
+      renderPaletteHistory()
       maybeUpdatePrimaryPalette(primaryPalette, primaryPaletteId)
     })
 
     minerva.on(PALETTES, p => {
       primaryPaletteId = minerva.get(ACTIVE_PALETTE)
       primaryPalette = p?.[primaryPaletteId]
+
+      renderPaletteHistory()
       maybeUpdatePrimaryPalette(primaryPalette, primaryPaletteId)
     })
 
+    renderPaletteHistory()
     maybeUpdatePrimaryPalette(primaryPalette, primaryPaletteId)
   }
 }

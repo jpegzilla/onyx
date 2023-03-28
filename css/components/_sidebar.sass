@@ -11,7 +11,7 @@
   display: grid
   gap: v.$p-s
   grid-area: sidebar
-  grid-template-rows: 2fr 8fr
+  grid-template-rows: minmax(0, 2fr) minmax(0, 8fr)
   max-width: 25vw
   min-width: 25vw
 
@@ -92,9 +92,8 @@
         border-radius: v.$border-radius-inner
         border-bottom-left-radius: 0
         border-bottom-right-radius: 0
-        display: flex
-        flex-grow: 1
         gap: v.$quartergap
+        aspect-ratio: 1 / 1
 
       &-controls
         +v.center
@@ -133,3 +132,62 @@
             border-radius: 0
             height: auto
             width: 100%
+
+  .palette-history-container
+    display: flex
+
+    .palettes
+      +v.fill
+
+      display: flex
+      flex-direction: column
+      gap: v.$halfgap
+      overflow: hidden scroll
+      padding-right: v.$quartergap
+
+      .saved-palette
+        display: flex
+        gap: v.$quartergap
+        flex-direction: column
+        width: 100%
+
+        &-swatches
+          display: grid
+          border-radius: v.$border-radius-inner
+          overflow: hidden
+          grid-template-columns: repeat(5, 1fr)
+
+          .swatch
+            aspect-ratio: 2 / 1
+
+            &:first-of-type
+              border-radius: v.$border-radius-inner
+              border-top-right-radius: 0
+              border-bottom-right-radius: 0
+
+            &:last-of-type
+              border-radius: v.$border-radius-inner
+              border-top-left-radius: 0
+              border-bottom-left-radius: 0
+
+        &-controls
+          display: flex
+          gap: v.$quartergap
+          // justify-content: flex-end
+
+          button
+            +v.onyxbutton($bigpadding: false)
+
+            font-size: 1rem
+            border-radius: 0
+            padding: v.$button-padding
+
+            &:first-of-type
+              border-radius: v.$border-radius-inner
+              border-top-right-radius: 0
+              border-bottom-right-radius: 0
+
+            &:last-of-type
+              border-radius: v.$border-radius-inner
+              border-top-left-radius: 0
+              border-bottom-left-radius: 0

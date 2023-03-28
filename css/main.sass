@@ -45,3 +45,20 @@
 
 .noselect
   user-select: none
+
+// firefox only:
+*
+  scrollbar-width: thin
+  // scrollbar-color: fg color, bg color
+  scrollbar-color: var(--text-color) var(--bg-color)
+
+*::-webkit-scrollbar
+  width: v.$halfgap
+
+*::-webkit-scrollbar-track
+  background: var(--bg-color)
+
+*::-webkit-scrollbar-thumb
+  background-color: var(--text-color)
+  border-radius: v.$border-radius-inner
+  border: none
