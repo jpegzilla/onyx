@@ -1,19 +1,20 @@
 // ♪音楽 → 暁RECORDS - BLACK MIRROR ON THE WALL : https://www.youtube.com/watch?v=QyBjXlCMe7Y
-import { uuidv4 } from './misc.mjs'
-import LimitedList from './dataStructures/limitedList.mjs'
-import { minerva } from './../main.mjs'
+import { uuidv4 } from './../misc.mjs'
+import LimitedList from './limitedList.mjs'
+import { minerva } from './../../main.mjs'
 
 const PALETTES = 'palettes'
 
-/**
- * used to create palette objects.
- * @param {object} initializer the initial palette in the list
- * @param {string} initialId   the id of the first palette in the list
- */
 class Palette {
   static defaultSettings = {}
 
-  constructor({ initializer = [], initialId = uuidv4 } = {}) {
+  /**
+   * used to create palette objects.
+   * @param {object} args
+   * @param {array}  args.initializer the initial palette in the list
+   * @param {string} args.initialId   the id of the first palette in the list
+   */
+  constructor({ initializer = [], initialId = uuidv4() } = {}) {
     this.colorList = new LimitedList({
       limit: 5,
       initializer,
@@ -63,6 +64,8 @@ class Palette {
    */
   move(index, direction) {
     let tryToMoveTo = index + direction
+
+    if (this.colorList.items[index].locked) return
 
     while (
       this.colorList.items[tryToMoveTo]?.locked &&
