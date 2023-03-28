@@ -87,13 +87,11 @@ class LoadingScreen extends Component {
 
   async waitForEverything() {
     await this.waitForAllComponents()
-    await this.waitForAllMinervaActions()
 
     const assetsLoadedCorrectly = await this.loadAssets()
 
     if (assetsLoadedCorrectly) {
       minerva.hasAllSounds = true
-      // console.log('everything loaded correctly.')
     } else minerva.hasAllSounds = false
 
     return true
@@ -105,10 +103,11 @@ class LoadingScreen extends Component {
       <div class="loading-screen">${logo('loading-screen-logo')}</div>
     </section>`
 
-    this.waitForEverything().then(() => {
-      this.allDone()
-      setTimeout(() => {}, 4000)
-    })
+    this.waitForAllMinervaActions().then(
+      this.waitForEverything().then(() => {
+        this.allDone()
+      })
+    )
   }
 }
 
