@@ -2,8 +2,7 @@
 import { uuidv4 } from './../misc.mjs'
 import LimitedList from './limitedList.mjs'
 import { minerva } from './../../main.mjs'
-
-const PALETTES = 'palettes'
+import { PALETTES } from './../state/minervaActions.mjs'
 
 class Palette {
   static defaultSettings = {}
@@ -123,6 +122,8 @@ class Palette {
   duplicate() {}
 
   updatePalettes() {
+    if (!this.colorList.items.length) return
+
     const currentPalettes = minerva.get(PALETTES)
 
     minerva.set(PALETTES, {
