@@ -12,6 +12,7 @@ import {
   hslaToLCH,
   hslaToXYZ,
   hslaToNRGBA,
+  xyzToOklab,
 } from './../utils/color/conversions.mjs'
 
 const fromHex = color => {
@@ -28,7 +29,7 @@ const fromHex = color => {
   const hsla = `${hslaH.toFixed(2)}, ${hslaS.toFixed(2)}, ${hslaL.toFixed(
     2
   )}, ${hslaA}`
-  const hwb = `${hwbH.toFixed(2)} ${hwbW} ${hwbB} / ${hwbA}`
+  const hwb = `hwb(${hwbH.toFixed(2)} ${hwbW}% ${hwbB}% / ${hwbA})`
   const labD65 = `${d65L} ${d65A} ${d65B} / ${d65Alpha}`
   const labD50 = `${d50L} ${d50A} ${d50B} / ${d50Alpha}`
   const lch = `${lchL} ${lchC} ${lchH} / ${lchA}`
@@ -71,22 +72,25 @@ const fromHsl = color => {
   const { l: lchL, c: lchC, h: lchH, a: lchA } = hslaToLCH(color)
   const { x, y, z } = hslaToXYZ(color)
   const { nR, nG, nB, nA } = hslaToNRGBA(color)
+  const { l: okL, a: okA, b: okB } = xyzToOklab({ x, y, z })
 
-  const rgba = `${rgbaR}, ${rgbaG}, ${rgbaB}, ${rgbaA}`
-  const hsla = `${hslaH.toFixed(2)}, ${hslaS.toFixed(2)}, ${hslaL.toFixed(
+  const rgba = `rgba(${rgbaR}, ${rgbaG}, ${rgbaB})`
+  const hsla = `hsl(${hslaH.toFixed(2)}, ${hslaS.toFixed(2)}%, ${hslaL.toFixed(
     2
-  )}, ${hslaA}`
-  const hwb = `${hwbH.toFixed(2)} ${hwbW} ${hwbB} / ${hwbA}`
-  const labD65 = `${d65L} ${d65A} ${d65B} / ${d65Alpha}`
-  const labD50 = `${d50L} ${d50A} ${d50B} / ${d50Alpha}`
-  const lch = `${lchL} ${lchC} ${lchH} / ${lchA}`
-  const xyz = `${x}, ${y}, ${z}`
-  const nrgba = `${nR}, ${nG}, ${nB}, ${nA}`
+  )}%)`
+  const hwb = `hwb(${hwbH.toFixed(2)} ${hwbW}% ${hwbB}%)`
+  const labD65 = `lab(${d65L}% ${d65A} ${d65B})`
+  const labD50 = `lab(${d50L}% ${d50A} ${d50B})`
+  const lch = `lch(${lchL}% ${lchC} ${lchH})`
+  const xyz = `[${x}, ${y}, ${z}]`
+  const nrgba = `[${nR}, ${nG}, ${nB}]`
+  const okLab = `oklab(${okL.toFixed(4)}% ${okA.toFixed(4)} ${okB.toFixed(4)})`
 
   return {
     rgba, // correct
     hsla, // correct
     hwb, // correct
+    ['oklab']: okLab, // correct
     xyz, // correct
     ['CIELAB D50']: labD50, // CIE-L*ab D50/10 - correct
     ['CIELAB D65']: labD65, // CIE-L*ab D65/10- correct

@@ -730,3 +730,37 @@ export const invertHSL = ({ h, s, l }) => ({
   s,
   l,
 })
+
+/**
+ * converts an xyz color (with D65 whitepoint and white as y=100) to oklab
+ * @param  {object} xyz
+ * @param  {number} xyz.x x coordinate
+ * @param  {number} xyz.y y coordinate
+ * @param  {number} xyz.z z coordinate
+ * @return {object} oklab color
+ */
+export const xyzToOklab = xyz => {
+  const { cbrt } = Math
+
+  const x = xyz.x / 100
+  const y = xyz.y / 100
+  const z = xyz.z / 100
+
+  // convert to lms color space
+  const l = x * 0.8189330101 + y * 0.3618667424 + z * -0.1288597137
+  const m = x * 0.0329845436 + y * 0.9293118715 + z * 0.0361456387
+  const s = x * 0.0482003018 + y * 0.2643662691 + z * 0.633851707
+
+  const lPrime = cbrt(l)
+  const mPrime = cbrt(m)
+  const sPrime = cbrt(s)
+
+  const L =
+    lPrime * 0.2104542553 + mPrime * 0.793617785 + sPrime * -0.0040720468
+  const a =
+    lPrime * 1.9779984951 + mPrime * -2.428592205 + sPrime * 0.4505937099
+  const b =
+    lPrime * 0.0259040371 + mPrime * 0.7827717662 + sPrime * -0.808675766
+
+  return { l: L, a, b }
+}
