@@ -104,8 +104,6 @@ export default message => {
     data: { color, format },
   } = message
 
-  console.log({ color, format })
-
   let output = {}
 
   if (color) {

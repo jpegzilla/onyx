@@ -65,8 +65,6 @@ class Sidebar extends Component {
     const palettes = structuredClone(minerva.get(PALETTES))
     delete palettes?.[minerva.get(ACTIVE_PALETTE)]
 
-    console.log(palettes)
-
     if (!palettes.values.length)
       return html`<div class="empty-notifier">no palettes saved</div>`
 
