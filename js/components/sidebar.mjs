@@ -2,11 +2,13 @@ import Component from './component.mjs'
 import { html, Palette } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
 import { hslToHex } from './../utils/color/index.mjs'
+import { sidebarCopy } from './../data/copy.mjs'
 
 import {
   ACTIVE_PALETTE,
   EXTERNAL_UPDATE,
   PALETTES,
+  EXPORTING,
 } from './../utils/state/minervaActions.mjs'
 
 const listeners = []
@@ -18,6 +20,14 @@ class Sidebar extends Component {
     super()
 
     this.id = Sidebar.name
+  }
+
+  handleExportPalette(ident) {
+    const paletteToExport = minerva.get(PALETTES)?.[ident]
+
+    if (paletteToExport) {
+      minerva.set(EXPORTING, paletteToExport)
+    }
   }
 
   renderPrimaryPalette(colors = []) {
@@ -65,10 +75,15 @@ class Sidebar extends Component {
     const palettes = structuredClone(minerva.get(PALETTES))
     delete palettes?.[minerva.get(ACTIVE_PALETTE)]
 
+    palettes.entries.forEach(([k, v]) => {
+      if (v.length === 0) delete palettes[k]
+    })
+
     if (!palettes.values.length)
       return html`<div class="empty-notifier">no palettes saved</div>`
 
     return palettes.entries
+      .reverse()
       .map(
         ([id, palette]) => html`<div class="saved-palette" data-ident="${id}">
           <div class="saved-palette-controls">
@@ -186,21 +201,21 @@ class Sidebar extends Component {
           <div class="controls">
             <button
               class="save-palette"
-              title="save this palette to the library."
+              title="${sidebarCopy.primaryControlsSaveButton.title}"
             >
-              save
+              ${sidebarCopy.primaryControlsSaveButton.text}
             </button>
             <button
               class="generate-palette"
-              title="generate a new five-color palette. this will overwrite the current palette!"
+              title="${sidebarCopy.primaryControlsGenerateButton.title}"
             >
-              generate
+              ${sidebarCopy.primaryControlsGenerateButton.text}
             </button>
             <button
               class="export-palette"
-              title="export this palette for use in other contexts."
+              title="${sidebarCopy.primaryControlsExportButton.title}"
             >
-              export
+              ${sidebarCopy.primaryControlsExportButton.text}
             </button>
           </div>
           <div class="palette">${this.renderPrimaryPalette()}</div>
@@ -273,8 +288,6 @@ class Sidebar extends Component {
       activatePalette.forEach(button => {
         listeners.forEach(e => button.removeEventListener('click', e))
         const listener = button.addEventListener('click', e => {
-          console.log(e.target.dataset.ident)
-
           this.handleSavedPaletteActivate(e.target.dataset.ident)
         })
 
@@ -284,8 +297,7 @@ class Sidebar extends Component {
       exportPalette.forEach(button => {
         listeners.forEach(e => button.removeEventListener('click', e))
         const listener = button.addEventListener('click', e => {
-          console.log(e.target.dataset.ident)
-          // this.handleColorSwap(+e.target.dataset.color, 1)
+          this.handleExportPalette(e.target.dataset.ident)
         })
 
         listeners.push(listener)
@@ -294,7 +306,6 @@ class Sidebar extends Component {
       deletePalette.forEach(button => {
         listeners.forEach(e => button.removeEventListener('click', e))
         const listener = button.addEventListener('click', e => {
-          console.log(e.target.dataset.ident)
           this.handleSavedPaletteDelete(e.target.dataset.ident)
         })
 
@@ -303,7 +314,11 @@ class Sidebar extends Component {
     }
 
     const maybeUpdatePrimaryPalette = (palette, id) => {
-      if (!palette) return
+      if (!palette) {
+        primaryPaletteContainer.innerHTML = this.renderPrimaryPalette()
+
+        return
+      }
 
       primaryPalette = palette
       primaryPaletteId = id
@@ -339,6 +354,7 @@ class Sidebar extends Component {
 
     exportButton.addEventListener('click', () => {
       console.log('opening export modal')
+      this.handleExportPalette(minerva.get(ACTIVE_PALETTE))
     })
 
     minerva.on(EXTERNAL_UPDATE, () => {
