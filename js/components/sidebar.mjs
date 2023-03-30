@@ -1,5 +1,5 @@
 import Component from './component.mjs'
-import { html, Palette } from './../utils/index.mjs'
+import { html, Palette, uuidv4 } from './../utils/index.mjs'
 import { minerva } from './../main.mjs'
 import { hslToHex } from './../utils/color/index.mjs'
 import { sidebarCopy } from './../data/copy.mjs'
@@ -90,6 +90,9 @@ class Sidebar extends Component {
             <button class="saved-palette-activate" data-ident="${id}">
               set as active
             </button>
+            <button class="saved-palette-duplicate" data-ident="${id}">
+              duplicate
+            </button>
             <button class="saved-palette-export" data-ident="${id}">
               export
             </button>
@@ -123,6 +126,16 @@ class Sidebar extends Component {
     delete palettes?.[ident]
 
     minerva.set(PALETTES, palettes)
+  }
+
+  handleSavedPaletteDuplicate(ident) {
+    const palettes = minerva.get(PALETTES)
+    const dupe = palettes?.[ident]
+
+    minerva.set(PALETTES, {
+      ...palettes,
+      [uuidv4()]: dupe,
+    })
   }
 
   handleColorSwap(index, direction) {
@@ -284,6 +297,7 @@ class Sidebar extends Component {
       const activatePalette = this.qsa('.saved-palette-activate')
       const exportPalette = this.qsa('.saved-palette-export')
       const deletePalette = this.qsa('.saved-palette-delete')
+      const duplicatePalette = this.qsa('.saved-palette-duplicate')
 
       activatePalette.forEach(button => {
         listeners.forEach(e => button.removeEventListener('click', e))
@@ -307,6 +321,15 @@ class Sidebar extends Component {
         listeners.forEach(e => button.removeEventListener('click', e))
         const listener = button.addEventListener('click', e => {
           this.handleSavedPaletteDelete(e.target.dataset.ident)
+        })
+
+        listeners.push(listener)
+      })
+
+      duplicatePalette.forEach(button => {
+        listeners.forEach(e => button.removeEventListener('click', e))
+        const listener = button.addEventListener('click', e => {
+          this.handleSavedPaletteDuplicate(e.target.dataset.ident)
         })
 
         listeners.push(listener)
