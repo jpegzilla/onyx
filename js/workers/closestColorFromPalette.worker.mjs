@@ -7,6 +7,7 @@ import {
   behr,
   traditionalJapanese,
   crayola,
+  naturalColorSystem,
 } from './../data/palettes/index.mjs'
 import { hexToHSV, findClosestColor } from './../utils/color/index.mjs'
 
@@ -19,6 +20,7 @@ const LIBS = {
   bhr: behr,
   tjp: traditionalJapanese,
   crl: crayola,
+  ncs: naturalColorSystem
 }
 
 self.onmessage = message => {
@@ -61,6 +63,10 @@ self.onmessage = message => {
       color: hsvColor,
       library: LIBS.crl,
     })
+    const closestNCSColor = findClosestColor({
+      color: hsvColor,
+      library: LIBS.ncs,
+    })
 
     self.postMessage({
       css: closestCSSColor,
@@ -71,6 +77,7 @@ self.onmessage = message => {
       ['trad. jp']: closestDentouShoku,
       crayola: closestCrayolaColor,
       bonus: closestExtColor,
+      ncs: closestNCSColor
     })
   }
 }
