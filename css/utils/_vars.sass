@@ -219,13 +219,13 @@ $layer-loading-screen: 54
   &::-webkit-scrollbar-corner, &::-webkit-resizer
     display: none
 
-=focus($othertransitions: '')
+=focus($othertransitions: '', $color: currentColor)
   &:focus
-    outline: 1px solid currentColor
+    outline: 1px solid $color
     outline-offset: 0.15rem
 
     body.dark &
-      outline: 1px solid currentColor
+      outline: 1px solid $color
 
 =color($color1: $black-dark, $color2: $white-bright)
   color: $color1
@@ -265,15 +265,15 @@ $layer-loading-screen: 54
   @media (max-width: $breakpoint-miniscule)
     font-size: 5rem
 
-=kfocus($othertransitions: '')
+=kfocus($othertransitions: '', $color: currentColor)
   &:focus
-    outline: 2px dotted currentColor
+    outline: 2px dotted $color
 
   &:focus:not(:focus-visible)
     outline-color: transparent
 
   &:focus-visible
-    +focus($othertransitions)
+    +focus($othertransitions, $color)
 
 =antibullet
   list-style-type: none
@@ -378,9 +378,13 @@ $layer-loading-screen: 54
 
   @if $alternate == true
     +boldmono
+    +kfocus($color: var(--color-display-color))
 
     background-color: var(--color-display-color)
     color: var(--color-display-background)
+
+    &:focus
+      outline-offset: 2px
 
     &:hover:not(:disabled)
       border-color: var(--color-display-background)
