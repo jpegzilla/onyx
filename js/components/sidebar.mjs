@@ -1,7 +1,7 @@
 import Component from './component.mjs'
-import { html, Palette, uuidv4 } from './../utils/index.mjs'
-import { minerva } from './../main.mjs'
-import { hslToHex } from './../utils/color/index.mjs'
+import { html, Palette, uuidv4, objectComparison } from './../utils/index.mjs'
+import { minerva, colorHistory } from './../main.mjs'
+import { hslToHex, hexToHSLA } from './../utils/color/index.mjs'
 import { sidebarCopy } from './../data/copy.mjs'
 
 import {
@@ -9,9 +9,12 @@ import {
   EXTERNAL_UPDATE,
   PALETTES,
   EXPORTING,
+  SAVE_ACTIVE_PALETTE,
+  ACTIVE_COLOR,
+  LOCKS,
+  COLORS,
+  COLOR_HISTORY,
 } from './../utils/state/minervaActions.mjs'
-
-const listeners = []
 
 class Sidebar extends Component {
   static name = 'onyx-sidebar'
@@ -23,10 +26,10 @@ class Sidebar extends Component {
   }
 
   handleExportPalette(ident) {
-    const paletteToExport = minerva.get(PALETTES)?.[ident]
+    const palette = minerva.get(PALETTES)?.[ident]
 
-    if (paletteToExport) {
-      minerva.set(EXPORTING, paletteToExport)
+    if (palette) {
+      minerva.set(EXPORTING, { palette, ident })
     }
   }
 
@@ -41,7 +44,10 @@ class Sidebar extends Component {
           html`<div class="palette-swatch">
             <div
               class="palette-swatch-color"
-              style="background-color:${color};"
+              data-color=${color}
+              style="background-color:${color};${color.length !== 7
+                ? 'border: 1px solid red;'
+                : ''}"
             ></div>
             <div class="palette-swatch-controls">
               <button class="shift-left" data-color="${idx}">&lt;</button>
@@ -52,7 +58,9 @@ class Sidebar extends Component {
                   class="lock-color"
                   title="click to lock this color in the palette."
                 >
-                  ${locked ? 'locked' : 'lock'}
+                  ${locked
+                    ? sidebarCopy.primaryPaletteLockButton.textAlternate
+                    : sidebarCopy.primaryPaletteLockButton.text}
                 </button>
 
                 <button
@@ -60,7 +68,7 @@ class Sidebar extends Component {
                   title="click to clear this color from the palette."
                   class="clear-color"
                 >
-                  clear
+                  ${sidebarCopy.primaryPaletteClearButton.text}
                 </button>
               </div>
 
@@ -106,7 +114,8 @@ class Sidebar extends Component {
                 ({ color }) =>
                   html`<div
                     class="swatch"
-                    style="background-color:${hslToHex(color)}"
+                    data-color="${hslToHex(color)}"
+                    style="background-color:${hslToHex(color)};"
                   ></div>`
               )
               .join('')}
@@ -118,14 +127,23 @@ class Sidebar extends Component {
 
   handleSavedPaletteActivate(ident) {
     if (!ident) return
+
     minerva.set(ACTIVE_PALETTE, ident)
+
+    // do not save palettes that are empty
+    const filtered = minerva
+      .get(PALETTES)
+      .entries.filter(([k, v]) => v.length || k === ident)
+    const newPaletteSet = Object.fromEntries(filtered)
+
+    minerva.set(PALETTES, newPaletteSet)
   }
 
   handleSavedPaletteDelete(ident) {
     const palettes = structuredClone(minerva.get(PALETTES))
     delete palettes?.[ident]
 
-    minerva.set(PALETTES, palettes)
+    // minerva.set(PALETTES, palettes)
   }
 
   handleSavedPaletteDuplicate(ident) {
@@ -171,7 +189,7 @@ class Sidebar extends Component {
 
     palette.removeColorAtIndex(index)
 
-    minerva.set(ACTIVE_PALETTE, palette.id)
+    if (palette.length !== 0) minerva.set(ACTIVE_PALETTE, palette.id)
   }
 
   handlePaletteLock(index) {
@@ -205,6 +223,16 @@ class Sidebar extends Component {
     minerva.set(ACTIVE_PALETTE, newActivePaletteId)
 
     newActivePalette.updatePalettes()
+  }
+
+  generateColorPalette() {
+    this.handlePaletteSave()
+
+    const randomPalette = Palette.generateRandom()
+
+    const palette = new Palette()
+    minerva.set(ACTIVE_PALETTE, palette.id)
+    randomPalette.forEach(e => palette.addColor(e, 'onyx-palette-generated'))
   }
 
   connectedCallback() {
@@ -255,41 +283,54 @@ class Sidebar extends Component {
       const shiftRight = this.qsa('.shift-right')
       const clearColor = this.qsa('.clear-color')
       const lockColor = this.qsa('.lock-color')
+      const swatch = this.qsa('.palette-swatch-color')
+
+      swatch.forEach(s => {
+        s.addEventListener('dblclick', e => {
+          const color = e.target.dataset.color
+          const activeColor = minerva.get(ACTIVE_COLOR)
+          const locks = minerva.get(LOCKS)
+
+          if (locks[activeColor]) return
+
+          const inactiveColor = activeColor === 'bg' ? 'fg' : 'bg'
+          const unchangedColor = minerva.get(COLORS)[inactiveColor]
+
+          const newColors = {
+            [activeColor]: hexToHSLA(color),
+            [inactiveColor]: unchangedColor,
+          }
+
+          if (objectComparison(newColors, minerva.get(COLORS))) return
+
+          minerva.set(COLORS, newColors)
+          colorHistory.add(newColors).save(COLOR_HISTORY)
+          minerva.set(EXTERNAL_UPDATE, true)
+        })
+      })
 
       shiftLeft.forEach(button => {
-        listeners.forEach(e => button.removeEventListener('click', e))
-        const listener = button.addEventListener('click', e =>
+        button.addEventListener('click', e =>
           this.handleColorSwap(+e.target.dataset.color, -1)
         )
-
-        listeners.push(listener)
       })
 
       shiftRight.forEach(button => {
-        listeners.forEach(e => button.removeEventListener('click', e))
-        const listener = button.addEventListener('click', e =>
+        button.addEventListener('click', e =>
           this.handleColorSwap(+e.target.dataset.color, 1)
         )
-
-        listeners.push(listener)
       })
 
       clearColor.forEach(button => {
-        listeners.forEach(e => button.removeEventListener('click', e))
-        const listener = button.addEventListener('click', e =>
+        button.addEventListener('click', e =>
           this.handlePaletteRemove(+e.target.dataset.color)
         )
-
-        listeners.push(listener)
       })
 
       lockColor.forEach(button => {
-        listeners.forEach(e => button.removeEventListener('click', e))
-        const listener = button.addEventListener('click', e =>
+        button.addEventListener('click', e =>
           this.handlePaletteLock(+e.target.dataset.color)
         )
-
-        listeners.push(listener)
       })
     }
 
@@ -298,41 +339,54 @@ class Sidebar extends Component {
       const exportPalette = this.qsa('.saved-palette-export')
       const deletePalette = this.qsa('.saved-palette-delete')
       const duplicatePalette = this.qsa('.saved-palette-duplicate')
+      const swatch = this.qsa('.swatch')
 
       activatePalette.forEach(button => {
-        listeners.forEach(e => button.removeEventListener('click', e))
-        const listener = button.addEventListener('click', e => {
+        button.addEventListener('click', e => {
           this.handleSavedPaletteActivate(e.target.dataset.ident)
         })
-
-        listeners.push(listener)
       })
 
       exportPalette.forEach(button => {
-        listeners.forEach(e => button.removeEventListener('click', e))
-        const listener = button.addEventListener('click', e => {
+        button.addEventListener('click', e => {
           this.handleExportPalette(e.target.dataset.ident)
         })
-
-        listeners.push(listener)
       })
 
       deletePalette.forEach(button => {
-        listeners.forEach(e => button.removeEventListener('click', e))
-        const listener = button.addEventListener('click', e => {
+        button.addEventListener('click', e => {
           this.handleSavedPaletteDelete(e.target.dataset.ident)
         })
-
-        listeners.push(listener)
       })
 
       duplicatePalette.forEach(button => {
-        listeners.forEach(e => button.removeEventListener('click', e))
-        const listener = button.addEventListener('click', e => {
+        button.addEventListener('click', e => {
           this.handleSavedPaletteDuplicate(e.target.dataset.ident)
         })
+      })
 
-        listeners.push(listener)
+      swatch.forEach(s => {
+        s.addEventListener('dblclick', e => {
+          const color = e.target.dataset.color
+          const activeColor = minerva.get(ACTIVE_COLOR)
+          const locks = minerva.get(LOCKS)
+
+          if (locks[activeColor]) return
+
+          const inactiveColor = activeColor === 'bg' ? 'fg' : 'bg'
+          const unchangedColor = minerva.get(COLORS)[inactiveColor]
+
+          const newColors = {
+            [activeColor]: hexToHSLA(color),
+            [inactiveColor]: unchangedColor,
+          }
+
+          if (objectComparison(newColors, minerva.get(COLORS))) return
+
+          minerva.set(COLORS, newColors)
+          colorHistory.add(newColors).save(COLOR_HISTORY)
+          minerva.set(EXTERNAL_UPDATE, true)
+        })
       })
     }
 
@@ -372,13 +426,14 @@ class Sidebar extends Component {
 
     generateButton.addEventListener('click', () => {
       // generate new palette, save the current one if it exists
-      console.log('generating new palette')
+      this.generateColorPalette()
     })
 
     exportButton.addEventListener('click', () => {
-      console.log('opening export modal')
       this.handleExportPalette(minerva.get(ACTIVE_PALETTE))
     })
+
+    minerva.on(SAVE_ACTIVE_PALETTE, () => this.handlePaletteSave())
 
     minerva.on(EXTERNAL_UPDATE, () => {
       const externalPrimaryPaletteId = minerva.get(ACTIVE_PALETTE)

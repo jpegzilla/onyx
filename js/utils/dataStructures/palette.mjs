@@ -1,12 +1,12 @@
 // ♪音楽 → 暁RECORDS - BLACK MIRROR ON THE WALL : https://www.youtube.com/watch?v=QyBjXlCMe7Y
-import { uuidv4 } from './../misc.mjs'
+import { uuidv4, getRandomInt } from './../misc.mjs'
 import LimitedList from './limitedList.mjs'
 import { minerva } from './../../main.mjs'
-import { PALETTES } from './../state/minervaActions.mjs'
+import { PALETTES, ACTIVE_PALETTE } from './../state/minervaActions.mjs'
+// import { hslaToLCH, lchToHsl } from './../color/conversions.mjs'
+import { shiftHslHue } from './../color/modifications.mjs'
 
 class Palette {
-  static defaultSettings = {}
-
   /**
    * used to create palette objects.
    * @param {object} args
@@ -24,10 +24,11 @@ class Palette {
     this.updatePalettes()
   }
 
-  createColorObject(color) {
+  createColorObject(color, name = 'onyx-palette') {
     return {
       color,
       locked: false,
+      name,
     }
   }
 
@@ -39,8 +40,8 @@ class Palette {
     return this
   }
 
-  addColor(color) {
-    this.colorList.add(this.createColorObject(color))
+  addColor(color, name) {
+    this.colorList.add(this.createColorObject(color, name))
 
     this.updatePalettes()
 
@@ -49,6 +50,11 @@ class Palette {
 
   removeColorAtIndex(index) {
     this.colorList.removeAt(index)
+
+    if (this.colorList.items.length === 0) {
+      // prevent an empty palette from being saved
+      return this
+    }
 
     this.updatePalettes()
 
@@ -88,9 +94,90 @@ class Palette {
     return this
   }
 
-  // generate(distance) {
-  //   return this
-  // }
+  static generateMonochromatic(initial, count = 5, factor = 30) {
+    const { h, s, l } = initial
+
+    const colorsToGenerate = count - 1
+    const lightThreshold = 98
+    const darkThreshold = 10
+
+    // if color is close to black or white, modulate lightness
+    if (l <= darkThreshold || l >= lightThreshold) {
+      const lightModulation = Array(count)
+        .fill()
+        .map((_, i) =>
+          i === 0
+            ? { h, s, l }
+            : { h, s, l: l <= darkThreshold ? l + factor * i : l - factor * i }
+        )
+
+      return lightModulation
+    }
+
+    // if color saturation is too low, modulate saturation and lightness
+    if (s < 10) {
+      const lightModulation = Array(count)
+        .fill()
+        .map((_, i) =>
+          i === 0
+            ? { h, s, l }
+            : {
+                h,
+                s: s + factor * i,
+                l,
+              }
+        )
+
+      return lightModulation
+    }
+
+    // otherwise, modulate hue
+    // I want to use cielch for this, but it so often produces colors
+    // that are out of gamut and can't be displayed on the average
+    // monitor! I don't know how to fix this.
+    const hueModulation = [{ h, s, l }]
+
+    for (var i = 0; i < colorsToGenerate; i++) {
+      const shiftHueDown = shiftHslHue(h - factor * (i + 1))
+      const shiftHueUp = shiftHslHue(h + factor * (i + 1))
+
+      hueModulation.push({ h: shiftHueDown, s, l })
+      hueModulation.unshift({ h: shiftHueUp, s, l })
+    }
+
+    return hueModulation
+  }
+
+  static generateRandom(count = 5, factor = 40) {
+    const colorsToGenerate = count - 1
+
+    // there's surely a more sophisticated way to generate nice-looking
+    // random palettes. I'll put that in eventually.
+    //
+    // ...the palettes onyx generates on her own aren't very pretty yet...
+    // sorry about that...I will help you get better!
+    let initialHue = getRandomInt(0, 360, true)
+    let initialSat = getRandomInt(20, 100, true)
+    let initialLightness = getRandomInt(10, 90, true)
+
+    const { h, s, l } = {
+      h: initialHue,
+      s: initialSat,
+      l: initialLightness,
+    }
+
+    const hueModulation = [{ h, s, l }]
+
+    for (var i = 0; i < colorsToGenerate; i++) {
+      const darken = shiftHslHue(h - factor * i)
+      const lighten = shiftHslHue(h + factor * i)
+
+      hueModulation.push({ h: darken, s, l })
+      hueModulation.unshift({ h: lighten, s, l })
+    }
+
+    return hueModulation
+  }
 
   lock(index) {
     this.colorList.items[index].locked = true
@@ -119,10 +206,8 @@ class Palette {
     return this
   }
 
-  duplicate() {}
-
   updatePalettes() {
-    if (!this.colorList.items.length) return
+    if (this.colorList.items.length === 0) return
 
     const currentPalettes = minerva.get(PALETTES)
 

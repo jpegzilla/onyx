@@ -14,6 +14,7 @@ import {
   ACTIVE_PALETTE,
   LOCKS,
   COLOR_HISTORY,
+  SAVE_ACTIVE_PALETTE,
 } from './../utils/state/minervaActions.mjs'
 import { minerva, colorHistory } from './../main.mjs'
 
@@ -145,6 +146,25 @@ class Controls extends Component {
     }
   }
 
+  /**
+   * derives a monochromatic color palette from one color.
+   * @param  {'bg'|'fg'} layer which color layer to derive from
+   */
+  deriveColorPalette(layer) {
+    minerva.set(SAVE_ACTIVE_PALETTE, true)
+
+    const colors = minerva.get(COLORS)
+    const colorToDeriveFrom = colors[layer]
+    const monochromaticPalette =
+      Palette.generateMonochromatic(colorToDeriveFrom)
+
+    const palette = new Palette()
+    minerva.set(ACTIVE_PALETTE, palette.id)
+    monochromaticPalette.forEach(e =>
+      palette.addColor(e, 'onyx-palette-generated')
+    )
+  }
+
   handlePaletteUpdate(color) {
     const palettes = minerva.get(PALETTES)
     let palette
@@ -231,13 +251,22 @@ class Controls extends Component {
       </div>
     </section>`
 
-    this.backgroundColorInputs = this.qsa('.background .color-control')
-    this.foregroundColorInputs = this.qsa('.foreground .color-control')
-    this.backgroundAddToPaletteButton = this.qs('.controls-add-to-palette-bg')
-    this.foregroundAddToPaletteButton = this.qs('.controls-add-to-palette-fg')
-
+    const backgroundColorInputs = this.qsa('.background .color-control')
+    const foregroundColorInputs = this.qsa('.foreground .color-control')
+    const backgroundAddToPaletteButton = this.qs('.controls-add-to-palette-bg')
+    const foregroundAddToPaletteButton = this.qs('.controls-add-to-palette-fg')
+    const backgroundDeriveButton = this.qs('.derive-bg')
+    const foregroundDeriveButton = this.qs('.derive-fg')
     const lockFgButton = this.qs('.lock-colors-fg')
     const lockBgButton = this.qs('.lock-colors-bg')
+
+    backgroundDeriveButton.addEventListener('click', () => {
+      this.deriveColorPalette('bg')
+    })
+
+    foregroundDeriveButton.addEventListener('click', () => {
+      this.deriveColorPalette('fg')
+    })
 
     lockBgButton.addEventListener('click', () => {
       const { fg: fgLock, bg: bgLock } = minerva.get(LOCKS)
@@ -281,7 +310,7 @@ class Controls extends Component {
     }
 
     const handleInputLocks = locks => {
-      this.backgroundColorInputs.forEach(input => {
+      backgroundColorInputs.forEach(input => {
         const sliders = this.qs('.controls-sliders.background')
         input.disabled = locks.bg
         locks.bg
@@ -290,7 +319,7 @@ class Controls extends Component {
         sliders.title = locks.bg ? 'editing locked.' : ''
       })
 
-      this.foregroundColorInputs.forEach(input => {
+      foregroundColorInputs.forEach(input => {
         const sliders = this.qs('.controls-sliders.foreground')
         input.disabled = locks.fg
         locks.fg
@@ -303,21 +332,21 @@ class Controls extends Component {
     handleInputLocks(minerva.get(LOCKS))
     minerva.on(LOCKS, handleInputLocks)
 
-    this.backgroundColorInputs.forEach((input, index) => {
+    backgroundColorInputs.forEach((input, index) => {
       input.addEventListener('input', e => colorInputHandler(e, 'bg', index))
     })
 
-    this.foregroundColorInputs.forEach((input, index) => {
+    foregroundColorInputs.forEach((input, index) => {
       input.addEventListener('input', e => colorInputHandler(e, 'fg', index))
     })
 
-    this.backgroundAddToPaletteButton.addEventListener('click', () => {
+    backgroundAddToPaletteButton.addEventListener('click', () => {
       const { bg } = this.getColors(this.mode)
 
       this.handlePaletteUpdate(bg)
     })
 
-    this.foregroundAddToPaletteButton.addEventListener('click', () => {
+    foregroundAddToPaletteButton.addEventListener('click', () => {
       const { fg } = this.getColors(this.mode)
 
       this.handlePaletteUpdate(fg)
