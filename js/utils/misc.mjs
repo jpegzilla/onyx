@@ -260,3 +260,43 @@ export const supportsImportInWorkers = () => {
 export const objectComparison = (objectA, objectB) => {
   return JSON.stringify(objectA) === JSON.stringify(objectB)
 }
+
+/**
+ * converts a digit in 0-255 to 4-bit hex string
+ * @param  {number} d number between 0 and 255
+ * @return {string}   zero-padded hexadecimal string
+ */
+export const zeroPaddedHex = d => (+d).toString(16).padStart(2, '0')
+
+export const downloadHexadecimalData = (data, filename, extension) => {
+  const hexData = data.replaceAll(' ', '')
+  let byteArray = new Uint8Array(hexData.length / 2)
+
+  for (let i = 0; i < byteArray.length; i++) {
+    byteArray[i] = parseInt(hexData.substr(i * 2, 2), 16)
+  }
+
+  const blob = new Blob([byteArray], { type: 'application/octet-stream' })
+  const url = URL.createObjectURL(blob)
+
+  return {
+    href: url,
+    download: `${filename}.${extension}`,
+  }
+}
+
+export const downloadTextData = (data, filename, extension) => {
+  return {
+    href: `data:text/plain;charset=utf-8,${encodeURIComponent(data)}`,
+    download: `${filename}.${extension}`,
+  }
+}
+
+export const downloadImageData = (canvas, filename) => {
+  const dataURI = canvas.toDataURL()
+
+  return {
+    href: dataURI,
+    download: `${filename}.png`,
+  }
+}
