@@ -78,7 +78,7 @@ export const drawOnyxPalette = async (palette, canvas, crop = false) => {
 
     const hex = hslToHex(color)
 
-    const SWATCH_WIDTH = swatchWidth
+    const SWATCH_WIDTH = swatchWidth + totalSwatchCount
 
     ctx.fillStyle = hex
     ctx.fillRect(
