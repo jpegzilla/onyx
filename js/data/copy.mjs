@@ -52,3 +52,27 @@ export const colorDisplayCopy = {
     disabledTitleAlternate: 'nothing to redo. redo disabled.',
   },
 }
+
+export const sidebarCopy = {
+  primaryControlsSaveButton: {
+    text: 'save',
+    title: 'save this palette to the library.',
+  },
+  primaryControlsGenerateButton: {
+    text: 'generate',
+    title: 'generate a new five-color palette.',
+  },
+  primaryControlsExportButton: {
+    text: 'export',
+    title: 'export this palette for use in other contexts.',
+  },
+  primaryPaletteLockButton: {
+    text: 'lock',
+    textAlternate: 'locked',
+    title: 'lock this color, preventing it from ever moving.',
+  },
+  primaryPaletteClearButton: {
+    text: 'clear',
+    title: 'remove this color from the palette.',
+  },
+}
