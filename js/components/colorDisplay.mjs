@@ -4,6 +4,7 @@ import {
   objectComparison,
   setCustomProperty,
   supportsImportInWorkers,
+  getUrlParams,
 } from './../utils/index.mjs'
 import {
   CONVERSIONS,
@@ -630,6 +631,17 @@ class ColorDisplay extends Component {
     minerva.on(COLORS, colorsHandler)
 
     this.setupWorkers()
+
+    const urlParams = getUrlParams()
+
+    if ('fg' in urlParams && 'bg' in urlParams) {
+      const { fg, bg } = urlParams
+
+      minerva.set(COLORS, {
+        fg: hexToHSLA(`#${fg}`),
+        bg: hexToHSLA(`#${bg}`),
+      })
+    }
   }
 }
 
