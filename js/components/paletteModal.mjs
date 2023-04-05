@@ -269,6 +269,7 @@ class PaletteModal extends Component {
       this.renderPaletteExportMenu(palette, modalContainer, ident)
       this.setupPaletteExportControls()
       modalContainer.classList.add('palette-open')
+      modalContainer.querySelector('button').focus()
     })
 
     modalContainer.addEventListener('click', e => {
