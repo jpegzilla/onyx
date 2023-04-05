@@ -18,6 +18,16 @@ export const setupHotkeys = minerva => {
       return
     }
 
+    if (!e.ctrlKey && !e.shiftKey) {
+      if (letter === 'escape') {
+        const modalContainer = document.querySelector(
+          '.palette-modal-container'
+        )
+
+        modalContainer.classList.remove('palette-open')
+      }
+    }
+
     if (e.ctrlKey) {
       if (letter === 'z' && !e.shiftKey) {
         document.querySelector('.undo-color').focus()
