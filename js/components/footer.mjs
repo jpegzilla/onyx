@@ -39,7 +39,11 @@ class Footer extends Component {
             <button title="${footerCopy.export}" class="export-config">
               export
             </button>
-            <label for="configuration-upload" title="${footerCopy.import}"
+            <label
+              class="import-config-input-label"
+              for="configuration-upload"
+              tabindex="0"
+              title="${footerCopy.import}"
               >import</label
             >
 
@@ -57,12 +61,12 @@ class Footer extends Component {
             <button title="${footerCopy.switch}">switch</button>
           </div> -->
 
-          <div class="options-selector">
+          <!-- <div class="options-selector">
             <span class="fade">show</span>
             <button title="${footerCopy.controls}" class="show-controls">
               controls
             </button>
-          </div>
+          </div> -->
 
           <div class="options-selector noselect">
             <span class="fade">mode</span>
@@ -100,6 +104,7 @@ class Footer extends Component {
 
     const exportButton = this.qs('.export-config')
     const importInput = this.qs('.import-config-input')
+    const importInputLabel = this.qs('.import-config-input-label')
     const hotkeyMode = this.qs('.hotkey-mode')
 
     minerva.on(HOTKEY_MODE, e => {
@@ -129,6 +134,16 @@ class Footer extends Component {
       link.remove()
 
       minerva.set(STATUS, 'idle')
+    })
+
+    importInputLabel.addEventListener('keydown', e => {
+      if (e.repeat || e.ctrlKey || e.shiftKey) return
+
+      const key = e.key.toLowerCase()
+
+      if (key === ' ' || key === 'enter') {
+        importInputLabel.click()
+      }
     })
 
     importInput.addEventListener('change', e => {
