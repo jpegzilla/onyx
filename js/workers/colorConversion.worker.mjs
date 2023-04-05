@@ -78,23 +78,27 @@ const fromHsl = color => {
   const hsla = `hsl(${hslaH.toFixed(2)}, ${hslaS.toFixed(2)}%, ${hslaL.toFixed(
     2
   )}%)`
-  const hwb = `hwb(${hwbH.toFixed(2)} ${hwbW}% ${hwbB}%)`
-  const labD65 = `lab(${d65L}% ${d65A} ${d65B})`
-  const labD50 = `lab(${d50L}% ${d50A} ${d50B})`
-  const lch = `lch(${lchL}% ${lchC} ${lchH})`
-  const xyz = `[${x}, ${y}, ${z}]`
-  const nrgba = `[${nR}, ${nG}, ${nB}]`
+  const hwb = `hwb(${hwbH.toFixed(2)} ${hwbW.toFixed(2)}% ${hwbB.toFixed(2)}%)`
+  const labD65 = `lab(${d65L.toFixed(2)}% ${d65A.toFixed(2)} ${d65B.toFixed(
+    2
+  )})`
+  const labD50 = `lab(${d50L.toFixed(2)}% ${d50A.toFixed(2)} ${d50B.toFixed(
+    2
+  )})`
+  const lch = `lch(${lchL.toFixed(2)}% ${lchC.toFixed(2)} ${lchH.toFixed(2)})`
+  const xyz = `[${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(2)}]`
+  const nrgba = `[${nR.toFixed(2)}, ${nG.toFixed(2)}, ${nB.toFixed(2)}]`
   const okLab = `oklab(${okL.toFixed(4)}% ${okA.toFixed(4)} ${okB.toFixed(4)})`
 
   return {
-    rgba, // correct
-    hsla, // correct
+    rgb: rgba, // correct
+    hsl: hsla, // correct
     hwb, // correct
     ['oklab']: okLab, // correct
     xyz, // correct
     ['CIELAB D50']: labD50, // CIE-L*ab D50/10 - correct
-    ['CIELAB D65']: labD65, // CIE-L*ab D65/10- correct
-    ['CIELCh D65']: lch, // CIE-L*CH° D65/10- correct
+    ['CIELAB D65']: labD65, // CIE-L*ab D65/10 - correct
+    ['CIELCh D65']: lch, // CIE-L*CH° D65/10 - correct
     ['norm. rgba']: nrgba, // normalized rgba (0 - 1)
   }
 }

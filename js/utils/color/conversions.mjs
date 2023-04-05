@@ -204,8 +204,8 @@ export const rgbaToHSLA = (r, g, b, a) => {
 
   return {
     h,
-    s: +s.toFixed(2),
-    l: +l.toFixed(2),
+    s: +s,
+    l: +l,
     a,
   }
 }
@@ -286,8 +286,8 @@ export const hexToHWB = hex => {
 
   return {
     h: +h,
-    w: +white.toFixed(2),
-    b: +black.toFixed(2),
+    w: +white,
+    b: +black,
     a,
   }
 }
@@ -306,8 +306,8 @@ export const hslaToHWB = hsl => {
 
   return {
     h: +h,
-    w: +white.toFixed(2),
-    b: +black.toFixed(2),
+    w: +white,
+    b: +black,
     a,
   }
 }
@@ -379,9 +379,9 @@ export const rgbToLAB = (
   const b = 200 * (standardY - standardZ)
 
   return {
-    l: lIn100 ? (l * 100).toFixed(2) : l.toFixed(2),
-    a: a.toFixed(2),
-    b: b.toFixed(2),
+    l: lIn100 ? l * 100 : l,
+    a: a,
+    b: b,
     alpha,
   }
 }
@@ -486,10 +486,57 @@ export const hslaToXYZ = hsla => {
   const { x, y, z } = rgbToXYZ(r, g, b)
 
   return {
-    x: x.toFixed(2),
-    y: y.toFixed(2),
-    z: z.toFixed(2),
+    x,
+    y,
+    z,
   }
+}
+
+// correct
+export const labToXYZ = lab => {
+  const { pow } = Math
+  const { l, a, b } = lab
+
+  const Xref = CIE_1931_XYZ_REFERENCE.D65[0]
+  const Yref = CIE_1931_XYZ_REFERENCE.D65[1]
+  const Zref = CIE_1931_XYZ_REFERENCE.D65[2]
+
+  const kappa = 903.3
+  const epsilon = 0.008856
+
+  const fy = (l + 16) / 116
+  const fx = a / 500 + fy
+  const fz = fy - b / 200
+
+  const x = pow(fx, 3) > epsilon ? pow(fx, 3) : (116 * fx - 16) / kappa
+  const y = l > kappa * epsilon ? pow((l + 16) / 116, 3) : l / kappa
+  const z = pow(fz, 3) > epsilon ? pow(fz, 3) : (116 * fz - 16) / kappa
+
+  return {
+    x: x * Xref,
+    y: y * Yref,
+    z: z * Zref,
+  }
+}
+
+export const xyzToRGB = xyz => {
+  const { pow, round } = Math
+  const x = xyz.x / 100
+  const y = xyz.y / 100
+  const z = xyz.z / 100
+  const rLinear = x * 3.2406 + y * -1.5372 + z * -0.4986
+  const gLinear = x * -0.9689 + y * 1.8758 + z * 0.0415
+  const bLinear = x * 0.0557 + y * -0.204 + z * 1.057
+
+  const threshold = 0.0031308
+  const gammaCorrect = c =>
+    c <= threshold ? 12.92 * c : 1.055 * pow(c, 1 / 2.4) - 0.055
+
+  const r = gammaCorrect(rLinear)
+  const g = gammaCorrect(gLinear)
+  const b = gammaCorrect(bLinear)
+
+  return { r: round(r * 255), g: round(g * 255), b: round(b * 255) }
 }
 
 /**
@@ -510,9 +557,9 @@ export const hexToXYZ = hex => {
   const { x, y, z } = rgbToXYZ(r, g, b)
 
   return {
-    x: x.toFixed(2),
-    y: y.toFixed(2),
-    z: z.toFixed(2),
+    x: x,
+    y: y,
+    z: z,
   }
 }
 
@@ -530,11 +577,42 @@ export const labToLCH = (l, a, b, alpha) => {
   else h = ANGLE_MAX - (Math.abs(h) / PI) * 180
 
   return {
-    l: parseInt(l).toFixed(2),
-    c: Math.hypot(a, b).toFixed(2),
-    h: h.toFixed(2),
+    l,
+    c: Math.hypot(a, b),
+    h: h,
     a: alpha,
   }
+}
+
+/**
+ * convert an lch color to a lab color.
+ * @param  {number} l               [description]
+ * @param  {number} c               [description]
+ * @param  {number} h               [description]
+ * @return {object}   lab color
+ */
+export const lchToLab = lch => {
+  const { l, c, h } = lch
+  const { PI, sin, cos } = Math
+
+  // const radToDeg = rad => (360 * rad) / (2 * PI)
+  const degToRad = deg => (2 * PI * deg) / 360
+  const a = +c * cos(degToRad(+h))
+  const b = +c * sin(degToRad(+h))
+
+  return {
+    l,
+    a,
+    b,
+  }
+}
+
+export const lchToHsl = lch => {
+  const lab = lchToLab(lch)
+  const xyz = labToXYZ(lab)
+  const rgb = xyzToRGB(xyz)
+
+  return rgbaToHSLA(...rgb.values)
 }
 
 /**
@@ -638,10 +716,10 @@ export const hexToNRGBA = hex => {
   const { r, g, b, a } = hexToRGBA(hex)
 
   return {
-    nR: (r / 255).toFixed(2),
-    nG: (g / 255).toFixed(2),
-    nB: (b / 255).toFixed(2),
-    nA: a.toFixed(2),
+    nR: r / 255,
+    nG: g / 255,
+    nB: b / 255,
+    nA: a,
   }
 }
 
@@ -665,10 +743,10 @@ export const hslaToNRGBA = hsla => {
   const { r, g, b } = hslaToRGB(dh, ds, dl)
 
   return {
-    nR: (r / 255).toFixed(2),
-    nG: (g / 255).toFixed(2),
-    nB: (b / 255).toFixed(2),
-    nA: a.toFixed(2),
+    nR: r / 255,
+    nG: g / 255,
+    nB: b / 255,
+    nA: a || 1.0,
   }
 }
 
@@ -686,7 +764,7 @@ export const rgbaToHex = rgba => {
 }
 
 /**
- * converts an rgba color with elements in range [0, 360] [0, 100] [0, 100]
+ * converts a hex color with elements in range [0, 360] [0, 100] [0, 100]
  * to a hex color
  * @param  {object} hsl hsl color
  * @return {string}     hex color
