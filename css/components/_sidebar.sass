@@ -54,7 +54,57 @@
   .controls
     display: flex
     gap: v.$halfgap
-    // justify-content: flex-end
+
+    @media (max-width: v.$breakpoint-large)
+      gap: v.$quartergap
+
+    & > *:first-child
+      border-radius: v.$border-radius-inner
+      border-top-right-radius: 0
+      border-bottom-right-radius: 0
+
+    & > *:last-child
+      border-radius: v.$border-radius-inner
+      border-top-left-radius: 0
+      border-bottom-left-radius: 0
+
+    .palette-limit-container
+      height: 100%
+      display: flex
+
+      span
+        +v.onyxbutton
+        +v.center
+        +v.colordisplayborderfade12
+
+        border-radius: 0
+        height: 100%
+        cursor: default
+        border-right: 0
+
+        &:hover:not(:disabled)
+          +v.colordisplayborderfade12
+
+      input
+        +v.destroy
+        +v.colordisplaycolor
+        +v.colordisplaybgfade7
+        +v.colordisplayborderfade12
+        +v.kfocus
+        +v.croptext(1.25)
+
+        font-size: 1.25rem
+        line-height: 1.5rem
+        padding: v.$button-padding
+        padding-left: v.$halfgap
+        border-radius: v.$border-radius-inner
+        border-left: 0
+        width: 10ch
+
+        &::placeholder
+          +v.colordisplaycolor
+
+          opacity: 0.5
 
     button
       +v.destroy
@@ -62,22 +112,15 @@
 
       border-radius: 0
 
-      &:first-of-type
-        border-radius: v.$border-radius-inner
-        border-top-right-radius: 0
-        border-bottom-right-radius: 0
-
-      &:last-of-type
-        border-radius: v.$border-radius-inner
-        border-top-left-radius: 0
-        border-bottom-left-radius: 0
-
   .palette
     display: grid
     grid-template-columns: repeat(5, 1fr)
     gap: v.$halfgap
     height: 100%
     width: 100%
+
+    @media (max-width: v.$breakpoint-large)
+      gap: v.$quartergap
 
     .palette-swatch
       display: flex
@@ -96,7 +139,8 @@
         border-bottom-left-radius: 0
         border-bottom-right-radius: 0
         gap: v.$quartergap
-        aspect-ratio: 1 / 1
+        flex-grow: 1
+        max-height: 8rem
 
       &-controls
         +v.center
@@ -145,7 +189,7 @@
       display: flex
       flex-direction: column
       gap: v.$halfgap
-      overflow: hidden scroll
+      overflow: hidden auto
       padding-right: v.$quartergap
 
       .saved-palette
