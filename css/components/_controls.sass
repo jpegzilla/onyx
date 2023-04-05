@@ -23,6 +23,9 @@
 
       border-radius: 0
 
+      @media (max-width: v.$breakpoint-large)
+        +v.onyxbutton($bigpadding: false)
+
       &:first-of-type
         border-radius: v.$border-radius
         border-top-right-radius: 0
@@ -64,6 +67,9 @@
     grid-template-columns: 1fr 1fr
     gap: v.$p-l
 
+    @media (max-width: v.$breakpoint-large)
+      gap: v.$p-s
+
     .controls-header
       font-size: 1.5rem
       margin-bottom: v.$p-m
@@ -77,6 +83,9 @@
       gap: v.$p-m
       opacity: 1
       transition: opacity v.$color-transition ease-out
+
+      @media (max-width: v.$breakpoint-large)
+        gap: v.$p-s
 
       &.disabled
         opacity: 0.5

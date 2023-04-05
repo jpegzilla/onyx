@@ -15,6 +15,9 @@
   max-width: 25vw
   min-width: 25vw
 
+  @media (max-width: v.$breakpoint-large)
+    grid-template-rows: minmax(0, 2.5fr) minmax(0, 8fr)
+
   .sidebar-container
     +v.colordisplaybgfade7
     +v.colordisplayborderfade12
