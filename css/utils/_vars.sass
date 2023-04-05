@@ -270,7 +270,7 @@ $layer-loading-screen: 54
     outline: 2px dotted currentColor
 
   &:focus:not(:focus-visible)
-    outline: none
+    outline-color: transparent
 
   &:focus-visible
     +focus($othertransitions)
@@ -322,6 +322,10 @@ $layer-loading-screen: 54
   font-variation-settings: 'wght' 450
   font-family: $redhat
 
+=boldmono
+  font-variation-settings: 'wght' 600
+  font-family: $redhat
+
 =destroy
   font-size: 100%
   font-family: inherit
@@ -341,21 +345,23 @@ $layer-loading-screen: 54
   // filter: drop-shadow(0 0 1rem var(--color-display-background))
   // mix-blend-mode: exclusion
 
-=onyxbutton($fontsize: 1.25rem, $bigpadding: true, $background: true)
+=onyxbutton($fontsize: 1.25rem, $bigpadding: true, $background: true, $alternate: false)
   +destroy
   +colordisplayborderfade12
   +croptext(1.25)
   +center
+  +kfocus
 
-  color: currentColor
-  cursor: pointer
-  padding: $button-padding
   border-radius: $border-radius
   border-width: 1px
+  color: currentColor
+  cursor: pointer
   font-size: $fontsize
   line-height: calc(#{$fontsize} + 0.25rem)
-  transition: border-color $color-transition ease-out, opacity $color-transition ease-out
   opacity: 1
+  padding: $button-padding
+  text-align: center
+  transition: border-color $color-transition ease-out, opacity $color-transition ease-out
 
   &:disabled
     opacity: 0.5
@@ -369,6 +375,16 @@ $layer-loading-screen: 54
 
   @if $background == true
     +colordisplaybgfade12
+
+  @if $alternate == true
+    +boldmono
+
+    background-color: var(--color-display-color)
+    color: var(--color-display-background)
+
+    &:hover:not(:disabled)
+      border-color: var(--color-display-background)
+
 
 =thinborder
   height: 1px
