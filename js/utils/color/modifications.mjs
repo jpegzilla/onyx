@@ -19,6 +19,14 @@ export const shiftHue = (rgb, deg) => {
   return hslaToRGB(hue, saturation, lightness)
 }
 
+export const shiftHslHue = h => {
+  let newHue = h
+
+  if (newHue < 0) newHue += Math.ceil(-newHue / 360) * 360
+
+  return newHue % 360
+}
+
 // function to change color's saturation
 export const shiftSat = (rgb, deg) => {
   const hsl = rgbaToHSLA(rgb.r, rgb.g, rgb.b)
