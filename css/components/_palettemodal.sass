@@ -1,0 +1,203 @@
+@use '../utils/vars' as v
+
+#onyx-palette-modal
+  +v.fill
+
+  width: 100vw
+
+  .palette-modal-container
+    +v.positionzero
+    +v.lightmono
+    +v.center
+    +v.colordisplaycolor
+    +v.colordisplaybgfade7
+    +v.blurbg
+
+    position: absolute
+    z-index: v.$layer-overlay
+    font-size: 2rem
+    pointer-events: none
+    opacity: 0
+    transition: opacity v.$color-transition ease
+
+    &.palette-open
+      opacity: 1
+      pointer-events: auto
+
+    .palette-export-menu
+      +v.colordisplayborderfade7
+      +v.fadebg
+
+      display: flex
+      border-radius: v.$border-radius
+      padding: v.$halfgap
+      gap: v.$halfgap
+
+      &-controls
+        display: flex
+        flex-direction: column
+        gap: v.$halfgap
+
+        .material-switch
+          +v.onyxbutton($alternate: true)
+
+          border-radius: v.$border-radius-inner
+          border-top-right-radius: 0
+          border-bottom-right-radius: 0
+          text-align: right
+          justify-content: flex-end
+          width: 12ch
+
+      &-material
+        font-size: 1rem
+        display: grid
+        grid-template-rows: minmax(0, max-content) minmax(0, 9fr) minmax(0, max-content)
+        gap: v.$halfgap
+        flex-grow: 1
+        width: 90rem
+
+        @media (max-width: v.$breakpoint-large)
+          width: 80rem
+
+        @media (max-width: v.$breakpoint-small)
+          width: 60rem
+
+        canvas
+          aspect-ratio: 16 / 9
+          height: 100%
+
+        .material-name
+          width: 100%
+          font-size: 1.5rem
+
+          input
+            +v.destroy
+            +v.kfocus
+            +v.fadebg
+            +v.colordisplaycolor
+            +v.colordisplayborderfade12
+
+            padding: v.$halfgap
+            border-radius: v.$border-radius-inner
+            border-top-left-radius: 0
+            border-bottom-left-radius: 0
+            border-bottom-right-radius: 0
+            width: 100%
+            display: block
+
+            &::placeholder
+              +v.colordisplaycolor
+
+              opacity: 0.75
+
+        .material-display
+          flex-grow: 1
+          width: 100%
+          max-width: 100%
+
+        .material-url
+          text-align: center
+
+          &.download
+            transition: border-color v.$color-transition ease-out
+
+            &:hover
+              +v.colordisplayborder
+
+            a
+              +v.fill
+              +v.center
+
+              text-decoration: none
+
+          a
+            color: currentColor
+
+        .material-url, .material-display
+          +v.colordisplaycolor
+
+        .material-url
+          +v.fadebg
+          +v.colordisplayborderfade12
+
+          padding: v.$halfgap
+          border-radius: v.$border-radius-inner
+          border-top-left-radius: 0
+          border-bottom-left-radius: 0
+          border-top-right-radius: 0
+
+        .material
+          display: none
+          overflow: hidden auto
+          width: 100%
+          max-width: 100%
+
+          .download, .material-actual
+            padding: v.$halfgap
+            border-radius: v.$border-radius-inner
+            border-top-left-radius: 0
+            border-bottom-left-radius: 0
+
+          .download
+            background-color: var(--color-display-color)
+            color: var(--color-display-background)
+            border-radius: 0
+            padding: 0
+            border: 1px solid var(--color-display-color)
+            transition: border-color v.$color-transition ease-out
+
+            &:hover:not(:disabled)
+              border-color: var(--color-display-background)
+
+            a
+              +v.boldmono
+
+              padding: v.$halfgap
+
+          .material-actual
+            +v.fadebg
+            +v.colordisplayborderfade12
+
+            flex-grow: 1
+            aspect-ratio: 16 / 9
+
+          code
+            +v.lightmono
+
+            // aspect-ratio: 16 / 9
+            border-bottom-right-radius: 0
+            font-size: 1.25rem
+            height: 100%
+            line-height: 1.42
+            max-height: 100%
+            white-space: pre
+
+          &.active
+            display: flex
+            flex-direction: column
+            gap: v.$halfgap
+
+          &.material-ase,
+          &.material-hex
+            code
+              white-space: pre-wrap
+
+      .material-png .material-actual,
+      .material-crop .material-actual
+        +v.center
+        +v.fadebg
+
+        @font-face
+          font-family: "red hat mono regular"
+          src: url("./../assets/fonts/RedHatMono-Regular.ttf") format('truetype'), url("./../assets/fonts/RedHatMono-Regular.ttf")
+          font-style: normal
+          font-display: block
+          font-weight: 400
+
+        b
+          font-family: 'red hat mono regular'
+          visibility: hidden
+          height: 0
+          flex-shrink: 1
+          display: none
+
