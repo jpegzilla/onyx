@@ -28,4 +28,36 @@
   </body>
 
   <script src="./js/main.mjs" type="module" charset="utf-8"></script>
+
+  <script type="text/javascript">
+    window.isUpdateAvailable = new Promise((resolve, reject) => {
+      if ('serviceWorker' in navigator) {
+        // register service worker file
+        navigator.serviceWorker
+          .register('./service-worker.mjs')
+          .then(reg => {
+            console.log('[serviceworker] registered. ', reg.scope)
+
+            reg.onupdatefound = () => {
+              console.log('[serviceworker] update found. requesting update')
+              const installingWorker = reg.installing
+              installingWorker.onstatechange = () => {
+                switch (installingWorker.state) {
+                  case 'installed':
+                    if (navigator.serviceWorker.controller) {
+                      window.localStorage.setItem('onyxUpdateAvailable', true)
+                      resolve(true)
+                    } else {
+                      window.localStorage.setItem('onyxUpdateAvailable', false)
+                      resolve(false)
+                    }
+                    break
+                }
+              }
+            }
+          })
+          .catch(err => console.error('[serviceworker] error: ', err))
+      }
+    })
+  </script>
 </html>
