@@ -35,7 +35,7 @@ export const colorHistory = new LimitedList({
   initializer: initialHistory,
 })
 
-minerva.set('loaded', false)
+minerva.set(LOADED, false)
 
 const setupUserPrefs = minerva => {
   const { highlight } = minerva.get('systemColors')
