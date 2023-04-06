@@ -83,12 +83,12 @@ class Sidebar extends Component {
     const palettes = structuredClone(minerva.get(PALETTES))
     delete palettes?.[minerva.get(ACTIVE_PALETTE)]
 
-    if (!palettes.values.length)
-      return html`<div class="empty-notifier">no palettes saved</div>`
-
-    palettes.entries.forEach(([k, v]) => {
+    palettes?.entries?.forEach(([k, v]) => {
       if (v.length === 0) delete palettes[k]
     })
+
+    if (!palettes.values.length)
+      return html`<div class="empty-notifier">no palettes saved</div>`
 
     return palettes.entries
       .reverse()
@@ -143,7 +143,7 @@ class Sidebar extends Component {
     const palettes = structuredClone(minerva.get(PALETTES))
     delete palettes?.[ident]
 
-    // minerva.set(PALETTES, palettes)
+    minerva.set(PALETTES, palettes)
   }
 
   handleSavedPaletteDuplicate(ident) {
