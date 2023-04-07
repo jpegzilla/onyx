@@ -1,7 +1,7 @@
 import { uuidv4 } from '../index.mjs'
 import { arachne } from './../../main.mjs'
 
-const BASE_PATH = './../../assets/audio/'
+const BASE_PATH = './assets/audio/'
 
 export default class AudioManager {
   constructor(options) {

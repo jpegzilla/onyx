@@ -1,6 +1,6 @@
 import { findClosestColor } from './calculations.mjs'
-import { extendedColors, pantone } from './../../data/palettes/index.mjs'
-import { hslToHSV, stringifyHSL, hslToHex } from './conversions.mjs'
+import { pantone } from './../../data/palettes/index.mjs'
+import { hslToHSV, hslToHex } from './conversions.mjs'
 
 const fixDPI = canvas => {
   const DPI = window.devicePixelRatio
@@ -47,7 +47,7 @@ export const drawOnyxPalette = async (palette, canvas, crop = false) => {
 
   // draw icon
   const icon = new Image()
-  icon.src = './../../../assets/img/icons/svg/rainbow-flower.svg'
+  icon.src = './assets/img/icons/svg/rainbow-flower.svg'
 
   let GAP_HOR_CENTER_BOTTOM = 0
 
