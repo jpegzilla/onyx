@@ -99,7 +99,7 @@
       ) {
         // register service worker file
         navigator.serviceWorker
-          .register('./service-worker.mjs')
+          .register('./serviceWorker.mjs')
           .then(reg => {
             console.log('[serviceworker] registered. ', reg.scope)
 
