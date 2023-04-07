@@ -492,6 +492,40 @@ export const hslaToXYZ = hsla => {
   }
 }
 
+export const xyzToCIELUV = xyz => {
+  const { cbrt } = Math
+  const { x, y, z } = xyz
+
+  const Xref = CIE_1931_XYZ_REFERENCE.D65[0]
+  const Yref = CIE_1931_XYZ_REFERENCE.D65[1]
+  const Zref = CIE_1931_XYZ_REFERENCE.D65[2]
+
+  const yr = y / Yref
+
+  const uPrime = (4 * x) / (x + 15 * y + 3 * z)
+  const vPrime = (9 * y) / (x + 15 * y + 3 * z)
+  const Uref = (4 * Xref) / (Xref + 15 * Yref + 3 * Zref)
+  const Vref = (9 * Yref) / (Xref + 15 * Yref + 3 * Zref)
+  const kappa = 903.3
+  const epsilon = 0.008856
+
+  const l = yr > epsilon ? 116 * cbrt(yr) - 16 : kappa * yr
+
+  const u = 13 * l * (uPrime - Uref)
+  const v = 13 * l * (vPrime - Vref)
+
+  return {
+    l,
+    u,
+    v,
+  }
+}
+
+export const hslToCIELUV = hsl => {
+  const xyz = hslaToXYZ(hsl)
+  return xyzToCIELUV(xyz)
+}
+
 // correct
 export const labToXYZ = lab => {
   const { pow } = Math

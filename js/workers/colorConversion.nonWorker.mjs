@@ -13,6 +13,7 @@ import {
   hslaToXYZ,
   hslaToNRGBA,
   xyzToOklab,
+  hslToCIELUV,
 } from './../utils/color/conversions.mjs'
 
 const fromHex = color => {
@@ -73,6 +74,7 @@ const fromHsl = color => {
   const { x, y, z } = hslaToXYZ(color)
   const { nR, nG, nB, nA } = hslaToNRGBA(color)
   const { l: okL, a: okA, b: okB } = xyzToOklab({ x, y, z })
+  const { l: luvL, u: luvU, v: luvV } = hslToCIELUV(color)
 
   const rgba = `rgba(${rgbaR}, ${rgbaG}, ${rgbaB})`
   const hsla = `hsl(${hslaH.toFixed(2)}, ${hslaS.toFixed(2)}%, ${hslaL.toFixed(
@@ -89,6 +91,9 @@ const fromHsl = color => {
   const xyz = `[${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(2)}]`
   const nrgba = `[${nR.toFixed(2)}, ${nG.toFixed(2)}, ${nB.toFixed(2)}]`
   const okLab = `oklab(${okL.toFixed(4)}% ${okA.toFixed(4)} ${okB.toFixed(4)})`
+  const cieluv = `luv(${luvL.toFixed(2)}, ${luvU.toFixed(2)}, ${luvV.toFixed(
+    2
+  )})`
 
   return {
     rgb: rgba, // correct
@@ -97,8 +102,9 @@ const fromHsl = color => {
     ['oklab']: okLab, // correct
     xyz, // correct
     ['CIELAB D50']: labD50, // CIE-L*ab D50/10 - correct
-    ['CIELAB D65']: labD65, // CIE-L*ab D65/10- correct
-    ['CIELCh D65']: lch, // CIE-L*CH° D65/10- correct
+    ['CIELAB D65']: labD65, // CIE-L*ab D65/10 - correct
+    ['CIELCh D65']: lch, // CIE-L*CH° D65/10 - correct
+    ['CIELUV D65']: cieluv,
     ['norm. rgba']: nrgba, // normalized rgba (0 - 1)
   }
 }
