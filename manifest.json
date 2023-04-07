@@ -11,7 +11,7 @@
   "orientation": "landscape",
   "icons": [
     {
-      "src": "/assets/img/icons/png/144x144.png",
+      "src": "./assets/img/icons/png/144x144.png",
       "sizes": "144x144",
       "type": "image/png",
       "density": "1"
