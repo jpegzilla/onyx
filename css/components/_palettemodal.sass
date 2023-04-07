@@ -196,10 +196,24 @@
           font-display: block
           font-weight: 400
 
-        b
+        @font-face
+          font-family: "montserrat"
+          src: local("Montserrat"), url("./../assets/fonts/Montserrat-VariableFont_wght.ttf") format('truetype'), url("./../assets/fonts/Montserrat-VariableFont_wght.ttf")
+          font-style: normal
+          font-display: block
+
+        b.red-hat-loader
           font-family: 'red hat mono regular'
           visibility: hidden
           height: 0
           flex-shrink: 1
-          display: none
+          width: 0
+          position: absolute
 
+        b.montserrat-loader
+          font-family: 'montserrat'
+          visibility: hidden
+          height: 0
+          flex-shrink: 1
+          width: 0
+          position: absolute

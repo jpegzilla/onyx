@@ -157,7 +157,8 @@ class PaletteModal extends Component {
         <div class="material-display">
           <div class="material material-png active">
             <div class="material-actual">
-              <b>e</b>
+              <b class="red-hat-loader">e</b>
+              <b class="montserrat-loader">e</b>
               <canvas class="image-canvas"></canvas>
             </div>
             <div class="material-url download">

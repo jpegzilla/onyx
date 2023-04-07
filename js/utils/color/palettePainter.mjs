@@ -61,7 +61,7 @@ export const drawOnyxPalette = async (palette, canvas, crop = false) => {
     await loadImage(icon)
     ctx.drawImage(icon, PAD_LEFT, GAP_HOR_CENTER_TOP, ICON_SIZE, ICON_SIZE)
 
-    ctx.font = `bold 24px "montserrat"`
+    ctx.font = `bold 24px "montserrat", monospace`
     ctx.textBaseline = 'middle'
     ctx.textAlign = 'right'
     ctx.fillStyle = textColor
