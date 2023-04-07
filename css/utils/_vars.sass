@@ -18,10 +18,11 @@ $color-transition: 0.2s
 
 $breakpoint-huge: 2000px
 $breakpoint-large: 1920px
-$breakpoint-medium: 1700px
+$breakpoint-medium: 1850px
 $breakpoint-small: 1500px
 $breakpoint-tiny: 1350px
-$breakpoint-miniscule: 961px
+// $breakpoint-miniscule: 961px
+$breakpoint-miniscule: 1200px
 $breakpoint-infinitesimal: 700px
 $breakpoint-microscopic: 400px
 
@@ -85,7 +86,8 @@ $layer-sections: 49
 $layer-controls: 51
 $layer-header: 52
 $layer-overlay: 53
-$layer-loading-screen: 54
+$layer-nomobile: 52
+$layer-loading-screen: 55
 
 // mixins
 
@@ -362,6 +364,9 @@ $layer-loading-screen: 54
   padding: $button-padding
   text-align: center
   transition: border-color $color-transition ease-out, opacity $color-transition ease-out
+
+  @media (max-width: $breakpoint-medium)
+    font-size: 1rem
 
   &:disabled
     opacity: 0.5

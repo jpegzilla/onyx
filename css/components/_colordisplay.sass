@@ -68,6 +68,9 @@
     @media (max-width: v.$breakpoint-large)
       gap: v.$halfgap
 
+    @media (max-width: v.$breakpoint-medium)
+      gap: v.$quartergap
+
   .color-display-selector-container
     display: flex
     flex-direction: column
@@ -178,6 +181,9 @@
       grid-template-rows: repeat(5, max-content)
       grid-template-columns: repeat(2, 42ch)
 
+      @media (max-width: v.$breakpoint-medium)
+        grid-template-columns: repeat(2, 38ch)
+
       @media (max-width: v.$breakpoint-large)
         grid-column-gap: v.$quartergap
 
@@ -192,10 +198,19 @@
         user-select: none
         pointer-events: none
 
+        @media (max-width: v.$breakpoint-medium)
+          white-space: normal
+
     &.contrast .color-info-container-list
       grid-template-rows: repeat(3, max-content)
       grid-template-columns: repeat(2, 42ch)
 
+      @media (max-width: v.$breakpoint-medium)
+        grid-template-columns: repeat(2, 38ch)
+
     &.palettes .color-info-container-list
       grid-template-rows: repeat(5, max-content)
       grid-template-columns: repeat(2, 42ch)
+
+      @media (max-width: v.$breakpoint-medium)
+        grid-template-columns: repeat(2, 38ch)

@@ -8,6 +8,9 @@
   grid-area: controls
   padding-right: v.$p-m
 
+  @media (max-width: v.$breakpoint-medium)
+    padding-right: v.$halfgap
+
   section
     display: flex
     height: 100%
@@ -25,6 +28,9 @@
 
       @media (max-width: v.$breakpoint-large)
         +v.onyxbutton($bigpadding: false)
+
+      @media (max-width: v.$breakpoint-tiny)
+        padding: 0 0.15rem
 
       &:first-of-type
         border-radius: v.$border-radius

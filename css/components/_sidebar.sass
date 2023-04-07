@@ -12,11 +12,16 @@
   gap: v.$p-s
   grid-area: sidebar
   grid-template-rows: minmax(0, 2fr) minmax(0, 8fr)
+  grid-template-columns: 100%
   max-width: 25vw
-  min-width: 25vw
+  width: 25vw
 
   @media (max-width: v.$breakpoint-large)
     grid-template-rows: minmax(0, 2.5fr) minmax(0, 8fr)
+
+  @media (max-width: v.$breakpoint-medium)
+    max-width: 100%
+    width: 100%
 
   .sidebar-container
     +v.colordisplaybgfade7
@@ -24,6 +29,8 @@
 
     border-radius: v.$border-radius-inner
     padding: v.$halfgap
+    max-width: 100%
+    width: 100%
 
   .empty-notifier
     +v.center
@@ -118,6 +125,8 @@
     gap: v.$halfgap
     height: 100%
     width: 100%
+    max-width: 100%
+    overflow: auto hidden
 
     @media (max-width: v.$breakpoint-large)
       gap: v.$quartergap

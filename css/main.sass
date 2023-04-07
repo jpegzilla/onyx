@@ -55,6 +55,7 @@
 
 *::-webkit-scrollbar
   width: v.$halfgap
+  height: v.$halfgap
 
 *::-webkit-scrollbar-track
   background: var(--bg-color)
@@ -63,3 +64,20 @@
   background-color: var(--text-color)
   border-radius: v.$border-radius-inner
   border: none
+
+.no-mobile
+  +v.positionzero
+  +v.center
+  +v.lightmono
+  +v.colordisplaybg
+  +v.colordisplaycolor
+
+  font-size: 1.5rem
+  height: 100vh
+  position: absolute
+  width: 100vw
+  z-index: v.$layer-nomobile
+  display: none
+
+  @media (max-width: v.$breakpoint-miniscule)
+    display: flex
