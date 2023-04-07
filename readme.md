@@ -1,16 +1,20 @@
 <h1><img src="assets/img/onyx-wordmark.png" aria-hidden height="80em"></h1>
 
-onyx is a color tool made for software designers and developers &mdash; people who make websites, apps, video games, and anything else that uses color.
+onyx is a color tool made for software designers and developers &mdash; people who make websites, apps, video games, and anything else digital that uses color.
 
-the purpose of onyx is to provide you with a way to easily create and generate custom color palettes that you can use in a variety of contexts. onyx can be your full service color tool for any kind of chromatics-related research and development.
+the purpose of onyx is to provide you with a way to easily create and generate custom color palettes that you can use in a variety of contexts. onyx can be your full service color tool for any kind of digital chromatics-related research and development.
 
-designing an app and need some color inspiration? onyx can do that. want to convert colors from one format to another? onyx does that too! the list goes on &mdash; you'll never need another color app. maybe.
+designing an app and need some color inspiration? onyx can do that. want to convert colors from one format to another? onyx does that too! the list goes on &mdash; you'll never need another color app.\*
 
 onyx was created with the comfort and enjoyment of the user in mind. if you think some feature doesn't feel intuitive, or some workflow is awkward, please let me know. I try to design interfaces that are fun and easy to use!
 
+\***maybe.**
+
 ## how to use / download
 
-go to [jpegzilla.com/onyx](https://jpegzilla.com/onyx). if you're on a current version of chrome, edge, or safari, you should be prompted to download onyx as a [pwa](https://en.wikipedia.org/wiki/Progressive_web_app). otherwise, you can't download it, but you can use the online version as long as you have internet.
+go to [jpegzilla.com/onyx](https://jpegzilla.com/onyx). if you're on a current version of chrome, edge, or safari, you should be prompted to download onyx as a [pwa](https://en.wikipedia.org/wiki/Progressive_web_app). otherwise, you can't download it &mdash; but you can use the online version as long as you have internet.
+
+if you want to see an demo configuration, take the file in the `/demo` folder of this repository and drag it into onyx. this will overwrite all your data though, so make sure to export your configuration first if you need a backup!
 
 ## features
 
