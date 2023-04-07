@@ -11,8 +11,21 @@
     <title>onyx &mdash; chromatics research system</title>
   </head>
 
+  <noscript
+    >looks like you have javascript disabled. sorry, but there's just no way for
+    onyx to work without it! please re-enable javascript if you'd like to use
+    onyx.</noscript
+  >
+
   <body>
     <onyx-loading-screen></onyx-loading-screen>
+
+    <div class="no-mobile">
+      <span
+        >onyx isn't ready to be crammed into such a small space! I'm working on
+        it.</span
+      >
+    </div>
 
     <!-- modal containers go here -->
     <onyx-drop-target></onyx-drop-target>
@@ -31,7 +44,10 @@
 
   <script type="text/javascript">
     window.isUpdateAvailable = new Promise((resolve, reject) => {
-      if ('serviceWorker' in navigator) {
+      if (
+        'serviceWorker' in navigator &&
+        !['127.0.0.1', 'localhost'].includes(window.location.hostname)
+      ) {
         // register service worker file
         navigator.serviceWorker
           .register('./service-worker.mjs')
