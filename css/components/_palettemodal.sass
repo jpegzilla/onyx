@@ -69,6 +69,7 @@
         grid-template-rows: minmax(0, max-content) minmax(0, 9fr) minmax(0, max-content)
         gap: v.$halfgap
         flex-grow: 1
+        width: 90rem
 
         @media (max-width: v.$breakpoint-large)
           width: 80rem
@@ -78,7 +79,10 @@
 
         canvas
           aspect-ratio: 16 / 9
-          width: 90rem
+
+          +v.ffonly
+            width: 90rem
+
           height: 100%
           font-family: 'red hat mono regular'
 
@@ -178,7 +182,9 @@
 
             flex-grow: 1
             aspect-ratio: 16 / 9
-            width: 90rem
+
+            +v.ffonly
+              width: 90rem
 
           code
             +v.lightmono
