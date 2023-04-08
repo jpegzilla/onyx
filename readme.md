@@ -14,7 +14,7 @@ onyx was created with the comfort and enjoyment of the user in mind. if you thin
 
 go to [jpegzilla.com/onyx](https://jpegzilla.com/onyx). if you're on a current version of chrome, edge, or safari, you should be prompted to download onyx as a [pwa](https://en.wikipedia.org/wiki/Progressive_web_app). otherwise, you can't download it &mdash; but you can use the online version as long as you have internet.
 
-if you want to see an demo configuration, take the file in the `/demo` folder of this repository and drag it into onyx. this will overwrite all your data though, so make sure to export your configuration first if you need a backup!
+if you want to see a demo configuration, take the file in the `/demo` folder of this repository and drag it into onyx. this will overwrite all your data though, so make sure to export your configuration first if you need a backup!
 
 ## features
 
