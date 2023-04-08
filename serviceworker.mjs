@@ -1,6 +1,6 @@
 const FILES_TO_CACHE = ['./index.html', './css/main.min.css']
 
-const ONYX_VERSION = 'v0004'
+const ONYX_VERSION = 'v0005'
 const CACHE_NAME = `onyx_cache_${ONYX_VERSION}`
 const cacheWhitelist = [CACHE_NAME]
 

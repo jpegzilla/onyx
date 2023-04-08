@@ -1,18 +1,19 @@
 @use '../utils/vars' as v
 @use '../utils/fontfaces'
 
-@font-face
-  font-family: "red hat mono regular"
-  src: url("./../assets/fonts/RedHatMono-Regular.ttf") format('truetype'), url("./../assets/fonts/RedHatMono-Regular.ttf")
-  font-style: normal
-  font-display: block
-  font-weight: 400
++v.ffonly
+  @font-face
+    font-family: "red hat mono regular"
+    src: url("./../assets/fonts/RedHatMono-Regular.ttf") format('truetype'), url("./../assets/fonts/RedHatMono-Regular.ttf")
+    font-style: normal
+    font-display: block
+    font-weight: 400
 
-@font-face
-  font-family: "montserrat"
-  src: url("./../assets/fonts/Montserrat-VariableFont_wght.ttf") format('truetype'), url("./../assets/fonts/Montserrat-VariableFont_wght.ttf")
-  font-style: normal
-  font-display: block
+  @font-face
+    font-family: "montserrat"
+    src: url("./../assets/fonts/Montserrat-VariableFont_wght.ttf") format('truetype'), url("./../assets/fonts/Montserrat-VariableFont_wght.ttf")
+    font-style: normal
+    font-display: block
 
 #onyx-palette-modal
   +v.fill
@@ -203,6 +204,19 @@
       .material-crop .material-actual
         +v.center
         +v.fadebg
+
+        @font-face
+          font-family: "red hat mono regular"
+          src: url("./../assets/fonts/RedHatMono-Regular.ttf") format('truetype'), url("./../assets/fonts/RedHatMono-Regular.ttf")
+          font-style: normal
+          font-display: block
+          font-weight: 400
+
+        @font-face
+          font-family: "montserrat"
+          src: url("./../assets/fonts/Montserrat-VariableFont_wght.ttf") format('truetype'), url("./../assets/fonts/Montserrat-VariableFont_wght.ttf")
+          font-style: normal
+          font-display: block
 
         b.red-hat-loader
           font-family: 'red hat mono regular'

@@ -2,22 +2,6 @@ import { findClosestColor } from './calculations.mjs'
 import { pantone } from './../../data/palettes/index.mjs'
 import { hslToHSV, hslToHex } from './conversions.mjs'
 
-const montserrat = new FontFace(
-  'montserrat',
-  'url(./../../../assets/fonts/Montserrat-VariableFont_wght.ttf)'
-)
-const redhatmonoregular = new FontFace(
-  'red hat mono regular',
-  'url(./../../../assets/fonts/RedHatMono-Regular.ttf)'
-)
-
-montserrat.load().then(font => {
-  document.fonts.add(font)
-})
-redhatmonoregular.load().then(font => {
-  document.fonts.add(font)
-})
-
 const fixDPI = canvas => {
   const DPI = window.devicePixelRatio
   let height = +getComputedStyle(canvas).getPropertyValue('height').slice(0, -2)
