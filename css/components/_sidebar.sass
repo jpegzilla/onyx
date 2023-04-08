@@ -17,7 +17,7 @@
   width: 25vw
 
   @media (max-width: v.$breakpoint-large)
-    grid-template-rows: minmax(0, 2.5fr) minmax(0, 8fr)
+    grid-template-rows: minmax(0, 2fr) minmax(0, 8fr)
 
     width: 100%
 
@@ -132,7 +132,6 @@
     .palette-swatch
       display: flex
       flex-direction: column
-      flex-grow: 1
       gap: v.$quartergap
       height: 100%
 
@@ -147,7 +146,6 @@
         border-bottom-right-radius: 0
         gap: v.$quartergap
         flex-grow: 1
-        max-height: 8rem
 
       &-controls
         +v.center
