@@ -71,8 +71,8 @@
 
     <div class="no-mobile">
       <span
-        >onyx isn't ready to be crammed into such a small space! I'm working on
-        it.</span
+        >onyx isn't ready to be crammed into such a small space! (this is not a
+        tool for mobile devices.)</span
       >
     </div>
 
@@ -99,7 +99,7 @@
       ) {
         // register service worker file
         navigator.serviceWorker
-          .register('./serviceWorker.mjs')
+          .register('./onyxServiceWorker.mjs')
           .then(reg => {
             console.log('[serviceworker] registered. ', reg.scope)
 
