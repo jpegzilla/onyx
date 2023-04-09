@@ -126,9 +126,9 @@ Promise.all(allMounted).then(() => {
   minerva.set(HOTKEY_MODE, 'default')
 })
 
-window.addEventListener('storage', e => {
-  console.group()
-  arachne.warn('localStorage manually updated. new value:')
-  console.log(JSON.parse(e.newValue))
-  console.groupEnd()
-})
+// window.addEventListener('storage', e => {
+//   console.group()
+//   arachne.warn('localStorage manually updated. new value:')
+//   console.log(JSON.parse(e.newValue))
+//   console.groupEnd()
+// })
