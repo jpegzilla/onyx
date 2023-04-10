@@ -20,6 +20,7 @@ import {
   Mnemosyne,
   LimitedList,
   setupHotkeys,
+  mobileCheck,
 } from './utils/index.mjs'
 import { hexToHSLA, stringifyHSL } from './utils/color/conversions.mjs'
 import components from './components/index.mjs'
@@ -102,29 +103,33 @@ const setupUserPrefs = minerva => {
   )
 }
 
-const allMounted = components.map(({ name }) =>
-  customElements.whenDefined(name)
-)
+if (mobileCheck()) {
+  document.querySelector('.no-mobile').style.display = 'flex'
+} else {
+  const allMounted = components.map(({ name }) =>
+    customElements.whenDefined(name)
+  )
 
-components.forEach(({ name, element }) => {
-  if (customElements.get(name)) {
-    arachne.warn(
-      'received a custom element that has already been defined. check component exports!'
-    )
+  components.forEach(({ name, element }) => {
+    if (customElements.get(name)) {
+      arachne.warn(
+        'received a custom element that has already been defined. check component exports!'
+      )
 
-    return
-  }
+      return
+    }
 
-  if (name && element) customElements.define(name, element)
-})
+    if (name && element) customElements.define(name, element)
+  })
 
-Promise.all(allMounted).then(() => {
-  setupUserPrefs(minerva)
-  setupHotkeys(minerva)
-  minerva.set(LOADED, true)
-  minerva.set(STATUS, 'idle')
-  minerva.set(HOTKEY_MODE, 'default')
-})
+  Promise.all(allMounted).then(() => {
+    setupUserPrefs(minerva)
+    setupHotkeys(minerva)
+    minerva.set(LOADED, true)
+    minerva.set(STATUS, 'idle')
+    minerva.set(HOTKEY_MODE, 'default')
+  })
+}
 
 // window.addEventListener('storage', e => {
 //   console.group()

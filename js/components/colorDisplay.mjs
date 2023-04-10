@@ -30,6 +30,7 @@ import {
   MODE_RGB,
   getContrastRatio,
   getRandomColor,
+  getRandomColorPair,
   calculateAPCAContrast,
 } from './../utils/color/index.mjs'
 import { colorDisplayCopy } from './../data/copy.mjs'
@@ -533,9 +534,11 @@ class ColorDisplay extends Component {
 
       if (locks.fg && locks.bg) return
 
+      const { fg: rfg, bg: rbg } = getRandomColorPair('hsl')
+
       const newColors = {
-        fg: locks.fg ? currFg : getRandomColor('hsl'),
-        bg: locks.bg ? currBg : getRandomColor('hsl'),
+        fg: locks.fg ? currFg : rfg,
+        bg: locks.bg ? currBg : rbg,
       }
 
       minerva.set(COLORS, newColors)
