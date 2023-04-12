@@ -14,7 +14,7 @@ color names list (various sources) - https://en.wikipedia.org/wiki/List_of_color
 
 help creating range input styles: daniel stern - http://danielstern.ca/range.css
 
-color conversion formulas - bruse lindbloom - http://www.brucelindbloom.com/index.html?Math.html
+color conversion formulas - bruce lindbloom - http://www.brucelindbloom.com/index.html?Math.html
 
 inspiration
 
