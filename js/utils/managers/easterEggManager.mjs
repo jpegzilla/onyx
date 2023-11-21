@@ -8,6 +8,7 @@ const easterEggPairs = {
   'patchouli knowledge': ['541c60', 'f9acc0'], // hsl(289, 55%, 24%), hsl(344, 87%, 83%)
   'delicious coffee...': ['48332b', 'ffffff'], // hsl(17.5, 25.7%, 22.5%), hsl(31.7, 34.7%, 93.4%)
   emerald: ['50c878', '1b0758'], // hsl(140.00, 52.17%, 54.90%), hsl(254.81, 85.26%, 18.63%)
+  fluttershy: ['ece98b', 'e79ad3'], // hsl(58.14, 71.85, 73.53, 1), hsl(315.58, 61.60, 75.49, 1)
 }
 
 const easterEggColors = {

@@ -22,7 +22,7 @@ if you want to see a demo configuration, take the file in the `/demo` folder of 
 -   get data on similar colors from other palettes, such as pantone, behr, and crayola
 -   offline-first - onyx doesn't store your data online, so you always have access and control
 -   create and export palettes in several different formats for sharing or use in other software, including adobe software
--   get contrast data in wcag2 and acpa forms
+-   get contrast data in wcag2 and apca forms
 
 <hr>
 
