@@ -39,6 +39,15 @@
   @media (max-width: v.$breakpoint-medium)
     font-size: 14px
 
+  @media (max-width: v.$breakpoint-small)
+    font-size: 12px
+
+  @media (max-height: v.$breakpoint-infinitesimal), (max-width: v.$breakpoint-small)
+    font-size: 12px
+
+  @media (max-width: v.$breakpoint-miniscule)
+    font-size: 10px
+
 .ensure-visibility
   +v.ensurevisibility
 
@@ -89,5 +98,5 @@
     font-weight: bold
     text-decoration: underline
 
-  @media (max-width: v.$breakpoint-miniscule)
+  @media (max-width: v.$breakpoint-infinitesimal)
     display: flex

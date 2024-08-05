@@ -54,16 +54,19 @@ export const drawOnyxPalette = async (palette, canvas, crop = false) => {
   let GAP_HOR_CENTER_BOTTOM = 0
 
   if (!crop) {
-    const ICON_SIZE = 50
+    const ICON_SIZE =
+      parseInt(getComputedStyle(document.documentElement).fontSize) * 4
     const PAD_LEFT = 20
     const PAD_RIGHT = 30
     const GAP_HOR_CENTER_TOP = GAP / 2 - ICON_SIZE / 2
     GAP_HOR_CENTER_BOTTOM = height - GAP / 2 - ICON_SIZE / 2
+    const HEADER_FONT_SIZE =
+      parseInt(getComputedStyle(document.documentElement).fontSize) * 1.75
 
     await loadImage(icon)
     ctx.drawImage(icon, PAD_LEFT, GAP_HOR_CENTER_TOP, ICON_SIZE, ICON_SIZE)
 
-    ctx.font = `bold 24px "montserrat", monospace`
+    ctx.font = `bold ${HEADER_FONT_SIZE}px "montserrat", monospace`
     ctx.textBaseline = 'middle'
     ctx.textAlign = 'right'
     ctx.fillStyle = textColor
@@ -97,7 +100,9 @@ export const drawOnyxPalette = async (palette, canvas, crop = false) => {
 
     if (!crop) {
       const LINE_HEIGHT = 1.42
-      const FONT_SIZE = 18
+      const FONT_SIZE =
+        SWATCH_WIDTH /
+        parseInt(getComputedStyle(document.documentElement).fontSize)
       const generateYPosition = lineNumber =>
         FONT_SIZE * (LINE_HEIGHT * lineNumber)
 
