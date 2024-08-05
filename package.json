@@ -4,7 +4,8 @@
     "format": "prettier --write .",
     "build": "npx tauri build",
     "dev": "npx tauri dev",
-    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 npx jest"
+    "test": "NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 npx jest",
+    "jwm": "webpack --config webpack.config.mjs --watch --progress"
   },
   "type": "module",
   "dependencies": {
@@ -19,7 +20,9 @@
     "eslint-plugin-promise": "^4.3.1",
     "jest": "29.5",
     "jest-environment-jsdom": "^29.5.0",
-    "prettier": "^2.6.0"
+    "prettier": "^2.6.0",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4"
   },
   "jest": {
     "transform": {},
